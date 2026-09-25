@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/industry-8286e80e-223b-42c4-9c36-beb85b2ba7b1/styles.css">
+<script src="_ds/industry-8286e80e-223b-42c4-9c36-beb85b2ba7b1/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900&amp;display=swap">
+<style>
+:root{--color-accent:#00274C;--color-accent-500:#00274C;--color-accent-700:#001B35;--color-text:#131516}
+body{margin:0;background:#F7F8FA;color:#131516;font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#00274C;text-decoration:none}
+a:hover{color:#2A5993}
+input,select,textarea{font-family:'DM Sans',sans-serif}
+:focus-visible{outline:2px solid #00274C;outline-offset:2px}
+@keyframes paneFade{from{opacity:0}to{opacity:1}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;flex-direction:column;background:#F7F8FA">
+
+  <div style="background:#fff">
+    <div style="background:#FAFAFA;border-bottom:1px solid #F0F0F0;display:flex;align-items:center;gap:8px;padding:6px 40px">
+      <span style="font-size:12px;font-weight:400;line-height:18px;color:#6B7280">homeLocation</span>
+      <div style="display:flex;align-items:center;gap:5px;cursor:pointer">
+        <span style="font-size:12px;font-weight:600;line-height:100%;color:#00274C">Ann Arbor</span>
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="display:block"><path d="M1 1.5L5 4.5L9 1.5" stroke="#00274C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+        <span style="font-size:12px;font-weight:400;line-height:18px;color:#6B7280;white-space:nowrap">Viewing as</span>
+        <select onChange="{{ switchRole }}" value="{{ role }}" style="font-family:inherit;font-size:12px;font-weight:600;color:#00274C;background:#fff;border:1px solid #E5E7EB;border-radius:999px;padding:4px 12px;cursor:pointer">
+          <option value="officer">Officer</option>
+          <option value="supervisor">Supervisor</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:24px;padding:14px 40px; min-height: 67px;box-sizing:border-box">
+      <span style="font-size:18px;font-weight:700;line-height:27px;letter-spacing:1.8px;color:#00274C;white-space:nowrap">DPSS FLEET</span>
+      <div style="display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:8px 22px;min-width:0;">
+        <sc-for list="{{ navLinks }}" as="n" hint-placeholder-count="4">
+          <a href="{{ n.href }}" style="{{ n.style }}">{{ n.label }}</a>
+        </sc-for>
+        <a href="./Fleet Ordering.dc.html" style="background:#00274C;color:#fff;border-radius:999px;padding:12px 26px;font-size:14px;font-weight:600;white-space:nowrap" style-hover="background:#003A6E;color:#fff">+ Work Order</a>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{ noticeOpen }}" hint-placeholder-val="{{ true }}">
+    <div style="background:#FDECEC;border-bottom:1px solid #F5CFCB;padding:12px 40px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <span style="font-size:11px;font-weight:700;letter-spacing:0.66px;text-transform:uppercase;background:#C0362C;color:#fff;border-radius:999px;padding:3px 11px;white-space:nowrap">Safety hold</span>
+      <span style="flex:1 1 320px;font-size:13px;font-weight:500;line-height:19.5px;color:#5E1610">Ford rifle mount release operates in accessory mode. Four patrol vehicles held until 30 September.</span>
+      <button type="button" onClick="{{ dismissNotice }}" style="border:0;background:transparent;color:#C0362C;font-size:18px;line-height:1;cursor:pointer;padding:0 4px;font-family:inherit">×</button>
+    </div>
+  </sc-if>
+
+  <div style="display:flex;flex-direction:column;gap:20px;padding:22px 26px 48px;max-width:1680px;width:100%;margin:0 auto;box-sizing:border-box">
+
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:13px;font-weight:400;line-height:19.5px;color:#6B7280">{{ today }} · 102 leased vehicles · $1.28M a year</div>
+        <h1 style="margin:2px 0 0;font-size:30px;font-weight:700;line-height:1.2;color:#00274C">Budget Forecast</h1>
+      </div>
+    </div>
+
+    <sc-if value="{{ showForecast }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;gap:20px">
+
+      <div style="background:#fff;border:0.77px solid #E5E7EB;border-radius:14px;overflow:hidden;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:#F0F0F0">
+        
+        <sc-for list="{{ fcStats }}" as="k" hint-placeholder-count="4">
+          <div style="background:#fff;padding:18px 20px;display:flex;flex-direction:column;gap:6px;min-width:0">
+            <span style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:38px;line-height:1;color:{{ k.c }}">{{ k.v }}</span>
+            <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:16px;color:#131516">{{ k.label }}</span>
+            <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;line-height:1.4;color:#6B7280">{{ k.note }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:stretch">
+
+        <div style="background:#fff;border:0.77px solid #E5E7EB;border-radius:14px;overflow:hidden;flex:1 1 520px;min-width:0;display:flex;flex-direction:column">
+          
+          <div style="border-bottom:1px solid #F0F0F0;padding:13px 18px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+            <h2 style="margin:0;font-family:'DM Sans',sans-serif;font-weight:600;font-size:21px;color:#00274C">Yearly cost by unit</h2>
+            <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;color:#6B7280">Lease plus maintenance</span>
+          </div>
+          <div style="padding:16px 18px 18px;display:flex;flex-direction:column;gap:14px">
+            <sc-for list="{{ fcUnits }}" as="u" hint-placeholder-count="8">
+              <div style="display:grid;grid-template-columns:minmax(0,1fr) 108px;align-items:center;gap:14px">
+                <span style="display:flex;flex-direction:column;gap:6px;min-width:0">
+                  <span style="display:flex;align-items:baseline;gap:8px;min-width:0">
+                    <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:16px;color:#131516">{{ u.name }}</span>
+                    <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;color:#6B7280">{{ u.n }} vehicles</span>
+                  </span>
+                  <span style="height:14px;background:#F0F0F0;display:block;position:relative">
+                    <span style="position:absolute;left:0;top:0;bottom:0;width:{{ u.pct }};background:#00274C"></span>
+                  </span>
+                </span>
+                <span style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:24px;line-height:1;color:#00274C;text-align:right">{{ u.cost }}</span>
+              </div>
+            </sc-for>
+            <span style="border-top:1px solid #F0F0F0;padding-top:11px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:14.5px;color:#6B7280">Five smaller units hold 7 more vehicles at $82,200 a year.</span>
+          </div>
+        </div>
+
+        <div style="background:#fff;border:0.77px solid #E5E7EB;border-radius:14px;overflow:hidden;flex:1 1 400px;min-width:0;display:flex;flex-direction:column">
+          
+          <div style="border-bottom:1px solid #F0F0F0;padding:13px 18px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+            <h2 style="margin:0;font-family:'DM Sans',sans-serif;font-weight:600;font-size:21px;color:#00274C">Cost to build one car</h2>
+            <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;color:#6B7280">Quoted, by role</span>
+          </div>
+          <div style="flex:1 1 auto;padding:20px 18px 0;display:flex;align-items:flex-end;gap:18px;min-height:230px">
+            <sc-for list="{{ fcBuild }}" as="b" hint-placeholder-count="3">
+              <span style="flex:1 1 0;min-width:0;align-self:stretch;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:9px">
+                <span style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:23px;line-height:1;color:#00274C">{{ b.cost }}</span>
+                <span style="width:100%;flex:0 0 {{ b.h }};background:#00274C;display:flex;flex-direction:column;justify-content:flex-end">
+                  <span style="flex:0 0 {{ b.base }};background:#2A5993;display:block"></span>
+                </span>
+              </span>
+            </sc-for>
+          </div>
+          <div style="padding:10px 18px 0;display:flex;gap:18px">
+            <sc-for list="{{ fcBuild }}" as="b" hint-placeholder-count="3">
+              <span style="flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:3px;text-align:center">
+                <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:14.5px;line-height:1.2;color:#131516">{{ b.role }}</span>
+                <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:13.5px;line-height:1.35;color:#6B7280">{{ b.delta }}</span>
+              </span>
+            </sc-for>
+          </div>
+          <div style="margin-top:14px;border-top:1px solid #F0F0F0;padding:11px 18px;display:flex;align-items:center;gap:9px">
+            <span style="width:11px;height:11px;flex:0 0 auto;background:#2A5993;display:block"></span>
+            <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:14.5px;color:#6B7280">$3,595 of every build is labor and shop supplies</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#fff;border:0.77px solid #E5E7EB;border-radius:14px;overflow:hidden">
+        
+        <div style="border-bottom:1px solid #F0F0F0;padding:13px 18px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+          <h2 style="margin:0;font-family:'DM Sans',sans-serif;font-weight:600;font-size:21px;color:#00274C">When cars come due for replacement</h2>
+          <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;color:#6B7280">All 102 leased vehicles &middot; click a block to see which ones</span>
+        </div>
+        <div style="padding:20px 18px 18px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;width:100%;gap:2px">
+            <sc-for list="{{ fcTimeline }}" as="t" hint-placeholder-count="4">
+              <button type="button" onClick="{{ t.go }}" style="width:{{ t.pct }};border:0;border-bottom:{{ t.bd }};background:transparent;padding:0;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;gap:7px;min-width:0">
+                <span style="height:46px;border-radius:8px;background:{{ t.c }};display:flex;align-items:center;justify-content:center;width:100%">
+                  <span style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:23px;color:#fff">{{ t.n }}</span>
+                </span>
+                <span style="height:7px"></span>
+              </button>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ dueTabs }}" as="d" hint-placeholder-count="4">
+              <button type="button" onClick="{{ d.go }}" style="border:1px solid {{ d.c }};border-radius:999px;background:{{ d.bg }};color:{{ d.fg }};padding:8px 16px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;font-size:15px;display:flex;align-items:baseline;gap:8px">
+                {{ d.label }}
+                <span style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:17px">{{ d.n }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="border-top:1px solid #F0F0F0;display:flex;flex-wrap:wrap">
+          <div style="flex:1 1 300px;min-width:0;border-right:1px solid #F0F0F0;padding:18px;display:flex;flex-direction:column;gap:14px">
+            <span style="display:flex;flex-direction:column;gap:4px">
+              <span style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:26px;line-height:1.1;color:{{ dueC }}">{{ dueTitle }}</span>
+              <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:15px;color:#6B7280">{{ dueRange }}</span>
+            </span>
+            <span style="display:flex;gap:26px;flex-wrap:wrap">
+              <span style="display:flex;flex-direction:column;gap:3px">
+                <span style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:34px;line-height:1;color:#00274C">{{ dueN }}</span>
+                <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;color:#6B7280">vehicles</span>
+              </span>
+              <span style="display:flex;flex-direction:column;gap:3px">
+                <span style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:34px;line-height:1;color:#00274C">{{ dueCost }}</span>
+                <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;color:#6B7280">a year in lease and upkeep</span>
+              </span>
+            </span>
+            <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:15.5px;line-height:1.45;color:#131516">{{ dueSay }}</span>
+            <span style="display:flex;flex-direction:column;gap:9px;border-top:1px solid #F0F0F0;padding-top:13px">
+              <sc-for list="{{ dueUnits }}" as="u" hint-placeholder-count="4">
+                <span style="display:grid;grid-template-columns:150px minmax(0,1fr) 26px;align-items:center;gap:10px">
+                  <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:14.5px;color:#131516;min-width:0">{{ u.u }}</span>
+                  <span style="height:10px;background:#F0F0F0;display:block;position:relative">
+                    <span style="position:absolute;left:0;top:0;bottom:0;width:{{ u.pct }};background:{{ dueC }}"></span>
+                  </span>
+                  <span style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:16px;color:#6B7280;text-align:right">{{ u.n }}</span>
+                </span>
+              </sc-for>
+            </span>
+          </div>
+          <div style="flex:1 1 380px;min-width:0;display:flex;flex-direction:column">
+            <div style="border-bottom:1px solid #F0F0F0;padding:11px 18px;display:grid;grid-template-columns:70px minmax(0,1fr) 104px;gap:10px;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#6B7280">
+              <span>Veh ID</span><span>Unit</span><span style="text-align:right">Lease ends</span>
+            </div>
+            <div style="height:312px;overflow-y:auto">
+              <sc-for list="{{ dueRows }}" as="r" hint-placeholder-count="8">
+                <div style="border-bottom:1px solid #F0F0F0;padding:10px 18px;display:grid;grid-template-columns:70px minmax(0,1fr) 104px;align-items:center;gap:10px">
+                  <span style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:18px;color:#00274C">#{{ r.id }}</span>
+                  <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:15px;color:#131516;min-width:0">{{ r.unit }}</span>
+                  <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:15px;color:#6B7280;text-align:right">{{ r.when }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#fff;border:0.77px solid #E5E7EB;border-radius:14px;overflow:hidden">
+        
+        <div style="border-bottom:1px solid #F0F0F0;padding:13px 18px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+          <h2 style="margin:0;font-family:'DM Sans',sans-serif;font-weight:600;font-size:21px;color:#00274C">How much we can actually forecast</h2>
+          <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;color:#6B7280">Where the records are complete, and where they are not</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:#F0F0F0">
+          <sc-for list="{{ fcCoverage }}" as="c" hint-placeholder-count="4">
+            <div style="background:#fff;padding:16px 18px;display:flex;flex-direction:column;gap:9px;min-width:0">
+              <span style="display:flex;align-items:baseline;gap:10px;min-width:0">
+                <span style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:30px;line-height:1;color:{{ c.c }}">{{ c.pct }}</span>
+                <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:15.5px;line-height:1.2;color:#131516;min-width:0">{{ c.label }}</span>
+              </span>
+              <span style="height:12px;background:#F0F0F0;display:block;position:relative">
+                <span style="position:absolute;left:0;top:0;bottom:0;width:{{ c.pct }};background:{{ c.c }}"></span>
+              </span>
+              <span style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+                <span style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;color:#131516;white-space:nowrap">{{ c.have }} of {{ c.of }}</span>
+                <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;color:#6B7280">{{ c.note }}</span>
+              </span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <p style="margin:0;font-size:12.5px;line-height:1.55;color:#9CA3AF;max-width:96ch">Phase one covers purchasing, maintenance and notification. Figures are read live from the records in this portal and are only as current as those records.</p>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600},&quot;showNotice&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;unitColumns&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:3,&quot;min&quot;:2,&quot;max&quot;:4,&quot;tsType&quot;:&quot;number&quot;}}">
+const CH={ok:['#EDF7F1','#2A7D46','#CDE7D8'],pend:['#FDF4DC','#92610A','#F0DFB4'],crit:['#FDECEC','#C0362C','#F5CFCB'],blue:['#E8EEF7','#00274C','#C5D9EF']};
+const OOS='#C0362C', PEND='#92610A', OK='#2A7D46', NAVY='#00274C';
+
+const DUE=[
+  {key:'a',label:'Past due',range:'Apr 2025 to Jun 2026',n:11,pct:'10.8%',c:OOS,cost:'$134,244',say:'These eleven should already have been replaced.',rows:[{id:'0204',unit:'Michigan Medicine',when:'Apr 2025'},{id:'0078',unit:'DPSS Police',when:'Aug 2025'},{id:'0157',unit:'Michigan Medicine',when:'Aug 2025'},{id:'0177',unit:'Michigan Medicine',when:'Aug 2025'},{id:'0344',unit:'Michigan Medicine',when:'Aug 2025'},{id:'0555',unit:'DPSS Police',when:'Aug 2025'},{id:'0557',unit:'DPSS Police',when:'Sep 2025'},{id:'0552',unit:'DPSS Police',when:'Oct 2025'},{id:'0558',unit:'DPSS Police',when:'Dec 2025'},{id:'0186',unit:'Community Engagement',when:'May 2026'},{id:'0457',unit:'Housing Security',when:'Jun 2026'}],units:[{"u":"DPSS Police","n":5,"pct":"45%"},{"u":"Michigan Medicine","n":4,"pct":"36%"},{"u":"Community Engagement","n":1,"pct":"9%"},{"u":"Housing Security","n":1,"pct":"9%"}]},
+  {key:'b',label:'Next 12 months',range:'Feb 2027 to Jul 2027',n:11,pct:'10.8%',c:PEND,cost:'$122,520',say:'Order these now to have them on the road in time.',rows:[{id:'0029',unit:'Michigan Medicine',when:'Feb 2027'},{id:'0158',unit:'Michigan Medicine',when:'Feb 2027'},{id:'0320',unit:'Michigan Medicine',when:'Feb 2027'},{id:'0215',unit:'Housing Security',when:'Feb 2027'},{id:'0304',unit:'Michigan Medicine',when:'Feb 2027'},{id:'0233',unit:'Michigan Medicine',when:'Feb 2027'},{id:'0227',unit:'Dearborn Police',when:'Apr 2027'},{id:'0056',unit:'Protective Security',when:'Jun 2027'},{id:'0225',unit:'Dearborn Police',when:'Jun 2027'},{id:'0008',unit:'Housing Security',when:'Jul 2027'},{id:'0401',unit:'Housing Security',when:'Jul 2027'}],units:[{"u":"Michigan Medicine","n":5,"pct":"45%"},{"u":"Housing Security","n":3,"pct":"27%"},{"u":"Dearborn Police","n":2,"pct":"18%"},{"u":"Protective Security","n":1,"pct":"9%"}]},
+  {key:'c',label:'1 to 2 years out',range:'Sep 2027 to Aug 2028',n:18,pct:'17.6%',c:'#2A5993',cost:'$193,218',say:'Enough lead time to bid the package properly.',rows:[{id:'0166',unit:'Housing Security',when:'Sep 2027'},{id:'0363',unit:'DPSS Police',when:'Nov 2027'},{id:'0468',unit:'Housing Security',when:'Dec 2027'},{id:'0074',unit:'Museum Security',when:'Dec 2027'},{id:'0079',unit:'DPSS Police',when:'Feb 2028'},{id:'0103',unit:'DPSS Police',when:'Mar 2028'},{id:'0108',unit:'DPSS Police',when:'Mar 2028'},{id:'0439',unit:'DPSS Police',when:'Mar 2028'},{id:'0556',unit:'DPSS Police',when:'Mar 2028'},{id:'0151',unit:'Protective Security',when:'Mar 2028'},{id:'0080',unit:'DPSS Police',when:'Mar 2028'},{id:'0109',unit:'DPSS Police',when:'May 2028'},{id:'0053',unit:'DPSS Police',when:'May 2028'},{id:'0427',unit:'DPSS Police',when:'May 2028'},{id:'0179',unit:'Physical Security',when:'Jun 2028'},{id:'0010',unit:'DPSS Police',when:'Jun 2028'},{id:'0102',unit:'DPSS Police',when:'Jul 2028'},{id:'0112',unit:'Technology Services',when:'Aug 2028'}],units:[{"u":"DPSS Police","n":12,"pct":"67%"},{"u":"Housing Security","n":2,"pct":"11%"},{"u":"Museum Security","n":1,"pct":"6%"},{"u":"Protective Security","n":1,"pct":"6%"},{"u":"Physical Security","n":1,"pct":"6%"},{"u":"Technology Services","n":1,"pct":"6%"}]},
+  {key:'d',label:'More than 2 years',range:'Sep 2028 to Aug 2031',n:62,pct:'60.8%',c:OK,cost:'$833,067',say:'On term. Nothing to decide yet.',rows:[{id:'0234',unit:'DPSS Police',when:'Sep 2028'},{id:'0183',unit:'Dispatch',when:'Jan 2029'},{id:'0314',unit:'DPSS Police',when:'Mar 2029'},{id:'0322',unit:'DPSS Police',when:'Mar 2029'},{id:'0402',unit:'DPSS Police',when:'Apr 2029'},{id:'0319',unit:'DPSS Police',when:'Apr 2029'},{id:'0310',unit:'DPSS Police',when:'Apr 2029'},{id:'0230',unit:'Protective Security',when:'May 2029'},{id:'0038',unit:'DPSS Police',when:'Jun 2029'},{id:'1174',unit:'DPSS Police',when:'Aug 2029'},{id:'1278',unit:'Technology Services',when:'Sep 2029'},{id:'1014',unit:'Michigan Medicine',when:'Sep 2029'},{id:'0287',unit:'Dearborn Marygrove',when:'Sep 2029'},{id:'0284',unit:'Dearborn Marygrove',when:'Oct 2029'},{id:'0128',unit:'Michigan Medicine',when:'Oct 2029'},{id:'0021',unit:'Michigan Medicine',when:'Oct 2029'},{id:'0041',unit:'Protective Security',when:'Oct 2029'},{id:'0091',unit:'Protective Security',when:'Oct 2029'},{id:'0105',unit:'Michigan Medicine',when:'Oct 2029'},{id:'0236',unit:'Michigan Medicine',when:'Oct 2029'},{id:'0240',unit:'Michigan Medicine',when:'Oct 2029'},{id:'0251',unit:'Michigan Medicine',when:'Oct 2029'},{id:'0163',unit:'Technology Services',when:'Oct 2029'},{id:'0326',unit:'Michigan Medicine',when:'Oct 2029'},{id:'0292',unit:'Michigan Medicine',when:'Oct 2029'},{id:'0145',unit:'Physical Security',when:'Dec 2029'},{id:'1178',unit:'Dearborn Police',when:'Dec 2029'},{id:'0198',unit:'Dearborn Police',when:'Jan 2030'},{id:'0092',unit:'Michigan Medicine',when:'Jan 2030'},{id:'0277',unit:'Housing Security',when:'Jan 2030'},{id:'0195',unit:'Dearborn Police',when:'Feb 2030'},{id:'0170',unit:'Physical Security',when:'Feb 2030'},{id:'0270',unit:'Housing Security',when:'Apr 2030'},{id:'0275',unit:'Physical Security',when:'Apr 2030'},{id:'0333',unit:'Community Engagement',when:'Apr 2030'},{id:'0156',unit:'DPSS Police',when:'May 2030'},{id:'0438',unit:'DPSS Police',when:'May 2030'},{id:'1354',unit:'DPSS Police',when:'Jun 2030'},{id:'0368',unit:'Dearborn Marygrove',when:'Sep 2030'},{id:'0062',unit:'DPSS Division',when:'Sep 2030'},{id:'0388',unit:'Dearborn Marygrove',when:'Sep 2030'},{id:'0389',unit:'Dearborn Police',when:'Oct 2030'},{id:'0002',unit:'DPSS Police',when:'Oct 2030'},{id:'0381',unit:'Michigan Medicine',when:'Oct 2030'},{id:'0393',unit:'MM Guest Services',when:'Oct 2030'},{id:'0365',unit:'Dearborn Police',when:'Nov 2030'},{id:'0390',unit:'Michigan Medicine',when:'Nov 2030'},{id:'0392',unit:'MM Guest Services',when:'Nov 2030'},{id:'0025',unit:'DPSS Police',when:'Nov 2030'},{id:'0394',unit:'DPSS Police',when:'Jan 2031'},{id:'0395',unit:'DPSS Police',when:'Jan 2031'},{id:'0396',unit:'DPSS Police',when:'Jan 2031'},{id:'0400',unit:'DPSS Police',when:'Jan 2031'},{id:'0200',unit:'Michigan Medicine',when:'Feb 2031'},{id:'0125',unit:'DPSS Police',when:'Mar 2031'},{id:'0012',unit:'Protective Security',when:'Apr 2031'},{id:'0403',unit:'DPSS Police',when:'May 2031'},{id:'0404',unit:'DPSS Police',when:'May 2031'},{id:'0405',unit:'DPSS Police',when:'May 2031'},{id:'0406',unit:'DPSS Police',when:'May 2031'},{id:'0188',unit:'Protective Security',when:'May 2031'},{id:'1588',unit:'Technology Services',when:'Aug 2031'}],units:[{"u":"DPSS Police","n":22,"pct":"35%"},{"u":"Michigan Medicine","n":13,"pct":"21%"},{"u":"Protective Security","n":5,"pct":"8%"},{"u":"Dearborn Police","n":5,"pct":"8%"},{"u":"Dearborn Marygrove","n":4,"pct":"6%"},{"u":"Technology Services","n":3,"pct":"5%"},{"u":"Physical Security","n":3,"pct":"5%"},{"u":"Housing Security","n":2,"pct":"3%"},{"u":"MM Guest Services","n":2,"pct":"3%"},{"u":"Dispatch","n":1,"pct":"2%"},{"u":"Community Engagement","n":1,"pct":"2%"},{"u":"DPSS Division","n":1,"pct":"2%"}]}
+];
+const DUEBY=Object.fromEntries(DUE.map(d=>[d.key,d]));
+
+
+const ROWS=[
+ {unit:'225',what:'Service overdue',where:'Dearborn · Security patrol',status:'Out of service',stc:'crit',age:'11 days',cat:'oos'},
+ {unit:'394',what:'At vendor, no return date',where:'Ann Arbor · Police patrol',status:'At vendor',stc:'crit',age:'10 days',cat:'oos'},
+ {unit:'411',what:'At A2 Fleet Services',where:'Ann Arbor · Police patrol',status:'Out of service',stc:'crit',age:'10 days',cat:'oos'},
+ {unit:'422',what:'Awaiting parts',where:'Ann Arbor · Utility',status:'Out of service',stc:'crit',age:'24 days',cat:'oos'},
+ {unit:'540',what:'Collision repair, no estimate',where:'Ann Arbor · Police patrol',status:'Out of service',stc:'crit',age:'17 days',cat:'oos'},
+ {unit:'368',what:'Rifle mount release, accessory mode',where:'Dearborn · Police patrol',status:'Safety hold',stc:'crit',age:'held',cat:'faults'},
+ {unit:'388',what:'Rifle mount release, accessory mode',where:'Dearborn · Police patrol',status:'Safety hold',stc:'crit',age:'held',cat:'faults'},
+ {unit:'395',what:'Rifle mount release, accessory mode',where:'Ann Arbor · Police patrol',status:'Safety hold',stc:'crit',age:'held',cat:'faults'},
+ {unit:'396',what:'Rifle mount release, accessory mode',where:'Ann Arbor · Police patrol',status:'Safety hold',stc:'crit',age:'held',cat:'faults'},
+ {unit:'227',what:'Replacement due 1 December',where:'Dearborn · Police patrol',status:'Due soon',stc:'pend',age:'3 mo',cat:'due'},
+ {unit:'225',what:'Replacement due within 8 months',where:'Dearborn · Security patrol',status:'Due soon',stc:'pend',age:'8 mo',cat:'due'},
+ {unit:'531',what:'Preventative maintenance booked',where:'Ann Arbor · CIU',status:'Service booked',stc:'pend',age:'10 days',cat:'due'},
+ {unit:'078',what:'Plate shared with unit 403',where:'Ann Arbor · Police patrol',status:'Record gap',stc:'pend',age:'open',cat:'records'},
+ {unit:'403',what:'No VIN recorded',where:'Ann Arbor · Police patrol',status:'Record gap',stc:'pend',age:'open',cat:'records'},
+ {unit:'404',what:'No VIN recorded',where:'Ann Arbor · Police patrol',status:'Record gap',stc:'pend',age:'open',cat:'records'},
+ {unit:'365',what:'No cost figure, no maintenance log',where:'Dearborn · Police K-9',status:'Record gap',stc:'pend',age:'open',cat:'records'},
+ {unit:'514',what:'Disposed in August, still on the shift board',where:'Flint · Pool',status:'Record gap',stc:'pend',age:'open',cat:'records'}
+];
+
+const UNITS=[
+ {name:'Ann Arbor UMPD',n:42,open:'2 need action'},
+ {name:'Ann Arbor Parking',n:7,open:'Clear'},
+ {name:'Dearborn',n:17,open:'3 need action'},
+ {name:'Flint',n:25,open:'1 need action'},
+ {name:'Michigan Medicine Security',n:23,open:'No lease dates on file'},
+ {name:'Protective Services',n:8,open:'Workbook outstanding'},
+ {name:'Housing Security',n:8,open:'Clear'},
+ {name:'Museum Security',n:1,open:'Clear'},
+ {name:'Guest Services · MM',n:2,open:'Clear'}
+];
+
+const ROLE_HOME={officer:'./Officer Home.dc.html',supervisor:'./Supervisor Home.dc.html'};
+const ROLE_NAV={
+  officer:[{label:'Home',href:'./Officer Home.dc.html'},{label:'Assignments',href:'./Shift Assignments.dc.html'}],
+  supervisor:[{label:'Home',href:'./Supervisor Home.dc.html'},{label:'Overview',href:'./Overview.dc.html'},
+    {label:'Budget Forecast',href:'./Budget Forecast.dc.html'},{label:'Ordering',href:'./Vehicle Ordering.dc.html'},
+    {label:'Service Calendar',href:'./Service Calendar.dc.html'},{label:'Assignments',href:'./Shift Assignments.dc.html'}]
+};
+function navFor(role,current){
+  return (ROLE_NAV[role]||ROLE_NAV.officer).map(n=>({label:n.label,href:n.href,
+    style:'font-size:14px;white-space:nowrap;'+(n.label===current?'font-weight:700;color:#00274C;':'font-weight:500;color:#6B7280;')}));
+}
+function setStoredRole(role){try{localStorage.setItem('dpss-role',role);}catch(e){}}
+
+class Component extends DCLogic {
+  state={tab:'All',query:'',noticeOpen:(()=>{try{return sessionStorage.getItem('dpss-alert-dismissed')!=='1'}catch(e){return true}})(),expanded:false};
+
+  componentDidMount(){setStoredRole('supervisor');}
+
+  arc(from,to){
+    const r=94,c=100,rad=a=>(a-90)*Math.PI/180;
+    const x1=c+r*Math.cos(rad(from)),y1=c+r*Math.sin(rad(from));
+    const x2=c+r*Math.cos(rad(to)),y2=c+r*Math.sin(rad(to));
+    return 'M '+c+' '+c+' L '+x1.toFixed(2)+' '+y1.toFixed(2)+
+      ' A '+r+' '+r+' 0 '+((to-from>180)?1:0)+' 1 '+x2.toFixed(2)+' '+y2.toFixed(2)+' Z';
+  }
+
+  renderVals(){
+    const s=this.state, q=s.query.trim().toLowerCase();
+    const catOf={'Out of service':'oos','Safety holds':'faults','Falls due':'due','Record gaps':'records','Available':'__none'};
+    const rows=ROWS.filter(r=>(s.tab==='All'||r.cat===catOf[s.tab])
+      &&(!q||(r.unit+' '+r.what+' '+r.where).toLowerCase().includes(q)))
+      .map(r=>{const c=CH[r.stc];
+        return Object.assign({},r,{bar:c[1],chipBg:c[0],chipFg:c[1],chipBc:c[2]});});
+
+    const count=c=>ROWS.filter(r=>r.cat===c).length;
+
+    const seg=[
+      {label:'Available',n:132-ROWS.length,c:OK,sub:'On the road, nothing open against them',cat:null},
+      {label:'Falls due',n:count('due'),c:'#2A5993',sub:'Service or replacement approaching',cat:'due'},
+      {label:'Record gaps',n:count('records'),c:NAVY,sub:'Shared plates, missing VINs, impossible dates',cat:'records'},
+      {label:'Out of service',n:count('oos'),c:OOS,sub:'Off the road today',cat:'oos'},
+      {label:'Safety holds',n:count('faults'),c:PEND,sub:'Rifle mount release, held to 30 Sep',cat:'faults'}
+    ];
+    const total=seg.reduce((a,g)=>a+g.n,0);
+    let cursor=0;
+    const slices=seg.map(g=>{
+      const from=cursor, to=cursor+g.n/total*360; cursor=to;
+      const mid=(from+to)/2-90, rad=mid*Math.PI/180, out=s.hov===g.label?7:0;
+      const dim=s.hov&&s.hov!==g.label;
+      return {d:this.arc(from,to),fill:dim?'#E5E7EB':g.c,
+        tf:'translate('+(Math.cos(rad)*out).toFixed(2)+' '+(Math.sin(rad)*out).toFixed(2)+')',
+        op:(s.hov===g.label||s.tab==='All'||s.tab===g.label)?1:.28,
+        enter:()=>this.setState({hov:g.label}),
+        leave:()=>this.setState({hov:null}),
+        go:()=>this.setState({tab:s.tab===g.label?'All':g.label})};
+    });
+    const legend=seg.map(g=>({n:g.n,label:g.label,sub:g.sub,c:g.c,
+      bg:s.tab===g.label?'#F3F4F6':'#fff',
+      go:()=>this.setState({tab:s.tab===g.label?'All':g.label})}));
+
+    return {
+      today:'Monday, 14 September 2026',
+      noticeOpen:s.noticeOpen&&(this.props.showNotice??true),
+      unitCols:this.props.unitColumns??3,
+      dismissNotice:()=>{(()=>{try{sessionStorage.setItem('dpss-alert-dismissed','1')}catch(e){}})();this.setState({noticeOpen:false});},
+      slices, legend,
+      centerN:(s.hov||s.tab!=='All')?seg.find(g=>g.label===(s.hov||s.tab)).n:132,
+      centerLabel:(s.hov||s.tab!=='All')?(s.hov||s.tab).toLowerCase():'vehicles',
+      listTitle:s.tab==='All'?'Open items':s.tab,
+      filtered:s.tab!=='All',
+      clearSlice:()=>this.setState({tab:'All'}),
+      clearLabel:'Clear filter',
+      rows, rowsEmpty:rows.length===0,
+      listCount:rows.length+' open',
+      listMax:s.expanded?'none':'820px',
+      expandLabel:s.expanded?'Collapse':'Expand',
+      expandHint:s.expanded?('All '+rows.length+' shown'):(rows.length>6?('Showing 6 of '+rows.length+' — scroll inside, or expand'):('All '+rows.length+' shown')),
+      toggleExpand:()=>this.setState({expanded:!s.expanded}),
+      query:s.query,
+      setQuery:e=>this.setState({query:e.target.value}),
+      showCurrent:false,
+      showForecast:true,
+      role:'supervisor',
+      navLinks:navFor('supervisor','Budget Forecast'),
+      switchRole:e=>{const next=e.target.value;setStoredRole(next);if(next!=='supervisor')window.location.href=ROLE_HOME[next];},
+      curStyle:'cursor:pointer;font-family:inherit;border-radius:999px;padding:9px 20px;font-size:14px;font-weight:600;white-space:nowrap;'+
+        ((s.view||'current')==='current'?'background:#00274C;border:0.77px solid #00274C;color:#fff;':'background:#fff;border:0.77px solid #E5E7EB;color:#374151;'),
+      fcStyle:'cursor:pointer;font-family:inherit;border-radius:999px;padding:9px 20px;font-size:14px;font-weight:600;white-space:nowrap;'+
+        (s.view==='forecast'?'background:#00274C;border:0.77px solid #00274C;color:#fff;':'background:#fff;border:0.77px solid #E5E7EB;color:#374151;'),
+      fcStats:[
+        {v:'$1.28M',label:'What the fleet costs a year',note:'Lease plus maintenance, 102 vehicles',c:NAVY},
+        {v:'11',label:'Already past due',note:'Oldest expired April 2025',c:OOS},
+        {v:'22',label:'Due in the next year',note:'The 11 above, plus 11 more',c:PEND},
+        {v:'$19,954',label:'To build one patrol car',note:'Quoted, September 2025',c:NAVY}
+      ],
+      fcTimeline:DUE.map(d=>({key:d.key,n:d.n,label:d.label,pct:d.pct,c:d.c,
+        bd:(s.due||'a')===d.key?'3px solid #131516':'3px solid transparent',
+        go:()=>this.setState({due:d.key})})),
+      dueTabs:DUE.map(d=>({key:d.key,label:d.label,range:d.range,n:d.n,c:d.c,
+        bg:(s.due||'a')===d.key?d.c:'#fff',
+        fg:(s.due||'a')===d.key?'#fff':'#131516',
+        go:()=>this.setState({due:d.key})})),
+      dueTitle:DUEBY[s.due||'a'].label,
+      dueRange:DUEBY[s.due||'a'].range,
+      dueN:DUEBY[s.due||'a'].n,
+      dueCost:DUEBY[s.due||'a'].cost,
+      dueSay:DUEBY[s.due||'a'].say,
+      dueC:DUEBY[s.due||'a'].c,
+      dueRows:DUEBY[s.due||'a'].rows,
+      dueUnits:DUEBY[s.due||'a'].units,
+      fcBuild:[
+        {role:'Patrol Tahoe',cost:'$19,954',h:'86%',base:'18%',delta:'Highest'},
+        {role:'Supervisor Tahoe',cost:'$18,952',h:'81.7%',base:'19%',delta:'$1,002 less \u2014 no cage'},
+        {role:'Patrol Explorer',cost:'$18,477',h:'79.6%',base:'19%',delta:'$1,477 less \u2014 smaller vehicle'}
+      ],
+      fcCoverage:[
+        {label:'Vehicles we can date',have:102,of:144,pct:'71%',c:OK,note:'Transportation has the lease term'},
+        {label:'Vehicles with an outfitting cost on file',have:31,of:144,pct:'22%',c:OOS,note:'Missing on the other 113'},
+        {label:'Roles with a real price quote',have:3,of:9,pct:'33%',c:PEND,note:'One vendor, quotes now lapsed'},
+        {label:'Computer replacements budgeted',have:0,of:102,pct:'0%',c:OOS,note:'Replaced every 3 years, lease runs 5'}
+      ],
+      fcUnits:[
+        {name:'DPSS Police',n:39,cost:'$504,448',pct:'100%'},
+        {name:'Michigan Medicine Security',n:22,cost:'$278,717',pct:'55%'},
+        {name:'Housing Security',n:8,cost:'$96,534',pct:'19%'},
+        {name:'Protective Security Service',n:7,cost:'$95,052',pct:'19%'},
+        {name:'Dearborn Police',n:7,cost:'$93,534',pct:'19%'},
+        {name:'Dearborn Marygrove Operations',n:4,cost:'$59,641',pct:'12%'},
+        {name:'Technology Services',n:4,cost:'$38,028',pct:'8%'},
+        {name:'Physical Security',n:4,cost:'$34,896',pct:'7%'}
+      ],
+      fcRates:[
+        {role:'Patrol Tahoe',note:'EST1216 \u00b7 cage, partition mount rack, trunk tray',cost:'$19,954'},
+        {role:'Supervisor Tahoe',note:'EST1217 \u00b7 no cage, self-supporting rack',cost:'$18,952'},
+        {role:'Patrol Explorer',note:'EST1226 \u00b7 Interceptor Utility, 2025',cost:'$18,477'}
+      ],
+      fcExp:[
+        {n:11,label:'Overdue',note:'Lease term already run. Three Michigan Medicine vehicles expired August 2025',pct:'11%',c:OOS},
+        {n:11,label:'Within 12 months',note:'Six Michigan Medicine, three Housing, one Dearborn, one Protective',pct:'11%',c:PEND},
+        {n:18,label:'12 to 24 months',note:'Ten DPSS Police. The first year with room to plan the bid',pct:'18%',c:'#2A5993'},
+        {n:62,label:'Beyond 24 months',note:'On term, nothing to forecast yet',pct:'61%',c:OK}
+      ],
+      fcGaps:[
+        {what:'Upfitting rates come from one bidder',detail:'Equipment is bid among three approved upfitters. Both Arrowhead quotes lapsed in autumn 2025, so the three totals are a reference build, not a rate card.',bar:OOS},
+        {what:'Police Eq recorded on 31 of 144 vehicles',detail:'Where it is recorded it runs $43.51 to $468.90 a month. On the other 113 the outfitting charge is simply absent from the lease line.',bar:OOS},
+        {what:'Computers replace on a 3-year cycle against a 60-month lease',detail:'Every MDC is replaced mid-lease. No line in this forecast accounts for it, and no forecast lets Technology Services order in bulk.',bar:PEND},
+        {what:'Ann Arbor lease dates cannot be read as expirations',detail:'21 of 40 records show dates that predate the model year. The figures above use Transportation\u2019s file, which is the only source with a usable term on every leased vehicle.',bar:PEND}
+      ],
+      dates:[
+        {what:'Unit return workbooks',when:'16 days late',who:'Outstanding: Ann Arbor, Michigan Medicine, Flint, Protective Services',bar:OOS},
+        {what:'Packages technically settled',when:'9 days late',who:'Everything the upfitter has to confirm',bar:OOS},
+        {what:'Approved packages to Transportation',when:'26 days',who:'Renee Jordan · the only hard external date',bar:NAVY}
+      ],
+      pipeline:[
+        {unit:'227',pct:'94%',left:'3 mo left',c:PEND},
+        {unit:'225',pct:'87%',left:'8 mo left',c:PEND},
+        {unit:'368',pct:'40%',left:'36 mo left',c:OK},
+        {unit:'287',pct:'38%',left:'37 mo left',c:OK}
+      ],
+      units:UNITS.map(u=>Object.assign({},u,{
+        openFg:u.open==='Clear'?'#2A7D46':'#C0362C'}))
+    };
+  }
+}
+</script>
+</body>
+</html>

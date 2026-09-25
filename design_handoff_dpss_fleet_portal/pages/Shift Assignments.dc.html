@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900&amp;display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #F7F8FA; -webkit-font-smoothing: antialiased; }
+  a { color: #00274C; text-decoration: none; }
+  a:hover { color: #2A5993; }
+</style>
+</helmet>
+<div style="font-family: 'DM Sans', sans-serif; background: #F7F8FA; min-height: 100vh;">
+
+  <div style="background: #fff; border-bottom: 1px solid #E5E7EB;">
+    <div style="background: #FAFAFA; border-bottom: 1px solid #F0F0F0; display: flex; align-items: center; gap: 8px; padding: 6px 40px;">
+      <span style="font-size: 12px; line-height: 18px; color: #6B7280;">homeLocation</span>
+      <select onChange="{{ switchLoc }}" value="{{ loc }}" aria-label="Location" style="font-family: inherit; font-size: 12px; font-weight: 600; color: #00274C; background: transparent; border: none; padding: 2px 0; cursor: pointer;">
+        <option value="aa">Ann Arbor</option>
+        <option value="db">Dearborn</option>
+      </select>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 12px; line-height: 18px; color: #6B7280; white-space: nowrap;">Viewing as</span>
+        <select onChange="{{ switchRole }}" value="{{ role }}" style="font-family: inherit; font-size: 12px; font-weight: 600; color: #00274C; background: #fff; border: 1px solid #E5E7EB; border-radius: 999px; padding: 4px 12px; cursor: pointer;">
+          <option value="officer">Officer</option>
+          <option value="supervisor">Supervisor</option>
+        </select>
+      </div>
+    </div>
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 14px 40px; min-height: 67px; box-sizing: border-box;">
+      <span style="font-size: 18px; font-weight: 700; letter-spacing: 1.8px; color: #00274C; white-space: nowrap;">DPSS FLEET</span>
+      <div style="display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px 22px; min-width: 0;">
+        <sc-for list="{{ navLinks }}" as="n" hint-placeholder-count="2">
+          <a href="{{ n.href }}" style="{{ n.style }}">{{ n.label }}</a>
+        </sc-for>
+        <a href="#work-order" style="background: #00274C; color: #fff; border-radius: 999px; padding: 12px 26px; font-size: 14px; font-weight: 600; white-space: nowrap;" style-hover="background: #003A6E; color: #fff;">+ Work Order</a>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; justify-content: center;">
+    <div style="width: 100%; max-width: 1280px; padding: 48px 28px 88px; box-sizing: border-box; display: flex; flex-direction: column; gap: 22px;">
+
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex-wrap: wrap;">
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <div style="font-size: 13px; color: #6B7280;">{{ locSub }}</div>
+          <h1 style="margin: 0; font-size: 42px; font-weight: 800; line-height: 1.12; letter-spacing: -1px; color: #00274C;">Vehicle Assignments</h1>
+        </div>
+        <sc-if value="{{ isSupervisor }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; gap: 4px; background: #fff; border: 0.77px solid #E5E7EB; border-radius: 999px; padding: 4px;">
+            <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+              <button type="button" onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.label }}</button>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{ isOfficer }}" hint-placeholder-val="{{ false }}">
+        <div style="border-radius: 18px; background: #00274C; padding: 28px 32px; display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap;">
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <span style="align-self: flex-start; border-radius: 999px; background: #FFCB05; padding: 3px 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.66px; text-transform: uppercase; color: #131516;">{{ myBadge }}</span>
+            <span style="font-size: 80px; font-weight: 800; line-height: 1; letter-spacing: -2px; color: #FFCB05; margin-top: 10px;">{{ myUnit }}</span>
+            <span style="font-size: 18px; font-weight: 600; color: #fff;">{{ myShift }}</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px; max-width: 380px;">
+            <span style="font-size: 14px; font-weight: 700; color: #fff;">{{ myToday }}</span>
+            <span style="font-size: 13px; line-height: 20px; color: rgba(255,255,255,0.75);">Your supervisor records the vehicle and equipment you actually take at the start of each shift.</span>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showPeriods }}" hint-placeholder-val="{{ true }}">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;">
+          <sc-for list="{{ periods }}" as="p" hint-placeholder-count="3">
+            <button type="button" onClick="{{ p.pick }}" style="{{ p.style }}">
+              <span style="{{ p.labelStyle }}">{{ p.label }}</span>
+              <span style="{{ p.subStyle }}">{{ p.sub }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showPlan }}" hint-placeholder-val="{{ false }}">
+        <div style="position: sticky; top: 12px; z-index: 5; background: #fff; border: 0.77px solid #E5E7EB; border-radius: 16px; padding: 14px 16px 14px 22px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; box-shadow: 0 6px 20px rgba(0,39,76,0.06);">
+          <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0;">
+            <span style="{{ barTitleStyle }}">{{ barTitle }}</span>
+            <span style="font-size: 12px; line-height: 18px; color: #6B7280; text-wrap: pretty;">{{ barSub }}</span>
+          </div>
+          <sc-if value="{{ dirty }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button type="button" onClick="{{ discard }}" style="cursor: pointer; font-family: inherit; background: #fff; border: 0.77px solid #E5E7EB; color: #374151; border-radius: 999px; padding: 12px 18px; font-size: 13px; font-weight: 600; white-space: nowrap;" style-hover="border-color: #00274C;">Undo changes</button>
+              <button type="button" onClick="{{ post }}" style="cursor: pointer; font-family: inherit; border: none; border-radius: 999px; padding: 12px 22px; font-size: 14px; font-weight: 700; white-space: nowrap; background: #FFCB05; color: #00274C;">{{ postLabel }}</button>
+            </div>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ planEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="background: #fff; border: 0.77px solid #E5E7EB; border-radius: 16px; padding: 28px; display: flex; flex-direction: column; gap: 14px; align-items: flex-start;">
+            <span style="font-size: 20px; font-weight: 700; color: #00274C;">{{ emptyTitle }}</span>
+            <span style="font-size: 14px; line-height: 21px; color: #6B7280; max-width: 620px;">Build the week one row at a time: pick the officer, then their vehicle and equipment. The same week repeats for the whole period. Daily changes are made on the Daily roster.</span>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <sc-if value="{{ canSeed }}" hint-placeholder-val="{{ false }}">
+                <button type="button" onClick="{{ seedFromPrev }}" style="cursor: pointer; font-family: inherit; border: none; background: #00274C; color: #fff; border-radius: 999px; padding: 12px 22px; font-size: 14px; font-weight: 700;" style-hover="background: #003A6E;">{{ seedLabel }}</button>
+              </sc-if>
+              <button type="button" onClick="{{ startBlank }}" style="cursor: pointer; font-family: inherit; background: #fff; border: 0.77px solid #00274C; color: #00274C; border-radius: 999px; padding: 12px 22px; font-size: 14px; font-weight: 600;" style-hover="background: #F3F4F6;">Start blank</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ planReady }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 12px;">
+            <div style="max-width: 100%; overflow-x: auto;">
+              <div style="display: inline-flex; flex-wrap: nowrap; gap: 4px; background: #fff; border: 0.77px solid #E5E7EB; border-radius: 999px; padding: 4px;">
+                <sc-for list="{{ dayTabs }}" as="d" hint-placeholder-count="7">
+                  <button type="button" onClick="{{ d.pick }}" style="{{ d.style }}">{{ d.t }} <span style="{{ d.nStyle }}">{{ d.n }}</span></button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+              <span style="font-size: 12px; color: #6B7280; margin-right: 2px; white-space: nowrap;">Copy {{ dayName }} to</span>
+              <sc-for list="{{ copyDays }}" as="d" hint-placeholder-count="6">
+                <button type="button" onClick="{{ d.toggle }}" style="{{ d.style }}">{{ d.t }}</button>
+              </sc-for>
+              <button type="button" onClick="{{ doCopy }}" style="{{ copyBtnStyle }}">Copy</button>
+            </div>
+          </div>
+        </sc-if>
+      </sc-if>
+
+      <sc-if value="{{ showDaily }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <button type="button" onClick="{{ prevDay }}" aria-label="Previous day" style="cursor: pointer; font-family: inherit; width: 42px; height: 42px; border-radius: 999px; border: 0.77px solid #E5E7EB; background: #fff; font-size: 16px; color: #00274C;" style-hover="border-color: #00274C;">←</button>
+            <span style="min-width: 220px; text-align: center; font-size: 16px; font-weight: 700; color: #00274C;">{{ dateLabel }}</span>
+            <button type="button" onClick="{{ nextDay }}" aria-label="Next day" style="cursor: pointer; font-family: inherit; width: 42px; height: 42px; border-radius: 999px; border: 0.77px solid #E5E7EB; background: #fff; font-size: 16px; color: #00274C;" style-hover="border-color: #00274C;">→</button>
+            <button type="button" onClick="{{ goToday }}" style="{{ todayStyle }}">Today</button>
+          </div>
+          <span style="font-size: 12px; color: #6B7280;">{{ dailySource }}</span>
+        </div>
+        <sc-if value="{{ dailyEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="background: #fff; border: 0.77px solid #E5E7EB; border-radius: 16px; padding: 24px 28px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <span style="font-size: 14px; color: #6B7280; margin-right: 6px;">No roster for this date yet.</span>
+            <sc-if value="{{ canFromPlan }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ fromPlan }}" style="cursor: pointer; font-family: inherit; border: none; background: #00274C; color: #fff; border-radius: 999px; padding: 10px 18px; font-size: 13px; font-weight: 700;" style-hover="background: #003A6E;">{{ fromPlanLabel }}</button>
+            </sc-if>
+            <sc-if value="{{ canCopyPrev }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ copyPrev }}" style="cursor: pointer; font-family: inherit; background: #fff; border: 0.77px solid #00274C; color: #00274C; border-radius: 999px; padding: 10px 18px; font-size: 13px; font-weight: 600;" style-hover="background: #F3F4F6;">{{ copyPrevLabel }}</button>
+            </sc-if>
+            <sc-if value="{{ canJumpLatest }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ jumpLatest }}" style="cursor: pointer; font-family: inherit; background: #fff; border: 0.77px solid #E5E7EB; color: #374151; border-radius: 999px; padding: 10px 18px; font-size: 13px; font-weight: 600;" style-hover="border-color: #00274C;">{{ jumpLatestLabel }}</button>
+            </sc-if>
+          </div>
+        </sc-if>
+      </sc-if>
+
+      <sc-if value="{{ showBlocks }}" hint-placeholder-val="{{ false }}">
+        <sc-for list="{{ blocks }}" as="bk" hint-placeholder-count="3">
+          <div style="background: #fff; border: 0.77px solid #E5E7EB; border-radius: 16px; overflow-x: auto;">
+            <div style="min-width: 1060px;">
+              <div style="{{ bk.headStyle }}">
+                <span style="{{ bk.sw }}"></span>
+                <span style="font-size: 16px; font-weight: 700;">{{ bk.label }}</span>
+                <span style="font-size: 13px; font-weight: 500; opacity: 0.8;">{{ bk.hours }}</span>
+                <span style="margin-left: auto; font-size: 12px; font-weight: 600;">{{ bk.count }}</span>
+              </div>
+              <div style="display: grid; grid-template-columns: minmax(170px, 1.3fr) minmax(150px, 1fr) 96px 80px 80px minmax(150px, 1fr) minmax(0, 1.5fr) 36px; gap: 10px; padding: 10px 20px; border-bottom: 1px solid #F0F0F0; font-size: 11px; font-weight: 600; letter-spacing: 0.66px; text-transform: uppercase; color: #9CA3AF;">
+                <span>Officer</span><span>Vehicle</span><span>Taser</span><span>Rifle</span><span>Kit</span><span>Additional</span><span>Notes</span><span></span>
+              </div>
+              <sc-for list="{{ bk.rows }}" as="b" hint-placeholder-count="4">
+                <div style="{{ b.rowStyle }}">
+                  <select value="{{ b.n }}" onChange="{{ b.setN }}" aria-label="Officer" style="{{ b.nStyle }}">
+                    <sc-for list="{{ b.nameOpts }}" as="o" hint-placeholder-count="6">
+                      <option value="{{ o.v }}">{{ o.label }}</option>
+                    </sc-for>
+                  </select>
+                  <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0;">
+                    <select value="{{ b.u }}" onChange="{{ b.setU }}" aria-label="Vehicle" style="{{ b.uStyle }}">
+                      <sc-for list="{{ b.vehOpts }}" as="o" hint-placeholder-count="6">
+                        <option value="{{ o.v }}">{{ o.label }}</option>
+                      </sc-for>
+                    </select>
+                    <sc-if value="{{ b.canPartner }}" hint-placeholder-val="{{ false }}">
+                      <button type="button" onClick="{{ b.openPartner }}" style="align-self: flex-start; cursor: pointer; font-family: inherit; border: none; background: transparent; padding: 0 4px; font-size: 12px; font-weight: 600; color: #2A5993;" style-hover="text-decoration: underline;">+ Add second officer</button>
+                    </sc-if>
+                    <sc-if value="{{ b.isSecond }}" hint-placeholder-val="{{ false }}">
+                      <button type="button" onClick="{{ b.remove }}" style="align-self: flex-start; cursor: pointer; font-family: inherit; border: none; background: transparent; padding: 0 4px; font-size: 12px; font-weight: 600; color: #C0362C;" style-hover="text-decoration: underline;">Remove second officer</button>
+                    </sc-if>
+                    <sc-if value="{{ b.partnerOpen }}" hint-placeholder-val="{{ false }}">
+                      <div style="display: flex; align-items: center; gap: 4px;">
+                        <select value="" onChange="{{ b.addPartner }}" aria-label="Second officer" style="flex: 1; min-width: 0; font-family: inherit; font-size: 12px; font-weight: 600; border: 1px dashed #A9BFDD; border-radius: 999px; padding: 6px 10px; color: #2A5993; background: #fff; cursor: pointer;">
+                          <sc-for list="{{ b.partnerOpts }}" as="o" hint-placeholder-count="6">
+                            <option value="{{ o.v }}">{{ o.label }}</option>
+                          </sc-for>
+                        </select>
+                        <button type="button" onClick="{{ b.closePartner }}" aria-label="Cancel second officer" title="Cancel" style="flex: none; cursor: pointer; font-family: inherit; border: none; background: #F3F4F6; color: #374151; border-radius: 999px; width: 26px; height: 26px; font-size: 13px;" style-hover="background: #FDECEC; color: #C0362C;">×</button>
+                      </div>
+                    </sc-if>
+                  </div>
+                  <select value="{{ b.taser }}" onChange="{{ b.setTaser }}" aria-label="Taser" style="{{ b.taserStyle }}">
+                    <option value="">—</option>
+                    <option value="Assigned">Assigned</option>
+                    <option value="Loaner">Loaner</option>
+                  </select>
+                  <select value="{{ b.rifle }}" onChange="{{ b.setRifle }}" aria-label="Rifle" style="{{ b.rifleStyle }}">
+                    <sc-for list="{{ rifleOpts }}" as="o" hint-placeholder-count="6">
+                      <option value="{{ o.v }}">{{ o.label }}</option>
+                    </sc-for>
+                  </select>
+                  <select value="{{ b.kit }}" onChange="{{ b.setKit }}" aria-label="Kit" style="{{ b.kitStyle }}">
+                    <sc-for list="{{ kitOpts }}" as="o" hint-placeholder-count="6">
+                      <option value="{{ o.v }}">{{ o.label }}</option>
+                    </sc-for>
+                  </select>
+                  <select value="{{ b.duty }}" onChange="{{ b.setDuty }}" aria-label="Additional" style="width: 100%; font-family: inherit; font-size: 13px; font-weight: 600; border-radius: 999px; padding: 8px 12px; cursor: pointer; background: #fff; border: 1px solid #E5E7EB; color: #131516;">
+                    <sc-for list="{{ dutyOpts }}" as="o" hint-placeholder-count="6">
+                      <option value="{{ o.v }}">{{ o.label }}</option>
+                    </sc-for>
+                  </select>
+                  <span style="{{ b.noteStyle }}">{{ b.note }}</span>
+                  <button type="button" onClick="{{ b.remove }}" aria-label="Remove row" style="cursor: pointer; font-family: inherit; border: none; background: transparent; color: #9CA3AF; border-radius: 999px; width: 32px; height: 32px; font-size: 16px;" style-hover="background: #FDECEC; color: #C0362C;">×</button>
+                </div>
+              </sc-for>
+              <div style="display: grid; grid-template-columns: minmax(170px, 1.3fr) minmax(0, 1fr); gap: 10px; padding: 10px 20px; align-items: center;">
+                <select value="" onChange="{{ bk.add }}" aria-label="{{ bk.addAria }}" style="width: 100%; font-family: inherit; font-size: 13px; font-weight: 600; border: 1px dashed #A9BFDD; border-radius: 999px; padding: 9px 14px; color: #2A5993; background: #fff; cursor: pointer;">
+                  <sc-for list="{{ bk.addOpts }}" as="o" hint-placeholder-count="6">
+                    <option value="{{ o.v }}">{{ o.label }}</option>
+                  </sc-for>
+                </select>
+                <span style="font-size: 12px; color: #9CA3AF;">Pick an officer to add a row</span>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </sc-if>
+
+      <sc-if value="{{ showTs }}" hint-placeholder-val="{{ false }}">
+        <div style="background: #fff; border: 0.77px solid #E5E7EB; border-radius: 16px; padding: 14px 16px 14px 22px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <span style="{{ tsTitleStyle }}">{{ tsTitle }}</span>
+            <span style="font-size: 12px; line-height: 18px; color: #6B7280;">{{ tsSub }}</span>
+          </div>
+          <button type="button" onClick="{{ markEntered }}" style="{{ tsBtnStyle }}">{{ tsBtn }}</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showSheet }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 14px 24px; flex-wrap: wrap;">
+          <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <span style="font-size: 13px; color: #6B7280;">{{ sheetNote }}</span>
+            <sc-if value="{{ sheetHas }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; gap: 8px;">
+                <button type="button" onClick="{{ printSheet }}" style="cursor: pointer; font-family: inherit; background: #fff; border: 0.77px solid #00274C; color: #00274C; border-radius: 999px; padding: 9px 16px; font-size: 13px; font-weight: 600; white-space: nowrap;" style-hover="background: #F3F4F6;">Print / PDF</button>
+                <button type="button" onClick="{{ exportCsv }}" style="cursor: pointer; font-family: inherit; background: #fff; border: 0.77px solid #00274C; color: #00274C; border-radius: 999px; padding: 9px 16px; font-size: 13px; font-weight: 600; white-space: nowrap;" style-hover="background: #F3F4F6;">Export to Excel</button>
+              </div>
+            </sc-if>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <sc-for list="{{ legend }}" as="l" hint-placeholder-count="3">
+              <button type="button" onClick="{{ l.pick }}" style="{{ l.style }}">
+                <span style="{{ l.sw }}"></span>
+                <span style="font-weight: 700;">{{ l.label }}</span>
+                <span style="{{ l.hoursStyle }}">{{ l.hours }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+        <sc-if value="{{ sheetEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="background: #fff; border: 0.77px solid #E5E7EB; border-radius: 16px; padding: 28px; font-size: 14px; color: #6B7280;">{{ sheetEmptyText }}</div>
+        </sc-if>
+        <sc-if value="{{ sheetHas }}" hint-placeholder-val="{{ false }}">
+          <div style="background: #fff; border: 0.77px solid #E5E7EB; border-radius: 16px; overflow-x: auto;">
+            <div style="min-width: 1000px;">
+              <div style="display: grid; grid-template-columns: 150px repeat(7, minmax(0, 1fr)); background: #FAFAFA; border-bottom: 1px solid #F0F0F0;">
+                <span style="padding: 12px 18px; font-size: 11px; font-weight: 600; letter-spacing: 0.66px; text-transform: uppercase; color: #9CA3AF;">Vehicle</span>
+                <sc-for list="{{ dayHead }}" as="h" hint-placeholder-count="7">
+                  <span style="{{ h.style }}">{{ h.t }}</span>
+                </sc-for>
+              </div>
+              <sc-for list="{{ gridRows }}" as="r" hint-placeholder-count="8">
+                <div style="display: grid; grid-template-columns: 150px repeat(7, minmax(0, 1fr)); border-bottom: 1px solid #F0F0F0;">
+                  <div style="padding: 10px 18px; display: flex; align-items: center; gap: 6px; border-right: 1px solid #F0F0F0;">
+                    <span style="{{ r.unitStyle }}">{{ r.u }}</span>
+                    <sc-for list="{{ r.tags }}" as="tg" hint-placeholder-count="1">
+                      <span style="{{ tg.style }}">{{ tg.t }}</span>
+                    </sc-for>
+                  </div>
+                  <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="7">
+                    <div style="{{ c.style }}">
+                      <sc-for list="{{ c.chips }}" as="ch" hint-placeholder-count="1">
+                        <span title="{{ ch.title }}" style="{{ ch.style }}">{{ ch.name }}</span>
+                      </sc-for>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const ROLE_NAV = {
+  officer: [{ label: "Home", href: "./Officer Home.dc.html" }, { label: "Assignments", href: "./Shift Assignments.dc.html" }],
+  supervisor: [
+    { label: "Home", href: "./Supervisor Home.dc.html" }, { label: "Overview", href: "./Overview.dc.html" },
+    { label: "Budget Forecast", href: "./Budget Forecast.dc.html" }, { label: "Ordering", href: "./Vehicle Ordering.dc.html" },
+    { label: "Service Calendar", href: "./Service Calendar.dc.html" }, { label: "Assignments", href: "./Shift Assignments.dc.html" },
+  ],
+};
+const SHC = { d: { bg: "#D8F1F8", fg: "#0B5566", sw: "#3FB5D3" }, a: { bg: "#F8DDEE", fg: "#7A1F5C", sw: "#D14FA0" }, m: { bg: "#FFF1BF", fg: "#6B4A00", sw: "#F2C200" } };
+const LOCS = {
+  aa: { me: "ZAMORSKI", name: "Ann Arbor", sh: { d: ["Days", "0700–1700"], a: ["Afternoons", "1600–0200"], m: ["Midnights", "2200–0800"] }, overlap: true, reserved: { "25": "command", "405": "command" },
+    tags: { "79": "R", "80": "R", "156": "R", "363": "R", "394": "R", "395": "R", "396": "R", "400": "R", "103": "R", "556": "R", "406": "R", "431/558": "R", "438": "CE" } },
+  db: { me: "Maxey 846", name: "Dearborn", sh: { d: ["Days", ""], a: ["Noons", ""], m: ["Nights", ""] }, overlap: false, reserved: {}, tags: { "365": "K9" } },
+};
+const TAGC = { R: "background:#00274C;color:#fff;", CE: "background:#1F5E35;color:#fff;", K9: "background:#5B3A8C;color:#fff;" };
+const tagStyle = t => "border-radius:4px;font-size:10px;font-weight:700;padding:1px 5px;" + (TAGC[t] || TAGC.R);
+const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const DOWL = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const PERIODS = [
+  { id: "2026-fa", label: "Sep – Dec 2026", start: "2026-09-01", end: "2026-12-31" },
+  { id: "2027-wi", label: "Jan – Apr 2027", start: "2027-01-01", end: "2027-04-30" },
+  { id: "2027-su", label: "May – Aug 2027", start: "2027-05-01", end: "2027-08-31" },
+];
+const ALL_PERIODS = [{ id: "2026-su", label: "May – Aug 2026", start: "2026-05-01", end: "2026-08-31" }].concat(PERIODS);
+const AA_RAW = [
+  ["78", "HOUSE.d|HOUSE.d|HOUSE.d|HOUSE.d,CLEMENT.a|CLEMENT.a|CLEMENT.a|CLEMENT.a"],
+  ["79", "HOLTON.a|TROHER.m|TROHER.m|TROHER.m|TROHER.m,HOLTON.a|HOLTON.a|HOLTON.a"],
+  ["80", "||NAPIERALSKI.d,BURKE.m|NAPIERALSKI.d,BURKE.m|NAPIERALSKI.d,BURKE.m|NAPIERALSKI.d,BURKE.m|"],
+  ["108", "ANDERSON.a|ANDERSON.a|ANDERSON.a|ANDERSON.a,CAPPELLA.d|CAPPELLA.d|CAPPELLA.d|CAPPELLA.d"],
+  ["125", "SMITH.a|SMITH.a|SMITH.a|SMITH.a|SMITH.a|SMITH.a|SMITH.a"],
+  ["156", "BEEMAN.m|BEEMAN.m|PARRISH.a|PARRISH.a|PARRISH.a|PARRISH.a,BEEMAN.m|BEEMAN.m"],
+  ["236", "MCCORMICK.m|MCCORMICK.m|HUMPHREY.d|HUMPHREY.d|HUMPHREY.d|HUMPHREY.d,MCCORMICK.m|MCCORMICK.m"],
+  ["363", "VALENTINE.d,LLOYD.m||||VALENTINE.d,LLOYD.m|VALENTINE.d,LLOYD.m|VALENTINE.d,LLOYD.m"],
+  ["394", "MANGNER.d|MANGNER.d||BLUMHARDT.a|BLUMHARDT.a|MANGNER.d,BLUMHARDT.a|MANGNER.d,BLUMHARDT.a"],
+  ["395", "SPOTTS.m|HAMLIN.d,SPOTTS.m|HAMLIN.d,SPOTTS.m|HAMLIN.d,SPOTTS.m|HAMLIN.d||"],
+  ["396", "REIFFER.d,MCKNIGHT.m|REIFFER.d,MCKNIGHT.m|MCKNIGHT.m|||REIFFER.d|REIFFER.d,MCKNIGHT.m"],
+  ["400", "CALLANDER.d,GROVES.a|CALLANDER.d,GROVES.a|CALLANDER.d,GROVES.a||||CALLANDER.d,GROVES.a"],
+  ["103", "SINCLAIR.a|ZAMORSKI.a,SINCLAIR.a|ZAMORSKI.a|ZAMORSKI.a|ZAMORSKI.a|SINCLAIR.a|SINCLAIR.a"],
+  ["403", "STAMPS.a||UPTON.d|UPTON.d|UPTON.d,STAMPS.a|STAMPS.a|STAMPS.a"],
+  ["404", "||D ROBERTS.d,KIRTON.m|D ROBERTS.d,KIRTON.m|D ROBERTS.d,KIRTON.m|D ROBERTS.d,KIRTON.m|"],
+  ["556", "|J ROBERTS.m|J ROBERTS.m|MORTON.d,J ROBERTS.m|MORTON.d,J ROBERTS.m|MORTON.d|MORTON.d"],
+  ["406", "BOLTON.d|BOLTON.d|BOLTON.d,PENDRED.a|BOLTON.d,PENDRED.a|PENDRED.a|PENDRED.a|"],
+  ["431/558", "|LOCK.a|LOCK.a|LOCK.a|LOCK.a||"],
+  ["438", "BELLANT.m|BELLANT.m|BELLANT.m|BAKER.m,BELLANT.m|BAKER.m|BAKER.m|BAKER.m"],
+];
+const emptyWeek = () => Array.from({ length: 7 }, () => ({ d: [], a: [], m: [] }));
+const row = (n, u, x) => ({ n, u: u || "", taser: "", rifle: "", kit: "", duty: "Regular Duty", ...(x || {}) });
+const aaSeed = () => { const w = emptyWeek(); AA_RAW.forEach(([u, s]) => s.split("|").forEach((c, i) => c && c.split(",").forEach(x => { const j = x.lastIndexOf("."); w[i][x.slice(j + 1)].push(row(x.slice(0, j), u)); }))); return w; };
+const SEEDS = { "aa|2026-fa": { rev: 4, at: "Aug 24, 2026", posted: aaSeed(), draft: null } };
+const AA_UNITS = AA_RAW.map(r => r[0]).concat(["25", "405"]);
+const DUTY = ["Regular Duty", "Remote Assignment", "Overtime", "Holiday", "Dispatch", "Training", "Court", "In FTO"];
+const NEEDS_CAR = ["Regular Duty", "Overtime", "In FTO"];
+const pad = n => String(n).padStart(2, "0");
+const iso = d => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+const parse = k => new Date(k + "T12:00:00");
+const addDays = (k, n) => { const d = parse(k); d.setDate(d.getDate() + n); return iso(d); };
+const minusMonths = (k, n) => { const d = parse(k); d.setMonth(d.getMonth() - n); return iso(d); };
+const fmt = (k, o) => parse(k).toLocaleDateString("en-US", o || { month: "short", day: "numeric" });
+const hhmm = d => pad(d.getHours()) + pad(d.getMinutes()) + " hrs";
+function load(k, f) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : f; } catch (e) { return f; } }
+function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+const clone = x => JSON.parse(JSON.stringify(x));
+const usable = st => !st || st === "In service" || st === "Due";
+const sw = c => "width:10px;height:10px;border-radius:3px;flex:none;background:" + c + ";";
+const numSort = (a, b) => (parseInt(a) || 1e9) - (parseInt(b) || 1e9) || String(a).localeCompare(b);
+const periodOf = k => ALL_PERIODS.find(p => k >= p.start && k <= p.end);
+
+class Component extends DCLogic {
+  state = { role: "supervisor", loc: "aa", tab: "plan", cars: [], aaRoster: [], db: null, plans: {}, rosters: {}, pid: null, partnerFor: null, day: 1, copyTo: [], focus: null, dates: { aa: iso(new Date()), db: "2026-06-30" } };
+
+  componentDidMount() {
+    let r = "supervisor", l = "aa"; try { r = localStorage.getItem("dpss-role") || r; l = localStorage.getItem("dpss-location") || l; } catch (e) {}
+    const today = iso(new Date()), next = PERIODS.find(p => today >= minusMonths(p.start, 4) && today < p.start);
+    this.setState({ role: r, loc: l, plans: load("dpss-plans", {}), rosters: load("dpss-rosters2", {}), pid: (next || PERIODS[0]).id, day: new Date().getDay() });
+    fetch("./assign-data.json").then(x => x.json()).then(d => this.setState({ cars: d.cars, aaRoster: d.roster }));
+    fetch("./dearborn-roster.json").then(x => x.json()).then(db => this.setState({ db }));
+  }
+  plan(loc, pid) { return this.state.plans[loc + "|" + pid] || SEEDS[loc + "|" + pid] || { rev: 0, at: "", posted: null, draft: null }; }
+  savePlan(loc, pid, p) { this.setState(st => { const plans = { ...st.plans, [loc + "|" + pid]: p }; save("dpss-plans", plans); return { plans }; }); }
+  writePlanDay(loc, pid, day, fn) { const p = clone(this.plan(loc, pid)); const w = p.draft || clone(p.posted) || emptyWeek(); w[day] = fn(w[day]); p.draft = w; this.savePlan(loc, pid, p); }
+  baseDaily(loc, date) {
+    if (loc !== "db") return null;
+    const day = this.state.db && this.state.db.days[date]; if (!day || !["d", "a", "m"].some(k => day[k].length)) return null;
+    const out = {}; ["d", "a", "m"].forEach(k => { out[k] = day[k].map(([n, u, t, rf, kt, du]) => row(n, u, { taser: t ? "Assigned" : "", rifle: rf, kit: kt, duty: du })).concat(day.co.filter(c => c[1] === k).map(([n]) => row(n, "", { duty: "Called off" }))); });
+    return out;
+  }
+  daily(loc, date) { return this.state.rosters[loc + "|" + date] || this.baseDaily(loc, date); }
+  writeDaily(loc, date, fn, extra) { this.setState(st => { const k = loc + "|" + date, cur = st.rosters[k] || this.baseDaily(loc, date) || { d: [], a: [], m: [] }; const next = { ...fn(clone(cur)), ...(extra || {}) }; const rosters = { ...st.rosters, [k]: next }; save("dpss-rosters2", rosters); return { rosters }; }); }
+  carInfo(u) { return this.state.cars.find(c => c[0] === String(u).split("/").pop()); }
+
+  renderVals() {
+    const s = this.state, isSup = s.role === "supervisor", L = LOCS[s.loc], isAA = s.loc === "aa", today = iso(new Date());
+    const shL = k => L.sh[k][0];
+    const seg = on => "cursor:pointer;font-family:inherit;border:none;border-radius:999px;padding:9px 18px;font-size:13px;white-space:nowrap;" + (on ? "background:#00274C;color:#fff;font-weight:600;" : "background:transparent;color:#374151;font-weight:500;");
+    const chipBtn = on => "cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:9px 16px;font-size:13px;white-space:nowrap;" + (on ? "background:#00274C;border:0.77px solid #00274C;color:#fff;" : "background:#fff;border:0.77px solid #E5E7EB;color:#374151;");
+    const pill = on => "cursor:pointer;font-family:inherit;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:600;" + (on ? "background:#00274C;color:#fff;border:0.77px solid #00274C;" : "background:#fff;color:#374151;border:0.77px solid #E5E7EB;");
+    const names = isAA ? [...new Set(aaSeed().flatMap(w => ["d", "a", "m"].flatMap(k => w[k].map(r => r.n))).concat(s.aaRoster))].sort() : (s.db ? s.db.officers : []);
+    const units = isAA ? AA_UNITS.concat(s.cars.map(c => c[0]).filter(u => !AA_UNITS.some(x => x.split("/").includes(u)))) : (s.db ? s.db.vehicles : []);
+    const dutyList = isAA ? DUTY : (s.db ? s.db.duty : DUTY);
+    const unitLabel = u => u + (L.tags[u] ? " " + L.tags[u] : "") + (L.reserved[u] ? " · " + L.reserved[u] : "");
+
+    // periods
+    const pid = s.pid || PERIODS[0].id, P = PERIODS.find(p => p.id === pid) || PERIODS[0], plan = this.plan(s.loc, pid);
+    const week = plan.draft || plan.posted, dirty = !!plan.draft && JSON.stringify(plan.draft) !== JSON.stringify(plan.posted);
+    const periodStatus = p => { const pl = this.plan(s.loc, p.id), by = minusMonths(p.start, 4);
+      if (today >= p.start && today <= p.end) return pl.posted ? ["In effect · Rev " + pl.rev + " posted", "#2A7D46"] : ["In effect · not posted", "#C0362C"];
+      if (today >= by) return pl.posted ? ["Posted · Rev " + pl.rev + (pl.draft ? " · draft changes" : ""), "#2A7D46"] : [(pl.draft ? "Draft · " : "") + "Plan by " + fmt(by) + (today > by ? " · due" : ""), "#92610A"];
+      return [pl.posted ? "Posted · Rev " + pl.rev : "Planning opens " + fmt(by, { month: "short", day: "numeric", year: "numeric" }), "#9CA3AF"]; };
+    const periods = PERIODS.map(p => { const on = p.id === pid, [sub, c] = periodStatus(p);
+      return { label: p.label, sub, pick: () => this.setState({ pid: p.id, copyTo: [] }),
+        style: "all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:4px;padding:14px 18px;border-radius:14px;font-family:inherit;" + (on ? "background:#00274C;border:0.77px solid #00274C;" : "background:#fff;border:0.77px solid #E5E7EB;"),
+        labelStyle: "font-size:16px;font-weight:700;color:" + (on ? "#fff" : "#00274C") + ";", subStyle: "font-size:12px;font-weight:600;color:" + (on ? "#FFCB05" : c) + ";" }; });
+
+    // shared row builder
+    const buildBlocks = (dayObj, write, ctx) => {
+      const pk = ctx.key || "";
+      const inDay = {}; ["d", "a", "m"].forEach(k => dayObj[k].forEach(r => { if (r.n) (inDay[r.n] = inDay[r.n] || []).push(k); }));
+      return ["d", "a", "m"].map(k => {
+        const rows = dayObj[k], usedBy = {}, rifleBy = {}, kitBy = {};
+        rows.forEach(r => { if (r.u) (usedBy[r.u] = usedBy[r.u] || []).push(r.n); if (r.rifle) (rifleBy[r.rifle] = rifleBy[r.rifle] || []).push(r.n); if (r.kit) (kitBy[r.kit] = kitBy[r.kit] || []).push(r.n); });
+        const adj = k === "d" ? "a" : k === "a" ? "d" : null, adjOn = {};
+        if (L.overlap && adj) dayObj[adj].forEach(r => { if (r.u) (adjOn[r.u] = adjOn[r.u] || []).push(r.n); });
+        const upd = (i, patch) => write(k, rs => { rs[i] = { ...rs[i], ...patch }; return rs; });
+        const on = rows.filter(r => r.duty !== "Called off").length;
+        return { label: shL(k), hours: L.sh[k][1], sw: sw(SHC[k].sw), count: on + " officer" + (on === 1 ? "" : "s"),
+          headStyle: "display:flex;align-items:center;gap:10px;padding:12px 20px;background:" + SHC[k].bg + ";color:" + SHC[k].fg + ";",
+          addAria: "Add officer to " + shL(k),
+          addOpts: [{ v: "", label: "+ Add officer to " + shL(k) }].concat(names.filter(n => !rows.some(r => r.n === n)).map(n => ({ v: n, label: n + (inDay[n] ? " · on " + inDay[n].map(shL).join(", ") : "") }))),
+          add: e => { const n = e.target.value; if (n) write(k, rs => rs.concat(row(n))); },
+          rows: rows.map((r, i) => {
+            const off = r.duty === "Called off", needs = NEEDS_CAR.includes(r.duty) && !off, ci = isAA && ctx.daily ? this.carInfo(r.u) : null, down = ci && !usable(ci[4]);
+            const twice = (inDay[r.n] || []).length > 1, dupR = r.rifle && rifleBy[r.rifle].length > 1, dupK = r.kit && kitBy[r.kit].length > 1;
+            const bad = twice || dupR || dupK || down || (needs && !r.u && ctx.daily);
+            const note = off ? "Called off" : twice ? "Also on " + inDay[r.n].filter((x, j, a) => x !== k || a.indexOf(x) !== j).map(shL).join(", ") + " this day" :
+              down ? "Unit " + r.u + " is " + ci[4].toLowerCase() : needs && !r.u ? "Pick a vehicle" :
+              dupR ? "Rifle " + r.rifle + " also with " + rifleBy[r.rifle].filter(x => x !== r.n).join(", ") :
+              dupK ? "Kit " + r.kit + " also with " + kitBy[r.kit].filter(x => x !== r.n).join(", ") :
+              r.u && usedBy[r.u].length > 1 ? "Two-officer car with " + usedBy[r.u].filter(x => x !== r.n).join(", ") :
+              r.u && adjOn[r.u] ? (k === "d" ? adjOn[r.u].join(", ") + " takes " + r.u + " at 1600 · hand off by 1700" : adjOn[r.u].join(", ") + " has " + r.u + " until 1700") :
+              ctx.planned && r.u && ctx.planned[r.n] && ctx.planned[r.n] !== r.u ? "Planned: " + ctx.planned[r.n] : "";
+            const warnSel = w => "width:100%;font-family:inherit;font-size:13px;font-weight:600;border-radius:999px;padding:8px 10px;cursor:pointer;" + (w ? "background:#FDECEC;border:1px solid #F2B8B3;color:#C0362C;" : "background:#fff;border:1px solid #E5E7EB;color:#131516;");
+            const rk = pk + "|" + k + "|" + i, solo = r.u && !off && usedBy[r.u].length === 1, pOpen = s.partnerFor === rk && solo;
+            const isSecond = !!r.u && !off && usedBy[r.u].length > 1 && rows.findIndex(x => x.u === r.u && x.duty !== "Called off") !== i;
+            return { canPartner: solo && !pOpen, partnerOpen: pOpen, isSecond,
+              openPartner: () => this.setState({ partnerFor: rk }), closePartner: () => this.setState({ partnerFor: null }),
+              partnerOpts: [{ v: "", label: "Riding with…" }].concat(names.filter(n => !rows.some(x => x.n === n)).map(n => ({ v: n, label: n + (inDay[n] ? " · on " + inDay[n].map(shL).join(", ") : "") }))),
+              addPartner: e => { const n = e.target.value; if (!n) return; write(k, rs => { rs.splice(i + 1, 0, row(n, r.u, { duty: r.duty })); return rs; }); this.setState({ partnerFor: null }); },
+              n: r.n, u: r.u, taser: r.taser, rifle: r.rifle, kit: r.kit, duty: r.duty,
+              rowStyle: "display:grid;grid-template-columns:minmax(170px,1.3fr) minmax(150px,1fr) 96px 80px 80px minmax(150px,1fr) minmax(0,1.5fr) 36px;gap:10px;padding:8px 20px;border-bottom:1px solid #F5F5F5;align-items:center;" + (off ? "opacity:0.5;" : ""),
+              nameOpts: names.map(n => ({ v: n, label: n + (n !== r.n && inDay[n] ? " · on " + inDay[n].map(shL).join(", ") : "") })),
+              nStyle: warnSel(twice).replace("font-size:13px", "font-size:14px"),
+              vehOpts: [{ v: "", label: "No vehicle" }].concat(units.map(u => { const c2 = isAA && ctx.daily ? this.carInfo(u) : null, by = (usedBy[u] || []).filter(x => x !== r.n);
+                return { v: u, label: unitLabel(u) + (c2 && !usable(c2[4]) ? " · " + c2[4].toLowerCase() : "") + (by.length ? " · with " + by.join(", ") : "") }; })),
+              uStyle: warnSel(down || (needs && !r.u && ctx.daily)),
+              taserStyle: warnSel(false), rifleStyle: warnSel(dupR), kitStyle: warnSel(dupK),
+              setN: e => upd(i, { n: e.target.value }), setU: e => upd(i, { u: e.target.value }), setTaser: e => upd(i, { taser: e.target.value }),
+              setRifle: e => upd(i, { rifle: e.target.value }), setKit: e => upd(i, { kit: e.target.value }),
+              setDuty: e => { const v = e.target.value; upd(i, v === "Called off" ? { duty: v, u: "", rifle: "", kit: "", taser: "" } : { duty: v }); },
+              remove: () => write(k, rs => rs.filter((_, j) => j !== i)),
+              note, noteStyle: "font-size:12px;line-height:17px;font-weight:600;color:" + (bad ? "#C0362C" : off ? "#6B7280" : r.u && adjOn[r.u] ? "#92610A" : "#6B7280") + ";" };
+          }) };
+      });
+    };
+
+    const tab = isSup ? s.tab : "sheet";
+    let blocks = [], out = {};
+    if (tab === "plan") {
+      const d = s.day, dObj = week ? week[d] : emptyWeek()[0];
+      blocks = week ? buildBlocks(dObj, (k, fn) => this.writePlanDay(s.loc, pid, d, w => { w[k] = fn(w[k]); return w; }), { key: "p" + pid + d }) : [];
+      const prevP = ALL_PERIODS[ALL_PERIODS.findIndex(p => p.id === pid) - 1], prevPlan = prevP ? this.plan(s.loc, prevP.id) : null, prevWeek = prevPlan && (prevPlan.posted || prevPlan.draft);
+      const placed = week ? new Set(week.flatMap(w => ["d", "a", "m"].flatMap(k => w[k].map(r => r.n)))).size : 0;
+      const [st] = periodStatus(P);
+      out = { planEmpty: !week, planReady: !!week, emptyTitle: "Start the " + P.label + " plan",
+        canSeed: !!prevWeek, seedLabel: prevP ? "Start from " + prevP.label + " plan" : "",
+        seedFromPrev: () => this.savePlan(s.loc, pid, { ...plan, draft: clone(prevWeek) }), startBlank: () => this.savePlan(s.loc, pid, { ...plan, draft: emptyWeek() }),
+        dayTabs: DOW.map((t, i) => { const n = week ? ["d", "a", "m"].reduce((a, k) => a + week[i][k].length, 0) : 0, on = i === d;
+          return { t, n: String(n), pick: () => this.setState({ day: i, copyTo: [] }), style: seg(on), nStyle: "font-weight:600;margin-left:4px;" + (on ? "color:rgba(255,255,255,0.65);" : "color:#9CA3AF;") }; }),
+        dayName: DOWL[d], copyDays: DOW.map((t, i) => ({ t, i })).filter(x => x.i !== d).map(x => { const on = s.copyTo.includes(x.i); return { t: x.t, style: pill(on), toggle: () => this.setState({ copyTo: on ? s.copyTo.filter(y => y !== x.i) : s.copyTo.concat(x.i) }) }; }),
+        copyBtnStyle: "cursor:pointer;font-family:inherit;border:none;border-radius:999px;padding:7px 14px;font-size:12px;font-weight:700;margin-left:4px;" + (s.copyTo.length ? "background:#00274C;color:#fff;" : "background:#E5E7EB;color:#9CA3AF;pointer-events:none;"),
+        doCopy: () => { const p = clone(this.plan(s.loc, pid)); const w = p.draft || clone(p.posted); s.copyTo.forEach(i => { w[i] = clone(w[d]); }); p.draft = w; this.savePlan(s.loc, pid, p); this.setState({ copyTo: [] }); },
+        barTitle: P.label + " · " + (dirty ? "Draft · Rev " + (plan.rev + 1) : plan.posted ? "Rev " + plan.rev + " posted " + plan.at : week ? "Draft" : "Not started"),
+        barTitleStyle: "font-size:15px;font-weight:700;color:" + (dirty ? "#2A5993" : plan.posted ? "#2A7D46" : "#92610A") + ";",
+        barSub: placed + " officers placed · " + st + ". Plans are set four months ahead; posting emails officers and prints for the key area and briefing room.",
+        dirty, postLabel: "Post Rev " + (plan.rev + 1) + " & email officers",
+        discard: () => this.savePlan(s.loc, pid, { ...plan, draft: null }),
+        post: () => this.savePlan(s.loc, pid, { rev: plan.rev + 1, at: fmt(today, { month: "short", day: "numeric", year: "numeric" }), posted: clone(plan.draft), draft: null }) };
+    }
+    if (tab === "daily") {
+      const date = s.dates[s.loc], dow = parse(date).getDay(), rec = this.daily(s.loc, date), dp = periodOf(date), dPlan = dp ? this.plan(s.loc, dp.id) : null, dWeek = dPlan && dPlan.posted;
+      const planned = {}; if (dWeek) ["d", "a", "m"].forEach(k => dWeek[dow][k].forEach(r => { planned[r.n] = r.u; }));
+      blocks = rec ? buildBlocks(rec, (k, fn) => this.writeDaily(s.loc, date, o => { o[k] = fn(o[k]); return o; }), { daily: true, planned, key: "d" + date }) : [];
+      const prev = this.daily(s.loc, addDays(date, -1));
+      const latest = s.db ? Object.keys(s.db.days).filter(k => ["d", "a", "m"].some(x => s.db.days[k][x].length)).sort().pop() : "";
+      const all = rec ? ["d", "a", "m"].flatMap(k => rec[k]) : [], missing = all.filter(r => NEEDS_CAR.includes(r.duty) && !r.u).length;
+      const sig = JSON.stringify(rec ? { d: rec.d, a: rec.a, m: rec.m } : null), entered = rec && rec.entered, stale = entered && rec.sig !== sig;
+      const setDate = v => this.setState(st => ({ dates: { ...st.dates, [st.loc]: v } }));
+      out = { dateLabel: fmt(date, { weekday: "short", month: "long", day: "numeric", year: "numeric" }),
+        prevDay: () => setDate(addDays(date, -1)), nextDay: () => setDate(addDays(date, 1)), goToday: () => setDate(today),
+        todayStyle: "cursor:pointer;font-family:inherit;border:none;border-radius:999px;padding:11px 20px;font-size:13px;font-weight:700;margin-left:4px;" + (date === today ? "background:#FFCB05;color:#131516;" : "background:#F3F4F6;color:#9CA3AF;"),
+        dailySource: dp ? dp.label + " period" + (dWeek ? " · plan Rev " + dPlan.rev : " · no posted plan") : "",
+        dailyEmpty: !rec, canFromPlan: !!dWeek, fromPlanLabel: "Start from " + DOWL[dow] + " plan",
+        fromPlan: () => this.writeDaily(s.loc, date, () => clone(dWeek[dow])),
+        canCopyPrev: !!prev, copyPrevLabel: "Copy " + fmt(addDays(date, -1), { weekday: "short", month: "short", day: "numeric" }),
+        copyPrev: () => this.writeDaily(s.loc, date, () => { const c = clone({ d: prev.d, a: prev.a, m: prev.m }); ["d", "a", "m"].forEach(k => c[k].forEach(r => { if (r.duty === "Called off") r.duty = "Regular Duty"; })); return c; }),
+        canJumpLatest: !isAA && !rec && !!latest, jumpLatestLabel: latest ? "Go to latest roster · " + fmt(latest) : "", jumpLatest: () => setDate(latest),
+        showTs: !!rec,
+        tsTitle: missing ? missing + " officer" + (missing > 1 ? "s" : "") + " still need a vehicle" : entered && !stale ? "Entered in TeleStaff at " + entered : entered ? "Changed since TeleStaff entry at " + entered : "Ready to enter in TeleStaff",
+        tsTitleStyle: "font-size:15px;font-weight:700;color:" + (missing ? "#C0362C" : entered && !stale ? "#2A7D46" : "#2A5993") + ";",
+        tsSub: all.filter(r => r.duty !== "Called off").length + " on shift today. Dispatch sees vehicle assignments in TeleStaff.",
+        tsBtn: entered && !stale ? "Entered" : "Mark entered in TeleStaff",
+        tsBtnStyle: "cursor:pointer;font-family:inherit;border:none;border-radius:999px;padding:12px 22px;font-size:14px;font-weight:700;white-space:nowrap;" + (missing ? "background:#E5E7EB;color:#9CA3AF;pointer-events:none;" : entered && !stale ? "background:#EDF7F1;color:#2A7D46;" : "background:#FFCB05;color:#00274C;"),
+        markEntered: () => { if (!missing) this.writeDaily(s.loc, date, o => o, { entered: hhmm(new Date()), sig }); } };
+    }
+    if (tab === "sheet") {
+      const sw7 = isSup ? week : plan.posted;
+      const grid = {}; if (sw7) sw7.forEach((w, i) => ["d", "a", "m"].forEach(k => w[k].forEach(r => { if (r.duty === "Called off") return; const u = r.u || "—"; (grid[u] = grid[u] || emptyWeek().map(() => []))[i].push([r.n, k]); })));
+      const us = Object.keys(grid).sort((a, b) => a === "—" ? 1 : b === "—" ? -1 : numSort(a, b));
+      const ORD = { d: 0, a: 1, m: 2 };
+      const title = L.name + " Vehicle Assignments · " + P.label + (plan.posted ? " · Rev " + plan.rev : "");
+      const cellTxt = c => c.slice().sort((a, b) => ORD[a[1]] - ORD[b[1]]).map(([n, k]) => n + " (" + shL(k) + ")");
+      const exportCsv = () => {
+        const q = v => '"' + String(v).replace(/"/g, '""') + '"';
+        const lines = [[title], ["Vehicle"].concat(DOWL)].concat(us.map(u => [u === "—" ? "No vehicle" : u + (L.tags[u] ? " " + L.tags[u] : "")].concat(grid[u].map(c => cellTxt(c).join("\n")))));
+        const blob = new Blob(["\ufeff" + lines.map(l => l.map(q).join(",")).join("\r\n")], { type: "text/csv;charset=utf-8" });
+        const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = title.replace(/[^\w\- ]+/g, "").replace(/\s+/g, "_") + ".csv"; document.body.appendChild(a); a.click(); a.remove();
+      };
+      const printSheet = () => {
+        const esc = t => String(t).replace(/[&<>]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[m]);
+        const chipH = c => c.slice().sort((a, b) => ORD[a[1]] - ORD[b[1]]).map(([n, k]) => '<div style="background:' + SHC[k].bg + ';color:' + SHC[k].fg + ';border-radius:4px;padding:2px 5px;margin:2px 0;font-weight:700;-webkit-print-color-adjust:exact;print-color-adjust:exact;">' + esc(n) + '</div>').join("");
+        const leg = ["d", "a", "m"].map(k => '<span style="display:inline-block;background:' + SHC[k].bg + ';color:' + SHC[k].fg + ';padding:2px 8px;border-radius:4px;margin-right:8px;font-weight:700;-webkit-print-color-adjust:exact;print-color-adjust:exact;">' + shL(k) + (L.sh[k][1] ? " " + L.sh[k][1] : "") + '</span>').join("");
+        const html = '<!doctype html><html><head><title>' + esc(title) + '</title><style>body{font-family:"DM Sans",Arial,sans-serif;margin:24px;color:#131516}h1{font-size:18px;color:#00274C;margin:0 0 8px}table{border-collapse:collapse;width:100%;font-size:11px;margin-top:12px}th,td{border:1px solid #D1D5DB;padding:4px 6px;vertical-align:top;text-align:left}th{background:#F3F4F6;-webkit-print-color-adjust:exact;print-color-adjust:exact}td.u{font-weight:700;font-size:13px;color:#00274C;white-space:nowrap}@page{size:landscape;margin:12mm}</style></head><body><h1>' + esc(title) + '</h1><div style="font-size:11px">' + leg + '</div><table><tr><th>Vehicle</th>' + DOWL.map(d => '<th>' + d + '</th>').join("") + '</tr>' +
+          us.map(u => '<tr><td class="u">' + esc(u === "—" ? "No vehicle" : u + (L.tags[u] ? " " + L.tags[u] : "")) + '</td>' + grid[u].map(c => '<td>' + chipH(c) + '</td>').join("") + '</tr>').join("") + '</table></body></html>';
+        const w = window.open("", "_blank"); if (!w) return; w.document.write(html); w.document.close(); w.focus(); setTimeout(() => w.print(), 300);
+      };
+      out = { exportCsv, printSheet, sheetNote: isSup ? (dirty ? "Showing draft changes for " + P.label + ". Officers see the posted revision." : "This is what officers see for " + P.label + ".") : P.label + (plan.posted ? " · Rev " + plan.rev + " posted " + plan.at : ""),
+        sheetEmpty: !us.length, sheetHas: us.length > 0, sheetEmptyText: isSup ? "Nothing planned for " + P.label + " yet." : P.label + " has not been posted yet.",
+        legend: ["d", "a", "m"].map(k => ({ label: shL(k), hours: L.sh[k][1], sw: sw(SHC[k].sw), style: chipBtn(s.focus === k), hoursStyle: "font-weight:500;" + (s.focus === k ? "color:rgba(255,255,255,0.65);" : "color:#9CA3AF;"), pick: () => this.setState({ focus: s.focus === k ? null : k }) })),
+        dayHead: DOWL.map((t, i) => ({ t, style: "padding:12px 8px;font-size:11px;font-weight:700;letter-spacing:0.66px;text-transform:uppercase;" + (i === new Date().getDay() ? "color:#131516;background:#FFCB05;" : "color:#9CA3AF;") })),
+        gridRows: us.map(u => ({ u: u === "—" ? "No vehicle" : u, unitStyle: "font-size:" + (u === "—" ? "13" : "19") + "px;font-weight:700;line-height:1.1;color:" + (u === "—" ? "#9CA3AF" : "#00274C") + ";",
+          tags: L.tags[u] ? [{ t: L.tags[u], style: tagStyle(L.tags[u]) }] : [],
+          cells: grid[u].map((c, i) => ({ style: "min-height:56px;padding:8px;display:flex;flex-direction:column;gap:4px;align-items:flex-start;border-right:1px solid #F5F5F5;background:" + (i === new Date().getDay() ? "#FFFBEA" : "#fff") + ";",
+            chips: c.sort((a, b) => ORD[a[1]] - ORD[b[1]]).map(([n, k]) => ({ name: n, title: n + " · " + shL(k),
+              style: "display:block;max-width:100%;box-sizing:border-box;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-radius:6px;padding:3px 7px;font-size:11.5px;font-weight:700;background:" + SHC[k].bg + ";color:" + SHC[k].fg + ";" +
+                (n === L.me && !isSup ? "box-shadow:0 0 0 2px #00274C;" : "") + (s.focus && s.focus !== k ? "opacity:0.2;" : "") })) })) })) };
+    }
+
+    // officer card
+    const cur = PERIODS.find(p => today >= p.start && today <= p.end) || PERIODS[0], cp = this.plan(s.loc, cur.id), cw = cp.posted;
+    const mine = []; if (cw) cw.forEach((w, i) => ["d", "a", "m"].forEach(k => w[k].forEach(r => { if (r.n === L.me) mine.push({ u: r.u, i, k }); })));
+    const tRec = this.daily(s.loc, today), tRow = tRec ? ["d", "a", "m"].map(k => tRec[k].find(r => r.n === L.me)).find(Boolean) : null;
+
+    return {
+      role: s.role, loc: s.loc, isOfficer: !isSup, isSupervisor: isSup,
+      locSub: L.name + " · plans are set by bid period, four months ahead",
+      navLinks: (ROLE_NAV[s.role] || ROLE_NAV.officer).map(n => ({ ...n, style: "font-size:14px;white-space:nowrap;" + (n.label === "Assignments" ? "font-weight:700;color:#00274C;" : "font-weight:500;color:#6B7280;") })),
+      switchRole: e => { const r = e.target.value; try { localStorage.setItem("dpss-role", r); } catch (x) {} this.setState({ role: r }); },
+      switchLoc: e => { const l = e.target.value; try { localStorage.setItem("dpss-location", l); } catch (x) {} this.setState({ loc: l, focus: null }); },
+      tabs: [["plan", "Period plan"], ["daily", "Daily roster"], ["sheet", "Posted sheet"]].map(([v, label]) => ({ label, style: seg(tab === v), pick: () => this.setState({ tab: v }) })),
+      showPeriods: tab !== "daily", periods,
+      showPlan: tab === "plan", showDaily: tab === "daily", showSheet: tab === "sheet", showBlocks: blocks.length > 0, showTs: false,
+      blocks, dirty: false,
+      rifleOpts: [{ v: "", label: "—" }].concat(Array.from({ length: 10 }, (_, i) => ({ v: String(i + 1), label: String(i + 1) }))),
+      kitOpts: [{ v: "", label: "—" }].concat(Array.from({ length: 5 }, (_, i) => ({ v: String(i + 1), label: String(i + 1) }))),
+      dutyOpts: [{ v: "", label: "—" }].concat(dutyList.map(v => ({ v, label: v }))).concat([{ v: "Called off", label: "Called off" }]),
+      myBadge: "Your vehicle · " + cur.label,
+      myUnit: [...new Set(mine.map(m => m.u).filter(Boolean))].join(" / ") || "—",
+      myShift: mine.length ? shL(mine[0].k) + (L.sh[mine[0].k][1] ? " · " + L.sh[mine[0].k][1] : "") + " · " + mine.map(m => DOW[m.i]).join(", ") : "Not on the posted " + cur.label + " plan",
+      myToday: tRow ? "Today: " + (tRow.u ? "Unit " + tRow.u : "no vehicle") + [tRow.rifle ? " · Rifle " + tRow.rifle : "", tRow.kit ? " · Kit " + tRow.kit : ""].join("") : "Today's roster hasn't been recorded yet.",
+      ...out,
+    };
+  }
+}
+</script>
+</body>
+</html>

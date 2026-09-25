@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900&amp;display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #F7F8FA; -webkit-font-smoothing: antialiased; }
+  a { color: #00274C; text-decoration: none; }
+  a:hover { color: #2A5993; }
+</style>
+</helmet>
+<div style="font-family: 'DM Sans', sans-serif; background: #F7F8FA; min-height: 100vh;">
+
+  <div style="background: #fff; border-bottom: 1px solid #E5E7EB;">
+    <div style="background: #FAFAFA; border-bottom: 1px solid #F0F0F0; display: flex; align-items: center; gap: 8px; padding: 6px 40px;">
+      <span style="font-size: 12px; line-height: 18px; color: #6B7280;">homeLocation</span>
+      <div style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+        <span style="font-size: 12px; font-weight: 600; color: #00274C;">Ann Arbor</span>
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="display: block;"><path d="M1 1.5L5 4.5L9 1.5" stroke="#00274C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 12px; line-height: 18px; color: #6B7280; white-space: nowrap;">Viewing as</span>
+        <select onChange="{{ switchRole }}" value="{{ role }}" style="font-family: inherit; font-size: 12px; font-weight: 600; color: #00274C; background: #fff; border: 1px solid #E5E7EB; border-radius: 999px; padding: 4px 12px; cursor: pointer;">
+          <option value="officer">Officer</option>
+          <option value="supervisor">Supervisor</option>
+        </select>
+      </div>
+    </div>
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 14px 40px; min-height: 67px; box-sizing: border-box;">
+      <span style="font-size: 18px; font-weight: 700; letter-spacing: 1.8px; color: #00274C; white-space: nowrap;">DPSS FLEET</span>
+      <div style="display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px 22px; min-width: 0;">
+        <sc-for list="{{ navLinks }}" as="n" hint-placeholder-count="6">
+          <a href="{{ n.href }}" style="{{ n.style }}">{{ n.label }}</a>
+        </sc-for>
+        <a href="#work-order" style="background: #00274C; color: #fff; border-radius: 999px; padding: 12px 26px; font-size: 14px; font-weight: 600; white-space: nowrap;" style-hover="background: #003A6E; color: #fff;">+ Work Order</a>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{ isOfficer }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width: 560px; margin: 120px auto; padding: 0 28px; text-align: center; display: flex; flex-direction: column; gap: 16px; align-items: center;">
+      <h1 style="margin: 0; font-size: 30px; font-weight: 700; color: #00274C;">Vehicle ordering is for supervisors</h1>
+      <p style="margin: 0; font-size: 15px; line-height: 23px; color: #6B7280;">Talk to your supervisor or fleet lead if your unit needs a new vehicle.</p>
+      <a href="./Officer Home.dc.html" style="background: #FFCB05; color: #131516; border-radius: 999px; padding: 14px 28px; font-size: 14px; font-weight: 600;">Back to home</a>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isSupervisor }}" hint-placeholder-val="{{ true }}">
+
+    <div style="background: #00274C; display: flex; justify-content: center;">
+      <div style="width: 100%; max-width: 1200px; padding: 56px 28px 56px; box-sizing: border-box; display: flex; flex-direction: column; gap: 40px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap;">
+          <div style="display: flex; flex-direction: column; gap: 10px; max-width: 640px;">
+            <span style="font-size: 20px; font-weight: 800; color: #FFCB05;">Supervisors and fleet leads</span>
+            <h1 style="margin: 0; font-size: 56px; font-weight: 700; line-height: 1.08; letter-spacing: -1.4px; color: #fff;">Vehicle Ordering</h1>
+            <p style="margin: 0; font-size: 16px; line-height: 24px; color: rgba(255,255,255,0.78); text-wrap: pretty;">Specify the vehicle your unit needs. The request goes to Renee Jordan in Transportation, who finalizes the build sheet with you and takes it to bid. All follow-up on this request comes by email, so keep an eye on your inbox.</p>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 2px; padding: 16px 20px; border-radius: 14px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14);">
+            <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.66px; text-transform: uppercase; color: rgba(255,255,255,0.6);">Fleet point of contact</span>
+            <span style="font-size: 16px; font-weight: 700; color: #fff;">Renee Jordan · Transportation</span>
+            <span style="font-size: 13px; color: rgba(255,255,255,0.75);">reneej@umich.edu · 734-615-0527</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: center;">
+      <div style="width: 100%; max-width: 1200px; padding: 64px 28px 88px; box-sizing: border-box;">
+
+        <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+          <div style="font-size: 13px; color: #6B7280;">Step {{ stepNum }} of 6</div>
+          <h2 style="margin: 2px 0 0; font-size: 30px; font-weight: 700; line-height: 1.2; color: #00274C;">{{ stepTitle }}</h2>
+
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 24px;">
+            <sc-for list="{{ steps }}" as="st" hint-placeholder-count="5">
+              <button type="button" onClick="{{ st.go }}" style="{{ st.style }}">
+                <span style="{{ st.numStyle }}">{{ st.n }}</span>
+                <span>{{ st.label }}</span>
+              </button>
+            </sc-for>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 24px; margin-top: 32px; align-items: start;">
+            <div style="grid-column: span 2; min-width: 0; background: #fff; border: 0.77px solid #E5E7EB; border-radius: 18px; padding: 28px 30px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px;">
+              <p style="margin: 0; font-size: 14px; line-height: 21px; color: #6B7280;">{{ stepBlurb }}</p>
+
+              <sc-if value="{{ is1 }}" hint-placeholder-val="{{ true }}">
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px;">
+                  <sc-for list="{{ units }}" as="u" hint-placeholder-count="9">
+                    <button type="button" onClick="{{ u.pick }}" style="{{ u.style }}">
+                      <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px;">
+                        <span style="{{ u.nameStyle }}">{{ u.name }}</span>
+                        <span style="{{ u.countStyle }}">{{ u.n }}</span>
+                      </div>
+                      <span style="{{ u.campusStyle }}">{{ u.campus }}</span>
+                      <span style="{{ u.descStyle }}">{{ u.desc }}</span>
+                    </button>
+                  </sc-for>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ is2 }}" hint-placeholder-val="{{ false }}">
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px;">
+                  <sc-for list="{{ locations }}" as="l" hint-placeholder-count="4">
+                    <button type="button" onClick="{{ l.pick }}" style="{{ l.style }}">
+                      <span style="{{ l.dotStyle }}"></span>
+                      <span style="display: flex; flex-direction: column; gap: 2px; text-align: left;">
+                        <span style="font-size: 15px; font-weight: 700;">{{ l.name }}</span>
+                        <span style="{{ l.subStyle }}">{{ l.sub }}</span>
+                      </span>
+                    </button>
+                  </sc-for>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ is3 }}" hint-placeholder-val="{{ false }}">
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px;">
+                  <sc-for list="{{ roles }}" as="r" hint-placeholder-count="6">
+                    <button type="button" onClick="{{ r.pick }}" style="{{ r.style }}">
+                      <span style="{{ r.nameStyle }}">{{ r.name }}</span>
+                      <span style="{{ r.descStyle }}">{{ r.desc }}</span>
+                    </button>
+                  </sc-for>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ is4 }}" hint-placeholder-val="{{ false }}">
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
+                    <div style="display: flex; flex-direction: column; gap: 2px;">
+                      <span style="font-size: 17px; font-weight: 700; color: #00274C;">{{ buildTitle }}</span>
+                      <span style="font-size: 13px; color: #6B7280;">{{ buildCount }}</span>
+                    </div>
+                    <button type="button" onClick="{{ toggleDetails }}" style="cursor: pointer; font-family: inherit; background: #fff; border: 0.77px solid #E5E7EB; color: #00274C; border-radius: 999px; padding: 10px 18px; font-size: 13px; font-weight: 600; white-space: nowrap;" style-hover="border-color: #00274C;">{{ detailsLabel }}</button>
+                  </div>
+
+                  <sc-if value="{{ hasPending }}" hint-placeholder-val="{{ false }}">
+                    <div style="background: #FDF4DC; border-radius: 14px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+                      <span style="font-size: 14px; font-weight: 700; color: #6B4A00;">{{ pendingNote }}</span>
+                      <sc-for list="{{ pendingList }}" as="p" hint-placeholder-count="2">
+                        <div style="display: flex; flex-direction: column; gap: 1px; padding-top: 8px; border-top: 1px solid #F1DFAE;">
+                          <span style="font-size: 13px; font-weight: 600; color: #131516;">{{ p.what }}</span>
+                          <span style="font-size: 12px; line-height: 18px; color: #6B4A00;">{{ p.why }}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+
+                  <div style="border: 0.77px solid #E5E7EB; border-radius: 14px; overflow: hidden;">
+                    <sc-for list="{{ zones }}" as="z" hint-placeholder-count="6">
+                      <div style="{{ z.wrapStyle }}">
+                        <button type="button" onClick="{{ z.toggle }}" style="all: unset; box-sizing: border-box; cursor: pointer; width: 100%; background: #fff; display: grid; grid-template-columns: minmax(110px, 170px) minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 14px 18px; font-family: inherit;" style-hover="background: #F7F8FA;">
+                          <span style="display: flex; align-items: center; gap: 8px;">
+                            <span style="{{ z.dotStyle }}"></span>
+                            <span style="font-size: 14px; font-weight: 700; color: #00274C;">{{ z.where }}</span>
+                          </span>
+                          <span style="font-size: 13px; color: #6B7280; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ z.summary }}</span>
+                          <span style="display: flex; align-items: center; gap: 10px;">
+                            <span style="{{ z.countStyle }}">{{ z.count }}</span>
+                            <span style="{{ z.chevStyle }}">▾</span>
+                          </span>
+                        </button>
+                        <sc-if value="{{ z.open }}" hint-placeholder-val="{{ false }}">
+                          <div style="padding: 0 18px 10px; display: flex; flex-direction: column; border-top: 1px solid #E5E7EB;">
+                            <sc-for list="{{ z.items }}" as="i" hint-placeholder-count="2">
+                              <div style="display: grid; grid-template-columns: minmax(110px, 170px) minmax(0, 1fr); gap: 16px; padding: 10px 0; border-top: 1px solid #E5E7EB;">
+                                <span style="display: flex; align-items: flex-start; gap: 8px;">
+                                  <span style="{{ i.dotStyle }}"></span>
+                                  <span style="font-size: 13px; font-weight: 600; line-height: 19.5px; color: #131516;">{{ i.what }}</span>
+                                </span>
+                                <span style="display: flex; flex-direction: column; gap: 2px;">
+                                  <span style="font-size: 13px; line-height: 19.5px; color: #374151;">{{ i.model }}</span>
+                                  <sc-if value="{{ i.hasNote }}" hint-placeholder-val="{{ false }}">
+                                    <span style="{{ i.noteStyle }}">{{ i.note }}</span>
+                                  </sc-if>
+                                </span>
+                              </div>
+                            </sc-for>
+                          </div>
+                        </sc-if>
+                      </div>
+                    </sc-for>
+                  </div>
+
+                  <div style="border: 0.77px solid #E5E7EB; border-radius: 14px; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px;">
+                    <span style="font-size: 17px; font-weight: 700; color: #00274C;">Graphics</span>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px;">
+                      <sc-for list="{{ graphics }}" as="g" hint-placeholder-count="4">
+                        <div style="display: flex; flex-direction: column; gap: 2px;">
+                          <span style="font-size: 12px; color: #9CA3AF;">{{ g.k }}</span>
+                          <span style="font-size: 13px; font-weight: 600; line-height: 19.5px; color: #131516;">{{ g.v }}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ is5 }}" hint-placeholder-val="{{ false }}">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 22px 20px;">
+                  <label style="display: flex; flex-direction: column; gap: 8px;">
+                    <span style="font-size: 14px; font-weight: 600; color: #131516;">Requested by <span style="color: #C0362C;">*</span></span>
+                    <input type="text" placeholder="Your name" value="{{ requester }}" onChange="{{ setRequester }}" style="{{ reqStyle }}">
+                  </label>
+                  <label style="display: flex; flex-direction: column; gap: 8px;">
+                    <span style="font-size: 14px; font-weight: 600; color: #131516;">Uniqname <span style="color: #C0362C;">*</span></span>
+                    <div style="{{ uniqWrapStyle }}">
+                      <input type="text" placeholder="uniqname" value="{{ uniq }}" onChange="{{ setUniq }}" style="flex: 1; min-width: 0; border: none; outline: none; font-family: inherit; font-size: 14px; background: transparent;">
+                      <span style="font-size: 13px; color: #9CA3AF;">@umich.edu</span>
+                    </div>
+                  </label>
+                  <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <span style="font-size: 14px; font-weight: 600; color: #131516;">How many vehicles <span style="color: #C0362C;">*</span></span>
+                    <div style="display: flex; align-items: center; gap: 4px; background: #F3F4F6; border-radius: 999px; padding: 4px; align-self: flex-start;">
+                      <button type="button" onClick="{{ qtyDown }}" aria-label="Fewer" style="cursor: pointer; font-family: inherit; width: 40px; height: 40px; border: none; border-radius: 999px; background: #fff; font-size: 18px; color: #00274C;">−</button>
+                      <span style="min-width: 44px; text-align: center; font-size: 18px; font-weight: 700; color: #00274C;">{{ qty }}</span>
+                      <button type="button" onClick="{{ qtyUp }}" aria-label="More" style="cursor: pointer; font-family: inherit; width: 40px; height: 40px; border: none; border-radius: 999px; background: #fff; font-size: 18px; color: #00274C;">+</button>
+                    </div>
+                  </div>
+
+                  <div style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 10px;">
+                    <span style="font-size: 14px; font-weight: 600; color: #131516;">What triggered this</span>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                      <sc-for list="{{ triggers }}" as="o" hint-placeholder-count="5">
+                        <button type="button" onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.label }}</button>
+                      </sc-for>
+                    </div>
+                  </div>
+
+                  <label style="display: flex; flex-direction: column; gap: 8px;">
+                    <span style="font-size: 14px; font-weight: 600; color: #131516;">Needed in service by</span>
+                    <input type="date" value="{{ needBy }}" onChange="{{ setNeedBy }}" style="font-family: inherit; font-size: 14px; height: 48px; border: 1px solid #E5E7EB; border-radius: 12px; padding: 0 14px; box-sizing: border-box;">
+                  </label>
+                  <label style="display: flex; flex-direction: column; gap: 8px;">
+                    <span style="font-size: 14px; font-weight: 600; color: #131516;">Short code <span style="color: #C0362C;">*</span></span>
+                    <input type="text" placeholder="e.g. 129217" value="{{ shortCode }}" onChange="{{ setShortCode }}" style="{{ codeStyle }}">
+                  </label>
+
+                  <label style="display: flex; flex-direction: column; gap: 8px;">
+                    <span style="font-size: 14px; font-weight: 600; color: #131516;">Vehicle numbers being replaced</span>
+                    <input type="text" placeholder="e.g. 78, 552 · leave blank if new" value="{{ replaced }}" onChange="{{ setReplaced }}" style="font-family: inherit; font-size: 14px; height: 48px; border: 1px solid #E5E7EB; border-radius: 12px; padding: 0 14px; box-sizing: border-box;">
+                    <span style="font-size: 12px; color: #6B7280;">Goes in the build sheet header for Renee.</span>
+                  </label>
+
+                  <div style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 10px;">
+                    <span style="font-size: 14px; font-weight: 600; color: #131516;">How is outfitting funded</span>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                      <sc-for list="{{ fundings }}" as="o" hint-placeholder-count="3">
+                        <button type="button" onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.label }}</button>
+                      </sc-for>
+                    </div>
+                  </div>
+
+                  <label style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 8px;">
+                    <span style="font-size: 14px; font-weight: 600; color: #131516;">Deviations from the standard package</span>
+                    <textarea rows="4" placeholder="Anything this vehicle needs that differs from what loaded above, clearance limits, unit-specific equipment, an item to omit. Leave blank if the package is correct as shown." value="{{ changes }}" onChange="{{ setChanges }}" style="font-family: inherit; font-size: 14px; line-height: 21px; border: 1px solid #E5E7EB; border-radius: 12px; padding: 12px 14px; resize: vertical;"></textarea>
+                    <span style="font-size: 12px; color: #6B7280;">Every deviation is recorded against the vehicle and needs approval before the order is placed.</span>
+                  </label>
+
+                  <label style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 8px;">
+                    <span style="font-size: 14px; font-weight: 600; color: #131516;">Anything else Transportation should know</span>
+                    <textarea rows="3" value="{{ extra }}" onChange="{{ setExtra }}" style="font-family: inherit; font-size: 14px; line-height: 21px; border: 1px solid #E5E7EB; border-radius: 12px; padding: 12px 14px; resize: vertical;"></textarea>
+                  </label>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ is6 }}" hint-placeholder-val="{{ false }}">
+                <div style="display: flex; flex-direction: column; gap: 24px;">
+                  <div style="border-radius: 14px; border: 0.77px solid #E5E7EB; overflow: hidden;">
+                    <div style="background: #FAFAFA; border-bottom: 1px solid #F0F0F0; padding: 14px 18px; display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: #6B7280;">
+                      <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.66px; text-transform: uppercase; color: #9CA3AF;">Email preview</span>
+                      <span><span style="color: #9CA3AF;">To</span> Renee Jordan &lt;reneej@umich.edu&gt;</span>
+                      <span><span style="color: #9CA3AF;">Cc</span> {{ emailCc }}</span>
+                      <span style="font-weight: 600; color: #131516;"><span style="font-weight: 400; color: #9CA3AF;">Subject</span> {{ emailSubject }}</span>
+                    </div>
+                    <div style="padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; line-height: 20px; color: #374151;">
+                      <sc-for list="{{ emailLines }}" as="e" hint-placeholder-count="8">
+                        <span>{{ e.t }}</span>
+                      </sc-for>
+                    </div>
+                    <div style="border-top: 1px solid #F0F0F0; padding: 14px 18px; display: flex; flex-direction: column; gap: 8px;">
+                      <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.66px; text-transform: uppercase; color: #9CA3AF;">Attachment</span>
+                      <button type="button" onClick="{{ downloadSheet }}" title="Open the attached build sheet" style="all: unset; box-sizing: border-box; cursor: pointer; align-self: flex-start; display: flex; align-items: center; gap: 12px; border: 0.77px solid #E5E7EB; border-radius: 12px; padding: 10px 14px; font-family: inherit; max-width: 100%;" style-hover="border-color: #00274C;">
+                        <span style="flex: none; border-radius: 6px; background: #1F6E43; color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.4px; padding: 6px 7px;">XLSX</span>
+                        <span style="display: flex; flex-direction: column; gap: 1px; min-width: 0;">
+                          <span style="font-size: 13px; font-weight: 700; color: #131516; overflow-wrap: anywhere;">{{ sheetFile }}</span>
+                          <span style="font-size: 12px; color: #6B7280;">{{ sheetSub }}</span>
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </sc-if>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 20px; border-top: 1px solid #F0F0F0;">
+                <button type="button" onClick="{{ back }}" style="{{ backStyle }}">← Back</button>
+                <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: flex-end;">
+                  <sc-if value="{{ showRequired }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size: 13px; font-weight: 600; color: #C0362C;">{{ requiredMsg }}</span>
+                  </sc-if>
+                  <button type="button" onClick="{{ next }}" style="{{ nextStyle }}">{{ nextLabel }}</button>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 16px; min-width: 0;">
+            <div style="background: #fff; border: 0.77px solid #E5E7EB; border-radius: 18px; padding: 24px 26px; box-sizing: border-box; display: flex; flex-direction: column; gap: 4px;">
+              <span style="font-size: 20px; font-weight: 700; color: #131516;">Your order</span>
+              <div style="padding-top: 8px;">
+                <sc-for list="{{ cart }}" as="c" hint-placeholder-count="6">
+                  <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 12px 0; border-bottom: 1px solid #F0F0F0;">
+                    <span style="font-size: 13px; color: #9CA3AF;">{{ c.k }}</span>
+                    <span style="{{ c.vStyle }}">{{ c.v }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <span style="padding-top: 14px; font-size: 12px; line-height: 18px; color: #6B7280;">{{ cartNote }}</span>
+            </div>
+            <div style="background: #fff; border: 0.77px solid #E5E7EB; border-radius: 18px; padding: 24px 26px; box-sizing: border-box; display: flex; flex-direction: column;">
+              <span style="font-size: 20px; font-weight: 700; color: #131516;">Who to contact</span>
+              <span style="font-size: 12px; color: #6B7280; padding-top: 2px;">{{ contactScope }}</span>
+              <div style="padding-top: 8px;">
+                <sc-for list="{{ contacts }}" as="c" hint-placeholder-count="4">
+                  <div style="display: flex; flex-direction: column; gap: 2px; padding: 12px 0; border-bottom: 1px solid #F0F0F0;">
+                    <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: #9CA3AF;">{{ c.for }}</span>
+                    <span style="font-size: 14px; font-weight: 700; color: #131516;">{{ c.who }}</span>
+                    <a href="{{ c.href }}" style="font-size: 12px; line-height: 18px; color: #2A5993; overflow-wrap: anywhere;">{{ c.how }}</a>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+          <div style="background: #fff; border: 0.77px solid #E5E7EB; border-radius: 18px; padding: 36px 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;">
+            <div style="display: flex; flex-direction: column; gap: 12px; align-items: flex-start;">
+              <span style="border-radius: 999px; background: #EDF7F1; color: #2A7D46; padding: 5px 12px; font-size: 12px; font-weight: 700;">✓ Sent to Renee Jordan</span>
+              <h2 style="margin: 0; font-size: 30px; font-weight: 700; line-height: 1.2; color: #00274C;">{{ sentTitle }}</h2>
+              <p style="margin: 0; font-size: 14px; line-height: 21px; color: #6B7280; text-wrap: pretty;">The templated request is in Renee's inbox and the tech team has been notified. It's now in the order list below as Submitted. Renee will follow up by email, so keep an eye on your inbox.</p>
+              <button type="button" onClick="{{ startOver }}" style="cursor: pointer; font-family: inherit; margin-top: 8px; border: 0.77px solid #00274C; background: #fff; color: #00274C; border-radius: 999px; padding: 13px 24px; font-size: 14px; font-weight: 600; white-space: nowrap;">Start another order</button>
+            </div>
+            <div style="display: flex; flex-direction: column;">
+              <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.66px; text-transform: uppercase; color: #9CA3AF; padding-bottom: 6px;">What happens next</span>
+              <sc-for list="{{ nextSteps }}" as="x" hint-placeholder-count="5">
+                <div style="display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid #F5F5F5;">
+                  <span style="{{ x.dotStyle }}">{{ x.mark }}</span>
+                  <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <span style="font-size: 14px; font-weight: 600; color: #131516;">{{ x.t }}</span>
+                    <span style="font-size: 12px; color: #6B7280;">{{ x.who }}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <div style="border-top: 1px solid #E5E7EB; margin: 72px 0 0;"></div>
+
+        <div style="padding-top: 56px; display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap;">
+          <div>
+            <div style="font-size: 13px; color: #6B7280;">{{ feedCount }}</div>
+            <h2 style="margin: 2px 0 0; font-size: 30px; font-weight: 700; line-height: 1.2; color: #00274C;">Orders</h2>
+          </div>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+            <input type="search" placeholder="Search unit, VIN, requester" value="{{ query }}" onChange="{{ setQuery }}" style="font-family: inherit; font-size: 13px; height: 42px; width: 240px; max-width: 100%; border: 0.77px solid #E5E7EB; border-radius: 999px; padding: 0 16px; box-sizing: border-box; background: #fff;">
+            <div style="display: flex; gap: 4px; background: #fff; border: 0.77px solid #E5E7EB; border-radius: 999px; padding: 4px;">
+              <sc-for list="{{ statusTabs }}" as="t" hint-placeholder-count="3">
+                <button type="button" onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 28px; background: #fff; border: 0.77px solid #E5E7EB; border-radius: 16px; overflow: hidden;">
+          <sc-for list="{{ feed }}" as="o" hint-placeholder-count="8">
+            <div style="display: grid; grid-template-columns: 96px 72px minmax(0, 1.4fr) minmax(0, 1.2fr) 110px; gap: 16px; align-items: center; padding: 16px 24px; border-bottom: 1px solid #F5F5F5;">
+              <span style="font-size: 13px; color: #6B7280;">{{ o.date }}</span>
+              <span style="font-size: 22px; font-weight: 700; color: #00274C;">{{ o.unit }}</span>
+              <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0;">
+                <span style="font-size: 14px; font-weight: 600; color: #131516;">{{ o.model }}</span>
+                <span style="font-size: 12px; color: #9CA3AF; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ o.vin }}</span>
+              </div>
+              <span style="font-size: 13px; color: #374151;">{{ o.who }}</span>
+              <span style="{{ o.pillStyle }}">{{ o.status }}</span>
+            </div>
+          </sc-for>
+          <sc-if value="{{ feedEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 28px 24px; font-size: 13px; color: #9CA3AF;">No orders match.</div>
+          </sc-if>
+        </div>
+
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const ROLE_HOME = { officer: "./Officer Home.dc.html", supervisor: "./Supervisor Home.dc.html" };
+const SUP_NAV = [
+  { label: "Home", href: "./Supervisor Home.dc.html" },
+  { label: "Overview", href: "./Overview.dc.html" },
+  { label: "Budget Forecast", href: "./Budget Forecast.dc.html" },
+  { label: "Ordering", href: "./Vehicle Ordering.dc.html" },
+  { label: "Service Calendar", href: "./Service Calendar.dc.html" },
+  { label: "Assignments", href: "./Shift Assignments.dc.html" },
+];
+const OFF_NAV = [{ label: "Home", href: "./Officer Home.dc.html" }, { label: "Assignments", href: "./Shift Assignments.dc.html" }];
+
+const LIFECYCLE = [
+  ["Renewal starts", "Renee · CCT spreadsheets"],
+  ["Specify the build", "Fleet lead · equipment, changes, upfitting"],
+  ["Finalize build sheet", "Renee with the fleet lead"],
+  ["Out for bid", "Renee runs the bid and picks the upfitter"],
+  ["Tech team notified", "Radios, MDC, access"],
+  ["Vehicle assigned", "Renee · then the sign shop"],
+  ["Delivered", "Renee sends it to the unit"],
+];
+
+const UNITS = [
+  { n: 43, name: "Ann Arbor UMPD", campus: "Ann Arbor", desc: "Marked patrol, motorcycles, administration and utility", locs: ["Main campus", "Concordia", "North Campus"] },
+  { n: 7, name: "Ann Arbor Parking", campus: "Ann Arbor", desc: "Chevrolet Bolt, minimal outfitting", locs: ["Main campus"] },
+  { n: 14, name: "Dearborn", campus: "Dearborn", desc: "Explorer Interceptor and Tahoe · Ann Arbor build from Sep 2026", locs: ["Main campus", "Marygrove", "Detroit regional"] },
+  { n: 25, name: "Flint", campus: "Flint", desc: "Purchased outright, outside the lease schedule", locs: ["Main campus", "Parking structure"] },
+  { n: 23, name: "Michigan Medicine Security", campus: "Michigan Medicine", desc: "White Explorer Interceptor, posted across SE Michigan", locs: ["East AA", "West AA", "KEC/NCRC", "South Campus", "Brighton", "Northville", "Ypsilanti Regional"] },
+  { n: 8, name: "Protective Services", campus: "Ann Arbor", desc: "Unmarked, varied in color and model", locs: ["Central Campus"] },
+  { n: 8, name: "Housing Security", campus: "Ann Arbor", desc: "Security patrol and one supervisor on a lighter build", locs: ["Main campus", "Northwood", "Residence halls"] },
+  { n: 1, name: "Museum Security", campus: "Ann Arbor", desc: "Marked to match Housing Security", locs: ["Main campus"] },
+  { n: 2, name: "Guest Services, MM", campus: "Michigan Medicine", desc: "Unmarked, not police package", locs: ["Main hospital"] },
+];
+const LOC_SUB = { "Central Campus": "CSSB lot · AA Fleet Services Garage", "North Campus": "North Campus lot · AA garage", "Medical Campus": "Medical campus structure", "Concordia": "Concordia lot", "Dearborn Campus": "Dearborn · local garage", "Flint Campus": "Flint · Arrowhead upfitter", "Off-site clinics": "Posted away from main campus", "Northville / Canton": "Regional posts" };
+
+const Y = "Confirmed", P = "To confirm";
+const SIGN = "UM Sign Shop";
+const AA_ROWS = [
+  ["Roof", "Antenna", "Panorama MiMo with GPS", "TFSKX"],
+  ["Roof", "Light bar", "Whelen 54 inch Legacy DUO with sync module", "TFSKX", { K: "Marked K-9 cars keep the overhead light bar" }],
+  ["Front grille", "Warning lights and takedown", "Whelen ION red, blue and white", "TFSKX"],
+  ["Front grille", "Siren speaker", "Whelen 100W, passenger side", "TFSKX"],
+  ["Rear and sides", "Warning lights", "Whelen ION red and blue on the spoiler and behind the rear side windows", "TFSKX"],
+  ["Front doors", "Spotlight", "Passenger side pillar, switched from the siren head", "TFSKX"],
+  ["Front of car", "Push bar", "Required on all patrol cars", "TFSKX", { all: "Model not named yet · waiting on Canfield" }, P],
+  ["Between the seats", "Console", "Havis angled console, 22 inches, with armrest, cup holders, mic clips and faceplates", "TFSKX"],
+  ["Between the seats", "Radio", "Motorola APX6500, one piece brick", "TFSKX"],
+  ["Between the seats", "Siren and light control head", "Whelen CenCom Core X with the CCLT6 head", "TFSKX"],
+  ["Front seat area", "Computer and dock", "Dell Pro Rugged 14 with the Havis dock", "TFSK"],
+  ["Front seat area", "Ticket printer and mount", "Brother RJ-4230B-L · mount changes with the model year", "TFSKX"],
+  ["Front seat area", "In car camera", "Axon", "TFSKX"],
+  ["Front seat area", "Radar", "Front and rear · moves over from the outgoing car", "TFKS", { S: "Only Patrol Command car 405 carries radar" }, null, { S: P }],
+  ["Back seat area", "Prisoner partition", "Setina 10VS recessed with lower panels", "TFSKX", { K: "Full cage" }],
+  ["Back seat area", "Rear seat", "Setina molded plastic seat, washable, with center pull belts", "TFSKX", { K: "K-9 insert in place of the seat", X: "Insert only" }],
+  ["Back seat area", "Door window barriers", "Setina polycarbonate, rear doors", "TFSKX"],
+  ["Back seat area", "Dome light over the prisoner area", "Techniq 4 inch red and white", "TFSKX"],
+  ["Back seat area", "Rifle mount", "Blac-Rac T-Rail on the partition panel", "TFSK"],
+  ["Back seat area", "Gun locker", "In addition to the rifle mount", "X"],
+  ["Back seat area", "K-9 heat alarm and cooling", "Hot shot cooling for the animal compartment", "K"],
+  ["Trunk or cargo", "Cargo box and drawer", "Setina box, sliding drawer with a keypad lock, radio tray", "TFSKX"],
+  ["Wiring", "Fuse and timer panel", "BIT13 panels in the console · circuits shut off at 0.5, 1, 2 or 4 hours", "TFSKX"],
+  ["On the body", "Graphics and striping", SIGN, "TFSKX"],
+];
+const FORD_NOTE = "Ford part supplied by the upfitter · Tahoe part on file";
+function aaMarked(k) {
+  return AA_ROWS.filter(r => r[3].includes(k)).map(([w, what, ord, , notes, st, stBy]) => {
+    let note = (notes && (notes[k] || notes.all)) || "";
+    if (k === "F" && ["Light bar", "Siren and light control head", "Computer and dock", "Ticket printer and mount", "Door window barriers"].includes(what)) note = note || FORD_NOTE;
+    return [w, what, ord, (stBy && stBy[k]) || st || Y, note];
+  });
+}
+const SEC_ROWS = [
+  ["Roof", "Light bar", "Whelen Liberty II 54 inch amber with takedown and alley lights", "MHU"],
+  ["Hidden", "Warning lights", "Hidden, non-visible lighting", "S"],
+  ["Roof", "Antenna", "Parsec 5 in 1 with Motorola cable", "MHUS"],
+  ["Front grille", "Warning lights", "Two white and two amber Whelen, upper grille", "MHU"],
+  ["Rear", "Plate lights", "Two amber Whelen above the plate", "MHU"],
+  ["Rear", "Reverse light housing", "Two white Whelen Vertex", "MHUS"],
+  ["Between the seats", "Console", "Havis 14 inch with armrest, cup holder, mic clip, 12 volt and USB, tablet mount", "MHU"],
+  ["Between the seats", "Radio", "Motorola APX6500, dash mount", "MHUS"],
+  ["Between the seats", "Light control head", "Whelen PCCS9RW, six buttons", "MHUS"],
+  ["Between the seats", "Siren", "Third-party siren", "S"],
+  ["Front seat area", "Computer mount", "Floor-to-pole mount, no computer · order with the build, it cost 286.99 dollars to add afterward", "U"],
+  ["Cab ceiling", "Dome light", "Whelen red and white between the front seats", "MHU"],
+  ["Wiring", "Fuse and timer panel", "BIT13 panels in the console · timed shut off at 0.5, 1, 2 or 4 hours", "MHUS"],
+  ["Carried in the car", "Life safety kit", "First aid, AED, ballistic vest, trauma kit", "MHUS", "Fitted by your own staff, not the upfitter · who fits it is unconfirmed", P],
+  ["On the body", "Graphics", SIGN, "MHU"],
+];
+function security(k, extra) {
+  const rows = SEC_ROWS.filter(r => r[3].includes(k)).map(([w, what, ord, , note, st]) => [w, what, ord, k === "S" ? P : (st || Y), k === "S" ? "Drawn from conversation · not yet confirmed by the unit" : (note || "")]);
+  return rows.concat(extra || []);
+}
+const PKGS = {
+  "Ann Arbor UMPD": { lead: "Brian Daniels and Thomas Eberts", roles: [
+    { name: "Patrol Tahoe", desc: "Marked · full patrol build", vehicle: "Chevrolet Tahoe PPV", items: aaMarked("T") },
+    { name: "Patrol Ford Interceptor", desc: "Marked · same list, Ford parts by the upfitter", vehicle: "Ford Police Interceptor Utility", items: aaMarked("F") },
+    { name: "Supervisor", desc: "Marked · no radar except command car 405", vehicle: "Chevrolet Tahoe PPV", items: aaMarked("S") },
+    { name: "K-9", desc: "Unit 1531 · full cage, heat alarm, light bar kept", vehicle: "Chevrolet Tahoe 4x4", items: aaMarked("K") },
+    { name: "Transport", desc: "Unit 1354 · gun locker, no rifle mount or radar", vehicle: "Ford Transit", items: aaMarked("X") },
+    { name: "CIU", desc: "Unmarked · grille and rear window lights", vehicle: "Unmarked sedan or SUV", gfx: "Unmarked · no graphics", items: [
+      ["Front grille and rear window", "Emergency lights", "Grille lights and rear window lights · no graphics", Y, ""],
+      ["Depends on vehicle", "Radio", "Motorola APX6500", Y, "Mounting location depends on the vehicle · civilian models may not take a between-seat mount"],
+      ["Depends on vehicle", "Console", "Havis angled console", Y, "Same as radio"],
+      ["Depends on vehicle", "Siren and control head", "Whelen CenCom Core X", Y, "Same as radio"],
+      ["Wiring", "Fuse and timer panel", "BIT13 panels", P, "Unit not sure if fitted"],
+      ["On the body", "Door identifier", "Door sticker on unmarked minivans and trucks · two identifiers required, as on 1174", Y, ""],
+    ] },
+    { name: "Admin pool", desc: "Plain vehicle, administrative color", vehicle: "Administrative pool vehicle", gfx: "Administrative color", items: [
+      ["Vehicle", "Plain vehicle", "Administrative color · nothing added", Y, ""],
+      ["On the body", "Door identifier", "Door sticker on minivans and trucks · two identifiers required", Y, ""],
+    ] },
+  ] },
+  "Ann Arbor Parking": { lead: "Brian Daniels and Thomas Eberts", roles: [
+    { name: "Parking enforcement", desc: "Yellow lights, plate reader · Bolt replacement not named", vehicle: "Bolt replacement to be agreed", items: [
+      ["Vehicle", "Platform", "Chevrolet Bolt is discontinued · Parking Services and Transportation agree the replacement", P, ""],
+      ["Dash and grille", "Warning lights", "Yellow lights on the dashboard and grille only", Y, ""],
+      ["Depends on vehicle", "Radio", "Motorola APX6500", Y, "Mounting location depends on the vehicle"],
+      ["Front seat area", "Plate reader", "LPR camera", Y, ""],
+      ["Wiring", "Fuse and timer panel", "BIT13 panels", P, "Not on any record held"],
+      ["On the body", "Graphics", "Parking graphics · " + SIGN, Y, ""],
+    ] },
+  ] },
+  "Dearborn": { lead: "Jack Lengyel", roles: [
+    { name: "Patrol", desc: "Same patrol list as Ann Arbor from Sep 2026", vehicle: "Ford Police Interceptor Utility", gfx: "Matches Ann Arbor, no campus wording", items: [
+      ["Roof", "Antenna and light bar", "Panorama MiMo with GPS · Whelen 54 inch Legacy DUO", Y, FORD_NOTE],
+      ["Front grille", "Warning lights, takedown and siren speaker", "Whelen ION red, blue and white · Whelen 100W speaker", Y, ""],
+      ["Rear and sides", "Warning lights", "Whelen ION red and blue", Y, ""],
+      ["Front of car", "Push bar", "Required on all patrol cars", P, "Model not named yet"],
+      ["Between the seats", "Console", "Havis angled console with armrest and faceplates", Y, ""],
+      ["Between the seats", "Radio", "Motorola APX6500", Y, "Required · has been left off Dearborn builds before"],
+      ["Between the seats", "Siren and light control head", "Whelen CenCom Core X with CCLT6 head", Y, "Ford interface harness supplied by the upfitter"],
+      ["Front seat area", "Computer, dock, printer, camera", "Dell Pro Rugged 14, Brother RJ-4230B-L, Axon", Y, "Ford dock and mount parts supplied by the upfitter"],
+      ["Back seat area", "Partition, rear seat, door barriers", "Setina recessed partition, molded seat, polycarbonate barriers", Y, ""],
+      ["Back seat area", "Rifle mount", "Blac-Rac T-Rail", Y, "Accessory-mode release issue corrected"],
+      ["Trunk or cargo", "Cargo box and drawer", "Setina box with sliding drawer", Y, ""],
+      ["Wiring", "Fuse and timer panel", "BIT13 panels in the console", Y, ""],
+      ["Glass", "Factory window tint", "Required · has been left off Dearborn builds before", Y, ""],
+      ["On the body", "Graphics", SIGN + " · match Ann Arbor with no campus wording", Y, ""],
+    ] },
+  ] },
+  "Flint": { lead: "Sgt. Thomas Needham", roles: ["Patrol", "Supervisor"].map(name => ({
+    name, desc: name === "Patrol" ? "Full partition, overhead weapon storage" : "No cage", vehicle: "Chevrolet Tahoe or Ford Explorer", gfx: "Flint markings · dimensioned proof on file", items: [
+      ["Roof and windshield", "Warning lights", "Behind the windshield, no roof bar", Y, "Tahoes only · one parking garage is too low for a roof bar. Explorers can take one"],
+      ["Front grille", "Warning lights and takedown", "Red and blue LED with white takedown and scene", Y, ""],
+      ["Front grille", "Siren and control head", "BluePrint 500 series remote amplifier ENGSA5201 · bluePRINT rotary control panel with mic ENGCP18004", Y, "Approved difference after Whelen failures"],
+      ["Between the seats", "Console", "Console with armrest and faceplates", Y, ""],
+      ["Between the seats", "Radio", "Motorola APX6500", Y, "DPSS supplies · not on the upfitter quote"],
+      ["Front seat area", "In car camera", "Axon", Y, "DPSS supplies · not on the upfitter quote"],
+    ].concat(name === "Patrol" ? [["Back seat area", "Partition and rear seat", "Full partition with a molded transport seat", Y, ""]] : []).concat([
+      ["Rear cargo area", "Weapon storage", "Lund LOFT overhead weapon storage, LOFT-PIU20-2G", Y, "New builds only · no plans to convert older cars"],
+      ["Wiring", "Fuse and timer panel", "Custom distribution and harness", Y, ""],
+      ["On the body", "Graphics", "Bill Carr Signs", Y, ""],
+    ]) })) },
+  "Michigan Medicine Security": { lead: "Ryan Reddig and Michael Dillard", roles: [
+    { name: "Security patrol", desc: "White full-size SUV, full back seat for escorts", vehicle: "White full-size SUV", gfx: "White vehicle", items: security("M") },
+    { name: "Security K-9", desc: "Security build with the extended K-9 cage", vehicle: "White full-size SUV", gfx: "White vehicle", items: security("M", [["Back seat area", "K-9 cage", "Havis Extended K9 Transport System K9-F29-XL", Y, "Cage size has changed between orders · this is current"]]) },
+  ] },
+  "Housing Security": { lead: "Charles McDermott", roles: [{ name: "Security patrol", desc: "Amber lights, no siren, no computer", vehicle: "Security patrol SUV", items: security("H") }] },
+  "Museum Security": { lead: "John Williams", roles: [{ name: "Security patrol", desc: "Unit 74 · amber lights, computer mount only", vehicle: "Ford Explorer", items: security("U") }] },
+  "Protective Services": { lead: "Milot Goci", roles: [{ name: "Unmarked protective", desc: "Hidden lights, third-party siren · unit to confirm", vehicle: "Unmarked vehicle", gfx: "Unmarked · no graphics", items: security("S") }] },
+  "Guest Services, MM": { lead: "Daniel Dombrowski", roles: [
+    { name: "Stock vehicle", desc: "Nothing added", vehicle: "Stock vehicle", gfx: "None · stock", items: [["Vehicle", "Stock vehicle", "Nothing added", Y, ""]] },
+    { name: "Minivan", desc: "Vehicle 29, February 2027 · stock like 392", vehicle: "Stock minivan", gfx: "None · stock", items: [["Vehicle", "Stock minivan", "Nothing added · same as current 392", Y, "Replaces vehicle 29 in February 2027"]] },
+  ] },
+};
+
+const FEED0 = [
+  ["08 Sep 2026", "—", "Ford Explorer Interceptor", "Submitted", "T. Eberts · Ann Arbor UMPD", "VIN pending · assigned at award"],
+  ["02 Sep 2026", "531", "Chevrolet Tahoe", "In build", "B. Daniels · Ann Arbor UMPD", "1GNSKDEC6LR248354"],
+  ["27 Aug 2026", "—", "Chrysler Pacifica Select", "In bid", "R. Reddig · Guest Services, MM", "VIN pending · assigned at award"],
+  ["19 Aug 2026", "404", "Chevrolet Tahoe", "Assigned", "B. Daniels · Ann Arbor UMPD", "1GNSKDEC0MR119872"],
+  ["11 Aug 2026", "388", "Ford Explorer / PIU", "In build", "M. Dillard · Dearborn", "1FM5K8AB1SGB44107"],
+  ["04 Aug 2026", "368", "Ford Explorer / PIU", "Delivered", "M. Dillard · Dearborn", "1FM5K8AB9SGB96895"],
+  ["22 Jul 2026", "—", "Harley-Davidson Electra Glide", "Cancelled", "F. Richardson · Ann Arbor UMPD", "Withdrawn before bid"],
+  ["09 Jul 2026", "365", "Ford Explorer / PIU", "Delivered", "M. Dillard · Dearborn", "1FM5K8AB4SGB87036"],
+  ["18 Jun 2026", "403", "Chevrolet Tahoe", "Delivered", "B. Daniels · Ann Arbor UMPD", "1GNSKDEC4NR221540"],
+  ["21 May 2026", "509", "Ford Explorer / PIU", "Delivered", "K. Hubbard · Flint", "1FM5K8AB2RGA55018"],
+].map(([date, unit, model, status, who, vin]) => ({ date, unit, model, status, who, vin }));
+const STATUS_PILL = { "Submitted": ["#E8EEF7", "#2A5993"], "In bid": ["#FDF4DC", "#92610A"], "In build": ["#FDF4DC", "#92610A"], "Assigned": ["#E8EEF7", "#00274C"], "Delivered": ["#EDF7F1", "#2A7D46"], "Cancelled": ["#F3F4F6", "#6B7280"] };
+
+const STEP_NAMES = ["Unit", "Location", "Vehicle role", "Package", "Order details", "Review and submit"];
+const STEP_TITLES = ["Which unit is this for?", "Where will it be posted?", "What role will it fill?", "Package overview", "Order details", "Review and submit"];
+const BLURBS = [
+  "Pick the department. Its campus, roles and build file load from here.",
+  "The location sets which garage preps it and where Renee delivers it.",
+  "The role decides the build sheet, upfitting and graphics.",
+  "The standard build and graphics for this role, grouped by where each item goes in the vehicle. Anything not yet confirmed is flagged at the top.",
+  "Who is asking, why, how it is paid for, and anything that should differ from the standard package.",
+  "Check the request, then send it. Renee receives it as a templated email and the tech team is notified.",
+];
+const LEAD_CONTACT = { "Ann Arbor UMPD": "btd@umich.edu · teberts@umich.edu", "Ann Arbor Parking": "btd@umich.edu · teberts@umich.edu" };
+const TRIGGERS = ["Lease ending: replacement", "Accident or total loss", "Approved fleet expansion", "New site or post", "Self funded from unit budget"];
+const FUNDINGS = ["Rolled into the lease agreement", "Paid separately by unit", "Not yet decided"];
+const SPEC_FOR = {
+  "Ann Arbor UMPD": { "Patrol Tahoe": "tahoe-ppv", "Patrol Ford Interceptor": "piu", "Supervisor": "tahoe-ppv", "K-9": "tahoe-4x4" },
+  "Dearborn": { "Patrol": "piu-dearborn" },
+  "Michigan Medicine Security": { "Security patrol": "piu-mm-security", "Security K-9": "piu-mm-security" },
+  "Housing Security": { "Security patrol": "piu-dpss" },
+  "Museum Security": { "Security patrol": "piu-dpss" },
+  "Protective Services": { "Unmarked protective": "jeep" },
+};
+const NUMW = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"];
+const xe = v => String(v).replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[m]);
+async function buildXlsx(rows, header) {
+  const JSZip = (await import("https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm")).default;
+  const z = new JSZip();
+  const all = [["ITEM", "DESCRIPTION", "ACCEPTANCE", "CORRECTION", "h"]];
+  rows.forEach(([a, b]) => all.push(a === "#" ? [b, "", "", "", "s"] : [a, b, "Select one", "", "i"]));
+  all.push(["", "", "", "", "b"], ["Department Authorization", "", "", "", "s"],
+    ["Lease term", "I understand that the lease term for the vehicle replacement is 60 months.", "Select One", "", "a"],
+    ["Acknowledgement", "This specification meets our operational needs.  I am authorizing LTP Fleet Services to proceed with vehicle procurement.", "Select One", "", "a"],
+    ["Name (signature)", "", "", "", "n"], ["Date", "", "", "", "n"]);
+  const cell = (ref, v, st) => '<c r="' + ref + '" s="' + st + '"' + (v ? ' t="inlineStr"><is><t xml:space="preserve">' + xe(v) + "</t></is></c>" : "/>");
+  const iRows = [], aRows = [];
+  const sd = all.map((r, i) => { const n = i + 1, k = r[4];
+    if (k === "i") iRows.push(n); if (k === "a") aRows.push(n);
+    if (k === "b") return '<row r="' + n + '"/>';
+    if (k === "s") return '<row r="' + n + '">' + cell("A" + n, r[0], 1) + "</row>";
+    const st = k === "h" ? 1 : 2, long = (r[1] || "").length > 70;
+    return '<row r="' + n + '"' + (long ? ' ht="30" customHeight="1"' : "") + ">" + ["A", "B", "C", "D"].map((c, j) => cell(c + n, r[j], st)).join("") + "</row>"; }).join("");
+  const dv = '<dataValidations count="2"><dataValidation type="list" allowBlank="1" showErrorMessage="1" sqref="' + iRows.map(n => "C" + n).join(" ") + '"><formula1>"Select one,Yes,No - state correction"</formula1></dataValidation><dataValidation type="list" allowBlank="1" showErrorMessage="1" sqref="' + aRows.map(n => "C" + n).join(" ") + '"><formula1>"Select One,Yes,No"</formula1></dataValidation></dataValidations>';
+  const sheet = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheetViews><sheetView tabSelected="1" view="pageLayout" workbookViewId="0"/></sheetViews><sheetFormatPr defaultRowHeight="15"/><cols><col min="1" max="1" width="22.85546875" customWidth="1"/><col min="2" max="2" width="60.28515625" customWidth="1"/><col min="3" max="3" width="14.140625" customWidth="1"/><col min="4" max="4" width="32.7109375" customWidth="1"/></cols><sheetData>' + sd + "</sheetData>" + dv +
+    '<pageMargins left="0.3958" right="0.3646" top="1.1146" bottom="0.75" header="0" footer="0"/><pageSetup orientation="landscape"/><headerFooter><oddHeader>&amp;L &amp;R' + xe(header.join("\n")) + "</oddHeader><oddFooter>&amp;Cpage &amp;P</oddFooter></headerFooter></worksheet>";
+  z.file("[Content_Types].xml", '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>');
+  z.file("_rels/.rels", '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>');
+  z.file("xl/workbook.xml", '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Item #01" sheetId="1" r:id="rId1"/></sheets></workbook>');
+  z.file("xl/_rels/workbook.xml.rels", '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>');
+  z.file("xl/styles.xml", '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/><family val="2"/></font><font><b/><sz val="11"/><name val="Calibri"/><family val="2"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFD0CECE"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border><border><left style="thin"/><right style="thin"/><top style="thin"/><bottom style="thin"/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="3"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf><xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>');
+  z.file("xl/worksheets/sheet1.xml", sheet);
+  return z.generateAsync({ type: "blob", mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+}
+const BLANK = { replaced: "", trigger: "", funding: "", extra: "", step: 1, unit: "", loc: "", role: "", tab: "Build sheet", qty: 1, needBy: "", shortCode: "", changes: "", sent: false };
+
+class Component extends DCLogic {
+  state = { role: "supervisor", ...BLANK, requester: "Faith Richardson", uniq: "frichar", query: "", status: "All", feed: FEED0 };
+
+  componentDidMount() {
+    let r = "supervisor"; try { r = localStorage.getItem("dpss-role") || "supervisor"; } catch (e) {}
+    this.setState({ role: r });
+    fetch("./build-specs.json").then(x => x.json()).then(specs => this.setState({ specs })).catch(() => {});
+  }
+
+  renderVals() {
+    const s = this.state;
+    const unit = UNITS.find(u => u.name === s.unit);
+    const isFlint = s.unit === "Flint";
+    const pk = PKGS[s.unit] || { lead: "", roles: [] };
+    const roleObj = pk.roles.find(r => r.name === s.role);
+    const ready = [true, !!s.unit, !!s.loc, !!s.role, !!s.role, !!s.role];
+    const codeOk = !!s.shortCode.trim(), uniqOk = !!s.uniq.trim(), reqOk = !!s.requester.trim();
+    const canNext = s.step === 1 ? !!s.unit : s.step === 2 ? !!s.loc : s.step === 3 ? !!s.role : s.step === 5 ? (codeOk && uniqOk && reqOk) : true;
+    const chipSt = on => "cursor:pointer;font-family:inherit;border-radius:999px;padding:10px 18px;font-size:13px;white-space:nowrap;" +
+      (on ? "background:#00274C;border:0.77px solid #00274C;color:#fff;font-weight:600;" : "background:#fff;border:0.77px solid #E5E7EB;color:#374151;font-weight:500;");
+    const bad = ok => "font-family:inherit;font-size:14px;height:48px;border-radius:12px;padding:0 14px;box-sizing:border-box;border:1px solid " + (!ok && s.tried ? "#C0362C" : "#E5E7EB") + ";";
+
+    const card = on => "cursor:pointer;font-family:inherit;text-align:left;display:flex;flex-direction:column;gap:6px;border-radius:14px;padding:18px 20px;box-sizing:border-box;" +
+      (on ? "background:#00274C;border:0.77px solid #00274C;" : "background:#fff;border:0.77px solid #E5E7EB;");
+    const seg = on => "cursor:pointer;font-family:inherit;border:none;border-radius:999px;padding:9px 18px;font-size:13px;white-space:nowrap;" +
+      (on ? "background:#00274C;color:#fff;font-weight:600;" : "background:transparent;color:#374151;font-weight:500;");
+    const pill = (bg, fg) => "border-radius:999px;padding:4px 12px;font-size:12px;font-weight:600;white-space:nowrap;justify-self:start;background:" + bg + ";color:" + fg + ";";
+
+    const lifecycle = LIFECYCLE.map(([title, who], i) => {
+      const here = i === 1;
+      return { n: "0" + (i + 1), title, who, here,
+        cardStyle: "border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:6px;box-sizing:border-box;" + (here ? "background:#fff;" : "background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);"),
+        numStyle: "font-size:13px;font-weight:700;color:" + (here ? "#00274C" : "#FFCB05") + ";",
+        titleStyle: "font-size:15px;font-weight:700;line-height:1.3;color:" + (here ? "#00274C" : "#fff") + ";",
+        whoStyle: "font-size:12px;line-height:17px;color:" + (here ? "#6B7280" : "rgba(255,255,255,0.65)") + ";" };
+    });
+
+    const steps = STEP_NAMES.map((label, i) => {
+      const n = i + 1, on = s.step === n, done = s.step > n, ok = ready[i];
+      return { n: done ? "✓" : String(n), label, go: () => { if (ok) this.setState({ step: n }); },
+        style: "font-family:inherit;display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:8px 16px 8px 8px;font-size:13px;white-space:nowrap;" +
+          (on ? "cursor:default;background:#00274C;border:0.77px solid #00274C;color:#fff;font-weight:700;" :
+           ok ? "cursor:pointer;background:#fff;border:0.77px solid #E5E7EB;color:#00274C;font-weight:600;" :
+           "cursor:not-allowed;background:#fff;border:0.77px solid #F0F0F0;color:#B0B8C1;font-weight:500;"),
+        numStyle: "width:24px;height:24px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;" +
+          (on ? "background:#FFCB05;color:#131516;" : done ? "background:#EDF7F1;color:#2A7D46;" : "background:#F3F4F6;color:#9CA3AF;") };
+    });
+
+    const units = UNITS.map(u => {
+      const on = s.unit === u.name;
+      return { ...u, style: card(on),
+        pick: () => this.setState({ unit: u.name, loc: u.locs.length === 1 ? u.locs[0] : "", role: "", step: 2 }),
+        nameStyle: "font-size:15px;font-weight:700;color:" + (on ? "#fff" : "#131516") + ";",
+        countStyle: "font-size:13px;font-weight:600;color:" + (on ? "#FFCB05" : "#9CA3AF") + ";",
+        campusStyle: "font-size:12px;font-weight:600;color:" + (on ? "#FFCB05" : "#00274C") + ";",
+        descStyle: "font-size:12px;line-height:18px;color:" + (on ? "rgba(255,255,255,0.75)" : "#6B7280") + ";" };
+    });
+
+    const locations = (unit ? unit.locs : []).map(name => {
+      const on = s.loc === name;
+      return { name, sub: LOC_SUB[name] || "", pick: () => this.setState({ loc: name }),
+        style: "cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:14px;border-radius:14px;padding:16px 20px;" +
+          (on ? "background:#00274C;border:0.77px solid #00274C;color:#fff;" : "background:#fff;border:0.77px solid #E5E7EB;color:#131516;"),
+        dotStyle: "width:18px;height:18px;border-radius:999px;flex-shrink:0;box-sizing:border-box;" + (on ? "border:5px solid #FFCB05;background:#00274C;" : "border:1.5px solid #D1D5DB;"),
+        subStyle: "font-size:12px;color:" + (on ? "rgba(255,255,255,0.7)" : "#6B7280") + ";" };
+    });
+
+    const roles = pk.roles.map(({ name, desc }) => {
+      const on = s.role === name;
+      return { name, desc, style: card(on), pick: () => this.setState({ role: name, step: 4, tab: "Build sheet" }),
+        nameStyle: "font-size:15px;font-weight:700;color:" + (on ? "#fff" : "#131516") + ";",
+        descStyle: "font-size:12px;line-height:18px;color:" + (on ? "rgba(255,255,255,0.75)" : "#6B7280") + ";" };
+    });
+
+    const rawBuild = roleObj ? roleObj.items : [];
+    const specKey = (SPEC_FOR[s.unit] || {})[s.role], spec = specKey && s.specs ? s.specs[specKey] : null;
+    const specRows = spec ? spec.rows : [["General Type", roleObj ? roleObj.vehicle : ""], ["#", "SPECIFICATION"], ["", "No saved specification for this vehicle yet · Transportation to add"]];
+    const specLines = specRows.filter(r => r[0] !== "#").length;
+    const repl = s.replaced.split(/[,\s]+/).filter(Boolean);
+    const sheetHeader = ["Item# 00", "U-M vehicle# " + (repl.length ? repl.join(",") : "to be assigned"), "Total of " + (NUMW[s.qty] || s.qty) + " (" + s.qty + ") vehicle" + (s.qty > 1 ? "s" : "")];
+    const sheetFile = "Build sheet · " + (s.unit || "Unit") + " · " + (s.role || "Role") + (repl.length ? " · " + repl.join(",") : "") + ".xlsx";
+    const build = rawBuild.map(([cat, what, ordered, status, note]) => ({ cat, item: what, note: ordered + (note ? " · " + note : ""), status,
+      pillStyle: status === Y ? pill("#EDF7F1", "#2A7D46") : pill("#FDF4DC", "#92610A") }));
+    const pendingRows = rawBuild.filter(b => b[3] !== Y);
+    const pending = pendingRows.length;
+    const zoneMap = [];
+    rawBuild.forEach(([where, what, ordered, status, note]) => {
+      let z = zoneMap.find(x => x.where === where);
+      if (!z) { z = { where, raw: [] }; zoneMap.push(z); }
+      z.raw.push({ what, flagged: status !== Y, model: ordered, note: note || "" });
+    });
+    const zones = zoneMap.map(z => {
+      const open = !!s.details || !!(s.open && s.open[z.where]);
+      const flag = z.raw.some(i => i.flagged);
+      return { where: z.where, open,
+        wrapStyle: "border-bottom:1px solid #E5E7EB;" + (open ? "background:#F3F4F6;box-shadow:inset 3px 0 0 #00274C;" : "background:#fff;"),
+        summary: z.raw.map(i => i.what).join(", "),
+        count: z.raw.length + (z.raw.length === 1 ? " item" : " items"),
+        toggle: () => this.setState(st => { const base = st.details ? Object.fromEntries(zoneMap.map(x => [x.where, true])) : (st.open || {}); return { open: { ...base, [z.where]: !open }, details: false }; }),
+        dotStyle: "width:8px;height:8px;border-radius:999px;flex-shrink:0;background:" + (flag ? "#E0A526" : "#9FD3B2") + ";",
+        countStyle: "font-size:12px;font-weight:600;white-space:nowrap;color:" + (flag ? "#92610A" : "#9CA3AF") + ";",
+        chevStyle: "font-size:14px;color:#6B7280;display:inline-block;transition:transform .15s;" + (open ? "transform:rotate(180deg);" : ""),
+        items: z.raw.map(i => ({ ...i, hasNote: !!i.note,
+          dotStyle: "width:6px;height:6px;border-radius:999px;flex-shrink:0;margin-top:7px;background:" + (i.flagged ? "#E0A526" : "#9FD3B2") + ";",
+          noteStyle: "font-size:12px;line-height:18px;color:" + (i.flagged ? "#92610A" : "#6B7280") + ";" })) };
+    });
+    const stock = !!roleObj && /None/.test(roleObj.gfx || "");
+    const unmarked = !!roleObj && /Unmarked|Administrative/.test(roleObj.gfx || "");
+    const graphics = [
+      { k: "Scheme", v: (roleObj && roleObj.gfx) || "Marked · DPSS standard" },
+      { k: "Applied by", v: stock ? "Not needed" : isFlint ? "Ken Hubbard · Bill Carr Signs" : "Matt Wilson · UM Sign Shop" },
+      { k: "Unit number", v: stock || unmarked ? "Door identifier only where required" : "Roof and rear · issued at assignment" },
+      { k: "When", v: stock ? "—" : "Usually before upfitting, after Renee assigns the vehicle" },
+    ];
+
+    const pkgTabs = ["Build sheet", "Graphics", "Other details"].map(label => ({ label, style: seg(s.tab === label), pick: () => this.setState({ tab: label }) }));
+
+    const dash = v => v || "—";
+    const cart = [
+      ["Unit", s.unit], ["Fleet lead", pk.lead], ["Location", s.loc], ["Role", s.role],
+      ["Build", s.role ? (rawBuild.length - pending) + " of " + rawBuild.length + " confirmed" : ""],
+      ["Factory spec", s.role ? (spec ? spec.rows[0][1].replace(/ with .*| - K8A.*/, "") : "None saved yet") : ""],
+      ["Quantity", s.role ? String(s.qty) : ""], ["Reason", s.trigger], ["Needed by", s.needBy], ["Short code", s.shortCode], ["Funding", s.funding],
+    ].map(([k, v]) => ({ k, v: dash(v), vStyle: "font-size:13px;font-weight:600;text-align:right;color:" + (v ? "#131516" : "#D1D5DB") + ";" }));
+
+    const subject = "Vehicle order request · " + (s.unit || "Unit") + " · " + (s.role || "Role") + " × " + s.qty;
+    const emailLines = [
+      "Hi Renee,",
+      s.unit + " is requesting " + s.qty + " " + (s.role || "").toLowerCase() + " vehicle" + (s.qty > 1 ? "s" : "") + ", posted at " + s.loc + ".",
+      "Vehicle: " + (spec ? spec.rows[0][1] : roleObj ? roleObj.vehicle : "") + ". Build sheet attached" + (spec ? ", " + specLines + " spec lines for acceptance" : ", spec to be added") + (repl.length ? " · replacing " + repl.join(", ") : "") + ".",
+      "Upfitting: " + s.role + " package, " + rawBuild.length + " line" + (rawBuild.length === 1 ? "" : "s") + ".",
+      pending ? pending + " line" + (pending > 1 ? "s" : "") + " still to confirm: " + pendingRows.map(b => b[1]).join(", ") + "." : "All build sheet lines confirmed by the unit.",
+      "Reason: " + (s.trigger || "not given") + " · Outfitting funded: " + (s.funding || "not given").toLowerCase() + ".",
+      "Deviations from the standard package: " + (s.changes.trim() || "none") + ".",
+      ...(s.extra.trim() ? ["Also: " + s.extra.trim()] : []),
+      "Needed in service by: " + (s.needBy || "no date given") + " · Short code: " + (s.shortCode || "not given") + ".",
+      "Thanks, " + s.requester + " (" + s.uniq + "@umich.edu)",
+    ].map(t => ({ t }));
+
+    const btn = "cursor:pointer;font-family:inherit;border-radius:999px;padding:13px 26px;font-size:14px;";
+    const q = s.query.trim().toLowerCase();
+    const feed = s.feed.filter(o => (s.status === "All" || (s.status === "In progress" ? !["Delivered", "Cancelled"].includes(o.status) : ["Delivered", "Cancelled"].includes(o.status))) &&
+      (!q || [o.unit, o.vin, o.who, o.model].some(x => x.toLowerCase().includes(q))))
+      .map(o => ({ ...o, pillStyle: pill(...STATUS_PILL[o.status]) }));
+    const inProgress = s.feed.filter(o => !["Delivered", "Cancelled"].includes(o.status)).length;
+
+    const nav = (s.role === "officer" ? OFF_NAV : SUP_NAV).map(n => ({ ...n,
+      style: "font-size:14px;white-space:nowrap;" + (n.label === "Ordering" ? "font-weight:700;color:#00274C;" : "font-weight:500;color:#6B7280;") }));
+
+    return {
+      role: s.role, isOfficer: s.role === "officer", isSupervisor: s.role !== "officer", navLinks: nav,
+      switchRole: e => { const r = e.target.value; try { localStorage.setItem("dpss-role", r); } catch (x) {} this.setState({ role: r }); },
+      lifecycle, steps, stepNum: s.step, stepTitle: STEP_TITLES[s.step - 1], stepBlurb: BLURBS[s.step - 1],
+      is1: s.step === 1, is2: s.step === 2, is3: s.step === 3, is4: s.step === 4, is5: s.step === 5, is6: s.step === 6,
+      units, locations, roles, pkgTabs,
+      tabBuild: s.tab === "Build sheet", tabGraphics: s.tab === "Graphics", tabOther: s.tab === "Other details",
+      buildTitle: s.role + " · " + (roleObj ? roleObj.vehicle : ""),
+      buildCount: rawBuild.length + " items · " + (rawBuild.length - pending) + " confirmed" + (pending ? " · " + pending + " to confirm" : "") + " · from the unit package confirmation, Sep 2026",
+      zones, hasPending: pending > 0,
+      toggleDetails: () => this.setState(st => ({ details: !(st.details || zones.every(z => z.open)), open: {} })),
+      detailsLabel: zones.length && zones.every(z => z.open) ? "Collapse all" : "Expand all",
+      pendingList: pendingRows.map(r => ({ what: r[1], why: r[4] || r[2] })),
+      pendingNote: pending + " to confirm before bid · you can still submit, Renee settles these with you",
+      graphics,
+      replaced: s.replaced, setReplaced: e => this.setState({ replaced: e.target.value }),
+      sheetFile, sheetSub: (spec ? specLines + " spec lines · acceptance left for Renee and the unit" : "Header and authorization only · no saved spec for this vehicle") + " · click to open",
+      downloadSheet: () => buildXlsx(specRows, sheetHeader).then(blob => { const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = sheetFile.replace(/ · /g, " - "); document.body.appendChild(a); a.click(); a.remove(); }),
+      qty: s.qty, qtyUp: () => this.setState(st => ({ qty: Math.min(20, st.qty + 1) })), qtyDown: () => this.setState(st => ({ qty: Math.max(1, st.qty - 1) })),
+      needBy: s.needBy, setNeedBy: e => this.setState({ needBy: e.target.value }),
+      shortCode: s.shortCode, setShortCode: e => this.setState({ shortCode: e.target.value }),
+      changes: s.changes, setChanges: e => this.setState({ changes: e.target.value }),
+      requester: s.requester, setRequester: e => this.setState({ requester: e.target.value }),
+      uniq: s.uniq, setUniq: e => this.setState({ uniq: e.target.value }),
+      emailCc: s.uniq + "@umich.edu" + (pk.lead ? " · " + pk.lead : "") + " · DPSS tech team", emailSubject: subject, emailLines,
+      cart, cartNote: "Nothing is ordered until Renee finalizes the build sheet and the bid is awarded.",
+      back: () => this.setState(st => ({ step: Math.max(1, st.step - 1), tried: false })),
+      codeStyle: bad(codeOk), uniqStyle: bad(uniqOk), reqStyle: bad(reqOk),
+      requiredMsg: s.tried && !canNext ? "Fill in the required fields to continue." : "",
+      uniqWrapStyle: "display:flex;align-items:center;gap:6px;height:48px;border-radius:12px;padding:0 14px;box-sizing:border-box;background:#fff;border:1px solid " + (!uniqOk && s.tried ? "#C0362C" : "#E5E7EB") + ";",
+      triggers: TRIGGERS.map(label => ({ label, style: chipSt(s.trigger === label), pick: () => this.setState({ trigger: s.trigger === label ? "" : label }) })),
+      fundings: FUNDINGS.map(label => ({ label, style: chipSt(s.funding === label), pick: () => this.setState({ funding: s.funding === label ? "" : label }) })),
+      extra: s.extra, setExtra: e => this.setState({ extra: e.target.value }),
+      showRequired: s.tried && !canNext,
+      backStyle: btn + "background:#fff;border:0.77px solid #E5E7EB;color:#374151;font-weight:600;" + (s.step === 1 ? "visibility:hidden;" : ""),
+      next: () => {
+        if (!canNext) { this.setState({ tried: true }); return; }
+        if (s.step < 6) { this.setState({ step: s.step + 1, tried: false }); return; }
+        const d = new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+        const initial = s.requester.split(" ").map((p, i, a) => i < a.length - 1 ? p[0] + "." : p).join(" ");
+        const row = { date: d, unit: "—", model: (roleObj ? roleObj.vehicle : s.role) + (s.qty > 1 ? " × " + s.qty : ""), status: "Submitted", who: initial + " · " + s.unit, vin: "VIN pending · assigned at award" };
+        this.setState(st => ({ sent: true, feed: [row, ...st.feed] }));
+      },
+      nextLabel: s.step === 6 ? "Send to Renee" : "Continue",
+      nextStyle: btn + "border:none;font-weight:700;" + (canNext ? (s.step === 6 ? "background:#FFCB05;color:#00274C;" : "background:#00274C;color:#fff;") : "background:#F3F4F6;color:#9CA3AF;cursor:not-allowed;"),
+      notSent: !s.sent, sent: s.sent,
+      sentTitle: s.qty + " × " + s.role + " for " + s.unit,
+      nextSteps: [
+        ["✓", "Request emailed to Renee", "Templated email with the build sheet attached", true],
+        ["✓", "Tech team notified", "Radios, MDC and access prepared ahead of delivery", true],
+        ["3", "Renee finalizes the build sheet with you", "Settles anything still marked pending", false],
+        ["4", "Out for bid", "Renee runs the bid and chooses the upfitter", false],
+        ["5", "Vehicle assigned, then sign shop", "Unit number and graphics applied", false],
+        ["6", "Delivered to " + s.loc, "Renee reaches out to the unit", false],
+      ].map(([mark, t, who, done]) => ({ mark, t, who,
+        dotStyle: "width:26px;height:26px;flex-shrink:0;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;" + (done ? "background:#EDF7F1;color:#2A7D46;" : "background:#F3F4F6;color:#9CA3AF;") })),
+      contactScope: s.unit ? "For " + s.unit : "Pick a unit to add its fleet lead and sign shop",
+      contacts: [
+        { for: "Orders, leases and bids", who: "Renee Jordan · Transportation", how: "reneej@umich.edu · 734-615-0527", href: "mailto:reneej@umich.edu" },
+        s.unit && { for: "Unit fleet lead", who: pk.lead, how: LEAD_CONTACT[s.unit] || "Contact through your unit", href: LEAD_CONTACT[s.unit] ? "mailto:" + LEAD_CONTACT[s.unit].split(" · ")[0] : "#" },
+        { for: "Build sheet questions", who: "Faith Richardson · DPSS", how: "frichar@umich.edu", href: "mailto:frichar@umich.edu" },
+        s.unit && (isFlint ? { for: "Graphics", who: "Ken Hubbard · Bill Carr Signs", how: "Through the Flint fleet lead", href: "#" }
+                           : { for: "Graphics", who: "Matt Wilson · UM Sign Shop", how: "Service request", href: "#" }),
+        { for: "Radios, computers, cameras", who: "DPSS Technology Services", how: "Installs after upfitting", href: "#" },
+        s.unit && !isFlint && { for: "Service and garage prep", who: "AA Fleet Services Garage", how: "734-764-2490 · calendly.com/umfleetgarage", href: "https://calendly.com/umfleetgarage" },
+      ].filter(Boolean),
+      startOver: () => this.setState({ ...BLANK }),
+      query: s.query, setQuery: e => this.setState({ query: e.target.value }),
+      statusTabs: ["All", "In progress", "Closed"].map(label => ({ label, style: seg(s.status === label), pick: () => this.setState({ status: label }) })),
+      feed, feedEmpty: feed.length === 0,
+      feedCount: inProgress + " in progress · " + s.feed.length + " this year",
+    };
+  }
+}
+</script>
+</body>
+</html>

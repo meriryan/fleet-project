@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900&amp;display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #F7F8FA; -webkit-font-smoothing: antialiased; }
+  a { color: #00274C; text-decoration: none; }
+  a:hover { color: #2A5993; }
+</style>
+</helmet>
+<div style="font-family: 'DM Sans', sans-serif; background: #F7F8FA; min-height: 100vh;">
+
+  <div style="background: #fff; border-bottom: 1px solid #E5E7EB;">
+    <div style="background: #FAFAFA; border-bottom: 1px solid #F0F0F0; display: flex; align-items: center; gap: 8px; padding: 6px 40px;">
+      <span style="font-size: 12px; line-height: 18px; color: #6B7280;">homeLocation</span>
+      <div style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+        <span style="font-size: 12px; font-weight: 600; color: #00274C;">Ann Arbor</span>
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="display: block;"><path d="M1 1.5L5 4.5L9 1.5" stroke="#00274C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 12px; line-height: 18px; color: #6B7280; white-space: nowrap;">Viewing as</span>
+        <select onChange="{{ switchRole }}" value="{{ role }}" style="font-family: inherit; font-size: 12px; font-weight: 600; color: #00274C; background: #fff; border: 1px solid #E5E7EB; border-radius: 999px; padding: 4px 12px; cursor: pointer;">
+          <option value="officer">Officer</option>
+          <option value="supervisor">Supervisor</option>
+        </select>
+      </div>
+    </div>
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 14px 40px; min-height: 67px; box-sizing: border-box;">
+      <span style="font-size: 18px; font-weight: 700; letter-spacing: 1.8px; color: #00274C; white-space: nowrap;">DPSS FLEET</span>
+      <div style="display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px 22px; min-width: 0;">
+        <sc-for list="{{ navLinks }}" as="n" hint-placeholder-count="6">
+          <a href="{{ n.href }}" style="{{ n.style }}">{{ n.label }}</a>
+        </sc-for>
+        <a href="#work-order" style="background: #00274C; color: #fff; border-radius: 999px; padding: 12px 26px; font-size: 14px; font-weight: 600; white-space: nowrap;" style-hover="background: #003A6E; color: #fff;">+ Work Order</a>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{ noticeOpen }}" hint-placeholder-val="{{ true }}">
+    <div style="background: #FDECEC; border-bottom: 1px solid #F5CFCB; padding: 12px 40px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+      <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.66px; text-transform: uppercase; background: #C0362C; color: #fff; border-radius: 999px; padding: 3px 11px; white-space: nowrap;">High priority</span>
+      <span style="flex: 1 1 320px; font-size: 13px; font-weight: 500; line-height: 19.5px; color: #5E1610;">Ford rifle mount release, accessory mode. Dearborn is cycling through Canfield one at a time; Ann Arbor exposure not yet confirmed. Until 9/30/26.</span>
+      <button type="button" onClick="{{ dismissNotice }}" aria-label="Dismiss" style="border: 0; background: transparent; color: #C0362C; font-size: 18px; line-height: 1; cursor: pointer; padding: 0 4px; font-family: inherit;">×</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isOfficer }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width: 560px; margin: 120px auto; padding: 0 28px; text-align: center; display: flex; flex-direction: column; gap: 16px; align-items: center;">
+      <h1 style="margin: 0; font-size: 30px; font-weight: 700; color: #00274C;">The service calendar is for supervisors</h1>
+      <p style="margin: 0; font-size: 15px; line-height: 23px; color: #6B7280;">If your vehicle needs service, place a work order or tell your supervisor.</p>
+      <a href="./Officer Home.dc.html" style="background: #FFCB05; color: #131516; border-radius: 999px; padding: 14px 28px; font-size: 14px; font-weight: 600;">Back to home</a>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isSupervisor }}" hint-placeholder-val="{{ true }}">
+    <div style="display: flex; justify-content: center;">
+      <div style="width: 100%; max-width: 1200px; padding: 48px 28px 88px; box-sizing: border-box; display: flex; flex-direction: column; gap: 56px;">
+
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap;">
+          <div style="display: flex; flex-direction: column; gap: 6px; max-width: 680px;">
+            <div style="font-size: 13px; color: #6B7280;">{{ countLabel }}</div>
+            <h1 style="margin: 0; font-size: 42px; font-weight: 800; line-height: 1.12; letter-spacing: -1px; color: #00274C;">Service Calendar</h1>
+            <p style="margin: 4px 0 0; font-size: 14px; line-height: 21px; color: #6B7280; text-wrap: pretty;">Only vehicles whose records carry a next-service date appear here. Every other vehicle needs that date captured before it can be scheduled.</p>
+          </div>
+          <div style="display: flex; gap: 4px; background: #fff; border: 0.77px solid #E5E7EB; border-radius: 999px; padding: 4px;">
+            <sc-for list="{{ locTabs }}" as="t" hint-placeholder-count="5">
+              <button type="button" onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="background: #fff; border: 0.77px solid #E5E7EB; border-radius: 18px; overflow: hidden;">
+          <div style="padding: 20px 24px; border-bottom: 1px solid #F0F0F0; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
+            <div style="display: flex; flex-direction: column; gap: 2px;">
+              <span style="font-size: 20px; font-weight: 700; color: #131516;">Google Calendar</span>
+              <span style="font-size: 13px; color: #6B7280;">{{ gcalStatus }}</span>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <label style="cursor: pointer; display: inline-flex; align-items: center; gap: 8px; background: #fff; border: 0.77px solid #00274C; color: #00274C; border-radius: 999px; padding: 11px 20px; font-size: 13px; font-weight: 600; white-space: nowrap;" style-hover="background: #F3F4F6;">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 11V2.5M4.5 6L8 2.5 11.5 6M2.5 11v2.5h11V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                <span>Import .ics file</span>
+                <input type="file" accept=".ics,text/calendar" onChange="{{ importIcs }}" style="display: none;">
+              </label>
+              <sc-if value="{{ connected }}" hint-placeholder-val="{{ false }}">
+                <button type="button" onClick="{{ disconnect }}" style="cursor: pointer; font-family: inherit; background: #fff; border: 0.77px solid #E5E7EB; color: #6B7280; border-radius: 999px; padding: 11px 20px; font-size: 13px; font-weight: 600; white-space: nowrap;" style-hover="border-color: #C0362C; color: #C0362C;">Disconnect</button>
+              </sc-if>
+            </div>
+          </div>
+
+          <sc-if value="{{ connected }}" hint-placeholder-val="{{ false }}">
+            <iframe src="{{ embedSrc }}" title="Fleet service Google Calendar" style="display: block; width: 100%; height: 620px; border: 0; background: #fff;"></iframe>
+          </sc-if>
+
+          <sc-if value="{{ notConnected }}" hint-placeholder-val="{{ true }}">
+            <div style="padding: 28px 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px;">
+              <div style="display: flex; flex-direction: column; gap: 12px;">
+                <span style="font-size: 15px; font-weight: 700; color: #00274C;">Embed the fleet calendar</span>
+                <span style="font-size: 13px; line-height: 20px; color: #6B7280;">Paste the calendar ID or its embed link. The calendar has to be shared with the people who will view it.</span>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <input type="text" placeholder="fleet@group.calendar.google.com" value="{{ calInput }}" onChange="{{ setCalInput }}" style="{{ calInputStyle }}">
+                  <button type="button" onClick="{{ connect }}" style="cursor: pointer; font-family: inherit; border: none; background: #00274C; color: #fff; border-radius: 999px; padding: 0 22px; height: 46px; font-size: 14px; font-weight: 600; white-space: nowrap;" style-hover="background: #003A6E;">Connect</button>
+                </div>
+                <sc-if value="{{ calBad }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size: 12px; font-weight: 600; color: #C0362C;">That doesn't look like a calendar ID or a Google Calendar link.</span>
+                </sc-if>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 8px; background: #F7F8FA; border-radius: 14px; padding: 18px 20px;">
+                <span style="font-size: 13px; font-weight: 700; color: #131516;">Where to find it</span>
+                <sc-for list="{{ howTo }}" as="h" hint-placeholder-count="4">
+                  <div style="display: flex; gap: 10px; font-size: 13px; line-height: 20px; color: #374151;">
+                    <span style="font-weight: 700; color: #00274C;">{{ h.n }}</span>
+                    <span>{{ h.t }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ hasImported }}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 14px 24px; border-top: 1px solid #F0F0F0; background: #FAFAFA; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+              <span style="font-size: 13px; color: #374151;">{{ importedLabel }}</span>
+              <button type="button" onClick="{{ clearImported }}" style="cursor: pointer; font-family: inherit; border: none; background: transparent; color: #C0362C; font-size: 13px; font-weight: 600; padding: 0;">Remove imported</button>
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 32px; align-items: start;">
+          <sc-for list="{{ groups }}" as="g" hint-placeholder-count="2">
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+              <div style="display: flex; align-items: baseline; gap: 10px;">
+                <h2 style="margin: 0; font-size: 24px; font-weight: 700; color: #00274C;">{{ g.title }}</h2>
+                <span style="{{ g.countStyle }}">{{ g.count }}</span>
+              </div>
+              <div style="background: #fff; border: 0.77px solid #E5E7EB; border-radius: 16px; overflow: hidden;">
+                <sc-for list="{{ g.items }}" as="i" hint-placeholder-count="6">
+                  <div style="display: grid; grid-template-columns: 84px minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 14px 18px; border-bottom: 1px solid #F5F5F5;">
+                    <span style="{{ i.dateStyle }}">{{ i.date }}</span>
+                    <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0;">
+                      <span style="font-size: 14px; font-weight: 600; color: #131516;">{{ i.title }}</span>
+                      <span style="font-size: 12px; line-height: 18px; color: #6B7280;">{{ i.sub }}</span>
+                    </div>
+                    <sc-if value="{{ i.canAdd }}" hint-placeholder-val="{{ true }}">
+                      <a href="{{ i.gcal }}" target="_blank" rel="noopener" title="Add to Google Calendar" style="border: 0.77px solid #E5E7EB; border-radius: 999px; padding: 7px 14px; font-size: 12px; font-weight: 600; color: #00274C; white-space: nowrap;" style-hover="border-color: #00274C;">+ Google</a>
+                    </sc-if>
+                    <sc-if value="{{ i.imported }}" hint-placeholder-val="{{ false }}">
+                      <span style="border-radius: 999px; background: #E8EEF7; color: #2A5993; padding: 4px 10px; font-size: 11px; font-weight: 700; white-space: nowrap;">Imported</span>
+                    </sc-if>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ g.empty }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding: 22px 18px; font-size: 13px; color: #9CA3AF;">{{ g.emptyText }}</div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div>
+          <div style="font-size: 13px; color: #6B7280;">Who handles what, and how to reach them</div>
+          <h2 style="margin: 2px 0 0; font-size: 30px; font-weight: 700; line-height: 1.2; color: #00274C;">Where each job goes</h2>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-top: 24px;">
+            <sc-for list="{{ routes }}" as="r" hint-placeholder-count="9">
+              <div style="{{ r.cardStyle }}">
+                <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; line-height: 16px; color: #9CA3AF;">{{ r.job }}</span>
+                <span style="font-size: 15px; font-weight: 700; line-height: 21px; color: #00274C;">{{ r.who }}</span>
+                <span style="font-size: 13px; line-height: 19.5px; color: #374151; text-wrap: pretty;">{{ r.how }}</span>
+                <span style="font-size: 13px; font-weight: 600; color: #131516; margin-top: auto; padding-top: 6px;">{{ r.contact }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const SUP_NAV = [
+  { label: "Home", href: "./Supervisor Home.dc.html" },
+  { label: "Overview", href: "./Overview.dc.html" },
+  { label: "Budget Forecast", href: "./Budget Forecast.dc.html" },
+  { label: "Ordering", href: "./Vehicle Ordering.dc.html" },
+  { label: "Service Calendar", href: "./Service Calendar.dc.html" },
+  { label: "Assignments", href: "./Shift Assignments.dc.html" },
+];
+const OFF_NAV = [{ label: "Home", href: "./Officer Home.dc.html" }, { label: "Assignments", href: "./Shift Assignments.dc.html" }];
+
+const SERVICE = [
+  ["225", "Dearborn", "2026-03-25", "22,291 mi"], ["2170", "Dearborn", "2026-06-11", "55,421 mi"],
+  ["227", "Dearborn", "2026-07-29", "32,144 mi"], ["368", "Dearborn", "2026-09-17", "5,000 mi"],
+  ["284", "Dearborn", "2026-09-22", "12,089 mi"], ["388", "Dearborn", "2026-09-22", "5,000 mi"],
+  ["2439", "Dearborn", "2026-09-24", "63,853 mi"], ["287", "Dearborn", "2026-10-02", "11,477 mi"],
+  ["389", "Dearborn", "2026-10-02", "5,000 mi"], ["1178", "Dearborn", "2026-10-06", "18,171 mi"],
+  ["198", "Dearborn", "2026-10-13", "10,298 mi"], ["195", "Dearborn", "2026-10-23", "11,421 mi"],
+  ["365", "Dearborn", "2026-11-14", "5,000 mi"], ["2171", "Dearborn", "2026-12-03", "51,562 mi"],
+];
+
+const ROUTES = [
+  ["Routine service: oil, tires, wipers", "Ann Arbor Fleet Services Garage", "Booked by fleet leads through Calendly", "734-764-2490 · umfleetgarage@umich.edu"],
+  ["Minor repairs and diagnostics (Dearborn)", "UMD Garage, Ron Ernst", "Walk-in, 0730–1600", "313-593-3702"],
+  ["Warranty repairs (Dearborn)", "Village Ford, Peter", "By appointment, 0800–1700", "313-565-6660"],
+  ["Emergency equipment faults", "Canfield Equipment, Keith Engblom", "On site for short jobs; Warren for larger work. Status unresolved: confirm the vendor is current before routing work here, see the reconciliation register.", "586-757-2020", true],
+  ["Emergency equipment faults (Flint)", "Arrowhead Upfitters", "Repairs on site at Flint", "Via Flint fleet lead"],
+  ["Flat tires (Dearborn)", "Ruskos", "", "Via fleet lead"],
+  ["Graphics and decals", "UM Sign Shop, Matt Wilson", "They print and fit", "Service request"],
+  ["Computer, dock, printer, network", "DPSS Technology Operations", "Standard support request", "TDx"],
+  ["Damage or collision", "Fleet lead, then Transportation", "Crash form required by Transportation", "Notify your fleet lead first"],
+];
+
+const LOCS = ["All", "Ann Arbor", "Dearborn", "Michigan Medicine", "Flint"];
+const pad = n => String(n).padStart(2, "0");
+const ymd = d => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+const short = iso => { const [y, m, d] = iso.split("-"); return +m + "/" + +d + "/" + y.slice(2); };
+function load(k, f) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : f; } catch (e) { return f; } }
+function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+
+function embedFrom(input) {
+  const s = (input || "").trim();
+  if (!s) return null;
+  if (/^https:\/\/calendar\.google\.com\/calendar\/(u\/\d+\/)?embed\?/i.test(s)) return s;
+  const m = s.match(/[?&]src=([^&]+)/) || s.match(/calendar\/ical\/([^/]+)\//i) || s.match(/[?&]cid=([^&]+)/);
+  let id = m ? decodeURIComponent(m[1]) : s;
+  if (m && /cid=/.test(m[0])) { try { id = atob(id); } catch (e) {} }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(id)) return null;
+  return "https://calendar.google.com/calendar/embed?src=" + encodeURIComponent(id) + "&ctz=America%2FDetroit&mode=MONTH&showPrint=0&showTitle=0";
+}
+
+function parseIcs(text) {
+  const lines = text.replace(/\r\n[ \t]/g, "").replace(/\n[ \t]/g, "").split(/\r?\n/);
+  const out = []; let ev = null;
+  lines.forEach(l => {
+    if (l === "BEGIN:VEVENT") ev = {};
+    else if (l === "END:VEVENT") { if (ev && ev.start) out.push(ev); ev = null; }
+    else if (ev) {
+      const i = l.indexOf(":"); if (i < 0) return;
+      const key = l.slice(0, i).split(";")[0], val = l.slice(i + 1).replace(/\\,/g, ",").replace(/\\n/g, " ").replace(/\\;/g, ";");
+      if (key === "SUMMARY") ev.title = val;
+      if (key === "LOCATION") ev.loc = val;
+      if (key === "DTSTART") {
+        const m = val.match(/^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2}))?/);
+        if (m) { ev.start = m[1] + "-" + m[2] + "-" + m[3]; ev.time = m[4] ? m[4] + m[5] + " hrs" : ""; }
+      }
+    }
+  });
+  return out;
+}
+
+class Component extends DCLogic {
+  state = { role: "supervisor", loc: "All", calInput: "", calBad: false, embed: null, imported: [], noticeOpen: (() => { try { return sessionStorage.getItem("dpss-alert-dismissed") !== "1"; } catch (e) { return true; } })() };
+
+  componentDidMount() {
+    let r = "supervisor"; try { r = localStorage.getItem("dpss-role") || "supervisor"; } catch (e) {}
+    this.setState({ role: r, embed: load("dpss-gcal-embed", null), imported: load("dpss-gcal-imported", []) });
+  }
+
+  renderVals() {
+    const s = this.state, today = ymd(new Date());
+    const seg = on => "cursor:pointer;font-family:inherit;border:none;border-radius:999px;padding:9px 16px;font-size:13px;white-space:nowrap;" + (on ? "background:#00274C;color:#fff;font-weight:600;" : "background:transparent;color:#374151;font-weight:500;");
+    const inLoc = c => s.loc === "All" || c === s.loc;
+    const svc = SERVICE.filter(x => inLoc(x[1])).map(([u, c, d, mi]) => {
+      const iso = d, next = new Date(d + "T12:00:00"); next.setDate(next.getDate() + 1);
+      const gcal = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent("Unit " + u + " routine service") +
+        "&dates=" + d.replace(/-/g, "") + "/" + ymd(next).replace(/-/g, "") + "&details=" + encodeURIComponent("Unit " + u + " · " + c + " · due " + short(d) + " or " + mi) + "&location=" + encodeURIComponent(c);
+      return { iso, date: short(d), title: "Unit " + u + " · " + c, sub: "Routine service due · " + short(d) + " or " + mi, gcal, canAdd: true, imported: false };
+    });
+    const imp = s.imported.map(e => ({ iso: e.start, date: short(e.start), title: e.title || "Untitled event", sub: [e.time, e.loc].filter(Boolean).join(" · ") || "From Google Calendar", canAdd: false, imported: true }));
+    const all = svc.concat(imp).sort((a, b) => a.iso.localeCompare(b.iso));
+    const overdue = all.filter(x => x.iso < today && !x.imported);
+    const upcoming = all.filter(x => x.iso >= today);
+    const tone = (x, od) => "font-size:13px;font-weight:700;white-space:nowrap;color:" + (od ? "#C0362C" : x.iso === today ? "#92610A" : "#00274C") + ";";
+    const groups = [
+      { title: "Overdue", items: overdue.map(x => ({ ...x, dateStyle: tone(x, true) })), emptyText: "Nothing overdue." },
+      { title: "Upcoming", items: upcoming.map(x => ({ ...x, dateStyle: tone(x, false) })), emptyText: "Nothing scheduled." },
+    ].map((g, i) => ({ ...g, count: String(g.items.length), empty: g.items.length === 0,
+      countStyle: "border-radius:999px;padding:2px 10px;font-size:12px;font-weight:700;" + (i === 0 && g.items.length ? "background:#FDECEC;color:#C0362C;" : "background:#E8EEF7;color:#2A5993;") }));
+
+    const connected = !!s.embed;
+    const nav = (s.role === "officer" ? OFF_NAV : SUP_NAV).map(n => ({ ...n,
+      style: "font-size:14px;white-space:nowrap;" + (n.label === "Service Calendar" ? "font-weight:700;color:#00274C;" : "font-weight:500;color:#6B7280;") }));
+
+    return {
+      role: s.role, isOfficer: s.role === "officer", isSupervisor: s.role !== "officer", navLinks: nav,
+      switchRole: e => { const r = e.target.value; try { localStorage.setItem("dpss-role", r); } catch (x) {} this.setState({ role: r }); },
+      noticeOpen: s.noticeOpen,
+      dismissNotice: () => { try { sessionStorage.setItem("dpss-alert-dismissed", "1"); } catch (e) {} this.setState({ noticeOpen: false }); },
+      countLabel: svc.length + " service date" + (svc.length === 1 ? "" : "s") + " on file" + (s.loc === "All" ? "" : " · " + s.loc),
+      locTabs: LOCS.map(label => ({ label, style: seg(s.loc === label), pick: () => this.setState({ loc: label }) })),
+      connected, notConnected: !connected, embedSrc: s.embed || "about:blank",
+      gcalStatus: connected ? "Connected · showing the shared fleet calendar" : "Not connected · embed a shared calendar or import an .ics export",
+      calInput: s.calInput, setCalInput: e => this.setState({ calInput: e.target.value, calBad: false }),
+      calBad: s.calBad,
+      calInputStyle: "flex:1 1 220px;min-width:0;font-family:inherit;font-size:14px;height:46px;border-radius:999px;padding:0 18px;box-sizing:border-box;border:1px solid " + (s.calBad ? "#C0362C" : "#E5E7EB") + ";",
+      connect: () => { const src = embedFrom(s.calInput); if (!src) { this.setState({ calBad: true }); return; } save("dpss-gcal-embed", src); this.setState({ embed: src, calInput: "" }); },
+      disconnect: () => { save("dpss-gcal-embed", null); this.setState({ embed: null }); },
+      howTo: [
+        ["1", "Open Google Calendar on a computer and find the fleet calendar in the left sidebar."],
+        ["2", "Choose ⋮ next to it, then Settings and sharing."],
+        ["3", "Under Integrate calendar, copy the Calendar ID or the embed code link."],
+        ["4", "To import instead, use Export calendar on the same screen and upload the .ics file."],
+      ].map(([n, t]) => ({ n, t })),
+      importIcs: e => {
+        const f = e.target.files && e.target.files[0]; e.target.value = "";
+        if (!f) return;
+        f.text().then(txt => { const evs = parseIcs(txt); save("dpss-gcal-imported", evs); this.setState({ imported: evs }); });
+      },
+      hasImported: s.imported.length > 0,
+      importedLabel: s.imported.length + " event" + (s.imported.length === 1 ? "" : "s") + " imported from Google Calendar · upcoming ones are in the list below",
+      clearImported: () => { save("dpss-gcal-imported", []); this.setState({ imported: [] }); },
+      groups,
+      routes: ROUTES.map(([job, who, how, contact, warn]) => ({ job, who, how, contact,
+        cardStyle: "display:flex;flex-direction:column;gap:6px;border-radius:14px;padding:18px 20px;box-sizing:border-box;" + (warn ? "background:#FDF4DC;border:0.77px solid #EBCB7A;" : "background:#fff;border:0.77px solid #E5E7EB;") })),
+    };
+  }
+}
+</script>
+</body>
+</html>

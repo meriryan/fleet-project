@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/industry-8286e80e-223b-42c4-9c36-beb85b2ba7b1/styles.css">
+<script src="_ds/industry-8286e80e-223b-42c4-9c36-beb85b2ba7b1/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900&amp;display=swap">
+<style>
+:root{--color-accent:#00274C;--color-accent-500:#00274C;--color-accent-700:#001B35;--color-text:#131516}
+body{margin:0;background:#F7F8FA;color:#131516;font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#00274C;text-decoration:none}
+a:hover{color:#2A5993}
+input,select,textarea{font-family:'DM Sans',sans-serif}
+:focus-visible{outline:2px solid #00274C;outline-offset:2px}
+@keyframes paneFade{from{opacity:0}to{opacity:1}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;flex-direction:column;background:#F7F8FA">
+
+  <div style="background:#fff">
+    <div style="background:#FAFAFA;border-bottom:1px solid #F0F0F0;display:flex;align-items:center;gap:8px;padding:6px 40px">
+      <span style="font-size:12px;font-weight:400;line-height:18px;color:#6B7280">homeLocation</span>
+      <div style="display:flex;align-items:center;gap:5px;cursor:pointer">
+        <span style="font-size:12px;font-weight:600;line-height:100%;color:#00274C">Ann Arbor</span>
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="display:block"><path d="M1 1.5L5 4.5L9 1.5" stroke="#00274C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+        <span style="font-size:12px;font-weight:400;line-height:18px;color:#6B7280;white-space:nowrap">Viewing as</span>
+        <select onChange="{{ switchRole }}" value="{{ role }}" style="font-family:inherit;font-size:12px;font-weight:600;color:#00274C;background:#fff;border:1px solid #E5E7EB;border-radius:999px;padding:4px 12px;cursor:pointer">
+          <option value="officer">Officer</option>
+          <option value="supervisor">Supervisor</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:24px;padding:14px 40px; min-height: 67px;box-sizing:border-box">
+      <span style="font-size:18px;font-weight:700;line-height:27px;letter-spacing:1.8px;color:#00274C;white-space:nowrap">DPSS FLEET</span>
+      <div style="display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:8px 22px;min-width:0;">
+        <sc-for list="{{ navLinks }}" as="n" hint-placeholder-count="4">
+          <a href="{{ n.href }}" style="{{ n.style }}">{{ n.label }}</a>
+        </sc-for>
+        <a href="./Fleet Ordering.dc.html" style="background:#00274C;color:#fff;border-radius:999px;padding:12px 26px;font-size:14px;font-weight:600;white-space:nowrap" style-hover="background:#003A6E;color:#fff">+ Work Order</a>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{ noticeOpen }}" hint-placeholder-val="{{ true }}">
+    <div style="background:#FDECEC;border-bottom:1px solid #F5CFCB;padding:12px 40px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <span style="font-size:11px;font-weight:700;letter-spacing:0.66px;text-transform:uppercase;background:#C0362C;color:#fff;border-radius:999px;padding:3px 11px;white-space:nowrap">Safety hold</span>
+      <span style="flex:1 1 320px;font-size:13px;font-weight:500;line-height:19.5px;color:#5E1610">Ford rifle mount release operates in accessory mode. Four patrol vehicles held until 30 September.</span>
+      <button type="button" onClick="{{ dismissNotice }}" style="border:0;background:transparent;color:#C0362C;font-size:18px;line-height:1;cursor:pointer;padding:0 4px;font-family:inherit">×</button>
+    </div>
+  </sc-if>
+
+  <div style="display:flex;flex-direction:column;gap:20px;padding:22px 26px 48px;max-width:1680px;width:100%;margin:0 auto;box-sizing:border-box">
+
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:13px;font-weight:400;line-height:19.5px;color:#6B7280">{{ today }} · 132 vehicles across nine units</div>
+        <h1 style="margin:2px 0 0;font-size:30px;font-weight:700;line-height:1.2;color:#00274C">Fleet Overview</h1>
+      </div>
+    </div>
+
+    <sc-if value="{{ showCurrent }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:stretch">
+
+      <div style="background:#fff;border:0.77px solid #E5E7EB;border-radius:14px;overflow:hidden;flex:1 1 620px;min-width:0;display:flex;flex-direction:column">
+        
+        <div style="border-bottom:1px solid #F0F0F0;padding:14px 20px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+          <h2 style="margin:0;font-family:'DM Sans',sans-serif;font-weight:600;font-size:23px;color:#00274C">Fleet status</h2>
+          <span style="font-size:12.5px;color:#9CA3AF">132 vehicles · click a slice to list them</span>
+          <button type="button" style="margin-left:auto;border:0.77px solid #E5E7EB;border-radius:999px;background:#fff;color:#00274C;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;padding:8px 16px;cursor:pointer;white-space:nowrap" style-hover="background:#E8EEF7">Export CSV</button>
+        </div>
+
+        <div style="position:relative;flex:1 1 auto;min-height:380px;overflow:hidden">
+        <div style="position:absolute;inset:0;padding:20px 22px;box-sizing:border-box;display:flex;gap:20px;align-items:center;justify-content:center">
+          <div style="position:relative;flex:0 1 auto;height:100%;aspect-ratio:1;min-width:0">
+            <svg viewBox="-8 -8 216 216" width="100%" height="100%" style="display:block">
+              <sc-for list="{{ slices }}" as="s" hint-placeholder-count="4">
+                <path d="{{ s.d }}" fill="{{ s.fill }}" stroke="#fff" stroke-width="2" transform="{{ s.tf }}" onClick="{{ s.go }}" onMouseEnter="{{ s.enter }}" onMouseLeave="{{ s.leave }}" style="cursor:pointer;transition:opacity .15s,fill .15s" opacity="{{ s.op }}"></path>
+              </sc-for>
+              <circle cx="100" cy="100" r="56" fill="#fff"></circle>
+            </svg>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;pointer-events:none">
+              <span style="display:block;font-family:'DM Sans',sans-serif;font-weight:700;font-size:64px;line-height:1.05;color:#00274C">{{ centerN }}</span>
+              <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:15px;color:#6B7280;text-align:center;max-width:150px;line-height:1.2">{{ centerLabel }}</span>
+            </div>
+          </div>
+          <div style="flex:0 0 210px;min-width:0;display:flex;flex-direction:column;justify-content:center">
+            <sc-for list="{{ legend }}" as="l" hint-placeholder-count="5">
+              <button type="button" onClick="{{ l.go }}" style="display:grid;grid-template-columns:10px 30px minmax(0,1fr);align-items:center;gap:8px;text-align:left;border:0;border-bottom:1px solid #F0F0F0;background:{{ l.bg }};padding:7px 8px;cursor:pointer;font-family:inherit" style-hover="background:#F7F8FA">
+                <span style="width:10px;height:10px;background:{{ l.c }};display:block"></span>
+                <span style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:18px;line-height:1;color:#00274C">{{ l.n }}</span>
+                <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:13.5px;color:#131516;min-width:0">{{ l.label }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+
+        <sc-if value="{{ filtered }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;background:#fff;display:flex;flex-direction:column;animation:paneFade .16s ease-out">
+            <div style="border-bottom:1px solid #F0F0F0;padding:11px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+              <button type="button" onClick="{{ clearSlice }}" style="border:0.77px solid #E5E7EB;border-radius:999px;background:#fff;color:#00274C;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;padding:8px 16px;cursor:pointer" style-hover="background:#E8EEF7">← Back to chart</button>
+              <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:19px;color:#00274C">{{ listTitle }}</span>
+              <span style="font-size:12.5px;color:#9CA3AF">{{ listCount }}</span>
+              <input value="{{ query }}" onChange="{{ setQuery }}" placeholder="Search unit, campus or role" style="margin-left:auto;border:1px solid #E5E7EB;background:#fff;border-radius:999px;padding:6px 12px;font-size:13px;color:#131516;width:200px;max-width:100%">
+            </div>
+            <div style="flex:1 1 auto;min-height:0;overflow:auto">
+              <sc-for list="{{ rows }}" as="r" hint-placeholder-count="5">
+                <div style="display:grid;grid-template-columns:62px minmax(0,1fr) 138px 100px;align-items:center;border-bottom:1px solid #F0F0F0;border-left:4px solid {{ r.bar }};padding:10px 16px 10px 12px;gap:8px">
+                  <span style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:21px;line-height:1;color:#00274C">{{ r.unit }}</span>
+                  <span style="display:flex;flex-direction:column;min-width:0">
+                    <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:14.5px;color:#131516">{{ r.what }}</span>
+                    <span style="font-size:12px;color:#9CA3AF">{{ r.where }}</span>
+                  </span>
+                  <span><span style="font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 9px;border-radius:999px;white-space:nowrap;background:{{ r.chipBg }};color:{{ r.chipFg }};border:1px solid {{ r.chipBc }}">{{ r.status }}</span></span>
+                  <span style="font-size:12.5px;color:#6B7280;text-align:right">{{ r.age }}</span>
+                </div>
+              </sc-for>
+              <sc-if value="{{ rowsEmpty }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:60px 20px;text-align:center;font-size:13.5px;color:#8892A0">Nothing matches that search.</div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+        </div>
+      </div>
+
+      <div style="flex:1 1 380px;min-width:0;display:flex;flex-direction:column;gap:20px">
+
+        <div style="background:#fff;border:0.77px solid #E5E7EB;border-radius:14px;overflow:hidden">
+          
+          <div style="border-bottom:1px solid #F0F0F0;padding:13px 18px">
+            <h2 style="margin:0;font-family:'DM Sans',sans-serif;font-weight:600;font-size:21px;color:#00274C">Important Dates</h2>
+          </div>
+          <sc-for list="{{ dates }}" as="d" hint-placeholder-count="3">
+            <div style="border-bottom:1px solid #F0F0F0;border-left:4px solid {{ d.bar }};padding:11px 16px;display:flex;flex-direction:column;gap:2px">
+              <span style="display:flex;align-items:baseline;gap:8px">
+                <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:14.5px;color:#131516">{{ d.what }}</span>
+                <span style="margin-left:auto;font-size:12.5px;font-weight:600;color:{{ d.bar }};white-space:nowrap">{{ d.when }}</span>
+              </span>
+              <span style="font-size:12.5px;color:#9CA3AF;line-height:1.45">{{ d.who }}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="background:#fff;border:0.77px solid #E5E7EB;border-radius:14px;overflow:hidden">
+          
+          <div style="border-bottom:1px solid #F0F0F0;padding:13px 18px;display:flex;align-items:baseline;gap:10px">
+            <h2 style="margin:0;font-family:'DM Sans',sans-serif;font-weight:600;font-size:21px;color:#00274C">Replacement pipeline</h2>
+            <span style="font-size:12.5px;color:#9CA3AF">Next 12 months · by vehicle ID</span>
+          </div>
+          <div style="padding:14px 18px 16px;display:flex;flex-direction:column;gap:12px">
+            <div style="display:grid;grid-template-columns:62px minmax(0,1fr) 74px;align-items:center;gap:10px;font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9CA3AF">
+              <span>Veh ID</span><span>Lease elapsed</span><span style="text-align:right">Remaining</span>
+            </div>
+            <sc-for list="{{ pipeline }}" as="p" hint-placeholder-count="3">
+              <div style="display:grid;grid-template-columns:62px minmax(0,1fr) 74px;align-items:center;gap:10px">
+                <span style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:19px;color:#00274C;letter-spacing:.02em">#{{ p.unit }}</span>
+                <span style="height:9px;background:#F0F0F0;display:block;position:relative">
+                  <span style="position:absolute;left:0;top:0;bottom:0;width:{{ p.pct }};background:{{ p.c }}"></span>
+                </span>
+                <span style="font-size:12.5px;color:#6B7280;text-align:right">{{ p.left }}</span>
+              </div>
+            </sc-for>
+            <p style="margin:0;border-top:1px solid #F0F0F0;padding-top:10px;font-size:12.5px;line-height:1.5;color:#9CA3AF">121 vehicles carry no usable replacement date. Ann Arbor's lease column predates the model year on 21 of 40 records.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="division" style="display:flex;flex-direction:column;gap:24px;padding-top:24px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap">
+        <div>
+          <div style="font-size:13px;color:#6B7280">{{ vCount }}</div>
+          <h2 style="margin:2px 0 0;font-size:30px;font-weight:700;line-height:1.2;color:#00274C">Division Overview</h2>
+        </div>
+        <sc-if value="{{ vFiltered }}" hint-placeholder-val="{{ false }}">
+          <button type="button" onClick="{{ clearF }}" style="cursor:pointer;font-family:inherit;border:none;background:transparent;color:#00274C;font-size:13px;font-weight:600;padding:0">Clear filters</button>
+        </sc-if>
+      </div>
+
+      <div style="background:#fff;border:0.77px solid #E5E7EB;border-radius:16px;padding:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <label style="flex:1 1 320px;display:flex;align-items:center;gap:10px;height:44px;padding:0 16px;border-radius:999px;background:#F3F4F6;box-sizing:border-box">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><circle cx="7" cy="7" r="5" stroke="#6B7280" stroke-width="1.6"></circle><path d="M11 11l3.5 3.5" stroke="#6B7280" stroke-width="1.6" stroke-linecap="round"></path></svg>
+          <input type="search" placeholder="Search unit number, plate or VIN" value="{{ f_q }}" onChange="{{ set_q }}" style="flex:1;min-width:0;border:none;outline:none;background:transparent;font-family:inherit;font-size:14px;color:#131516">
+        </label>
+          <label style="flex:0 1 auto;display:flex;align-items:center;gap:10px;height:44px;padding:0 14px 0 16px;border:0.77px solid #E5E7EB;border-radius:999px;background:#fff;box-sizing:border-box">
+            <span style="font-size:11px;font-weight:600;letter-spacing:0.66px;text-transform:uppercase;color:#9CA3AF;white-space:nowrap">Location</span>
+            <select value="{{ f_loc }}" onChange="{{ set_loc }}" style="appearance:auto;border:none;outline:none;background:transparent;font-family:inherit;font-size:13px;font-weight:600;color:#131516;cursor:pointer;min-width:90px">
+              <sc-for list="{{ opt_loc }}" as="o" hint-placeholder-count="4">
+                <option value="{{ o.v }}">{{ o.v }}</option>
+              </sc-for>
+            </select>
+          </label>
+          <label style="flex:0 1 auto;display:flex;align-items:center;gap:10px;height:44px;padding:0 14px 0 16px;border:0.77px solid #E5E7EB;border-radius:999px;background:#fff;box-sizing:border-box">
+            <span style="font-size:11px;font-weight:600;letter-spacing:0.66px;text-transform:uppercase;color:#9CA3AF;white-space:nowrap">Status</span>
+            <select value="{{ f_status }}" onChange="{{ set_status }}" style="appearance:auto;border:none;outline:none;background:transparent;font-family:inherit;font-size:13px;font-weight:600;color:#131516;cursor:pointer;min-width:90px">
+              <sc-for list="{{ opt_status }}" as="o" hint-placeholder-count="4">
+                <option value="{{ o.v }}">{{ o.v }}</option>
+              </sc-for>
+            </select>
+          </label>
+          <label style="flex:0 1 auto;display:flex;align-items:center;gap:10px;height:44px;padding:0 14px 0 16px;border:0.77px solid #E5E7EB;border-radius:999px;background:#fff;box-sizing:border-box">
+            <span style="font-size:11px;font-weight:600;letter-spacing:0.66px;text-transform:uppercase;color:#9CA3AF;white-space:nowrap">Unit type</span>
+            <select value="{{ f_type }}" onChange="{{ set_type }}" style="appearance:auto;border:none;outline:none;background:transparent;font-family:inherit;font-size:13px;font-weight:600;color:#131516;cursor:pointer;min-width:90px">
+              <sc-for list="{{ opt_type }}" as="o" hint-placeholder-count="4">
+                <option value="{{ o.v }}">{{ o.v }}</option>
+              </sc-for>
+            </select>
+          </label>
+          <label style="flex:0 1 auto;display:flex;align-items:center;gap:10px;height:44px;padding:0 14px 0 16px;border:0.77px solid #E5E7EB;border-radius:999px;background:#fff;box-sizing:border-box">
+            <span style="font-size:11px;font-weight:600;letter-spacing:0.66px;text-transform:uppercase;color:#9CA3AF;white-space:nowrap">Model year</span>
+            <select value="{{ f_year }}" onChange="{{ set_year }}" style="appearance:auto;border:none;outline:none;background:transparent;font-family:inherit;font-size:13px;font-weight:600;color:#131516;cursor:pointer;min-width:90px">
+              <sc-for list="{{ opt_year }}" as="o" hint-placeholder-count="4">
+                <option value="{{ o.v }}">{{ o.v }}</option>
+              </sc-for>
+            </select>
+          </label>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:16px">
+        <sc-for list="{{ vehicles }}" as="v" hint-placeholder-count="15">
+          <button type="button" onClick="{{ v.open }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:14px;background:#fff;border:0.77px solid #E5E7EB;padding:18px 18px 16px;display:flex;flex-direction:column;font-family:inherit" style-hover="border-color:#00274C">
+            <span style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+              <span style="font-size:32px;font-weight:700;line-height:32px;color:#00274C">{{ v.u }}</span>
+              <span style="font-size:12px;line-height:18px;color:#9CA3AF">{{ v.yr }}</span>
+            </span>
+            <span style="padding:8px 0 4px;font-size:13px;font-weight:600;line-height:19.5px;color:#131516">{{ v.model }}</span>
+            <span style="padding:0 0 14px;font-size:12px;line-height:18px;color:#6B7280">{{ v.place }}</span>
+            <span style="{{ v.pillStyle }}">
+              <span style="{{ v.dotStyle }}"></span>
+              <span>{{ v.status }}</span>
+            </span>
+          </button>
+        </sc-for>
+      </div>
+      <sc-if value="{{ vEmpty }}" hint-placeholder-val="{{ false }}">
+        <p style="margin:0;font-size:13px;color:#9CA3AF">No vehicles match these filters.</p>
+      </sc-if>
+      <sc-if value="{{ vMore }}" hint-placeholder-val="{{ false }}">
+        <button type="button" onClick="{{ showMore }}" style="align-self:center;cursor:pointer;font-family:inherit;border:0.77px solid #00274C;background:#fff;color:#00274C;border-radius:999px;padding:13px 26px;font-size:14px;font-weight:600">{{ moreLabel }}</button>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{ vehOpen }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ closeVeh }}" style="position:fixed;inset:0;z-index:50;background:rgba(0,20,40,0.55);display:flex;justify-content:center;align-items:flex-start;padding:32px 16px;box-sizing:border-box;overflow-y:auto">
+        <div onClick="{{ stop }}" role="dialog" aria-modal="true" style="width:100%;max-width:640px;background:#fff;border-radius:18px;box-shadow:0 24px 60px rgba(0,20,40,0.25);display:flex;flex-direction:column;overflow:hidden">
+          <div style="padding:24px 28px 20px;border-bottom:1px solid #F0F0F0;display:flex;justify-content:space-between;align-items:flex-start;gap:16px">
+            <div>
+              <div style="font-size:13px;line-height:19.5px;color:#6B7280">{{ veh.sub }}</div>
+              <h2 style="margin:2px 0 0;font-size:24px;font-weight:700;line-height:1.25;color:#00274C">Unit {{ veh.u }}</h2>
+            </div>
+            <button type="button" onClick="{{ closeVeh }}" aria-label="Close" style="flex-shrink:0;width:40px;height:40px;border-radius:999px;border:0.77px solid #E5E7EB;background:#fff;cursor:pointer;font-family:inherit;font-size:18px;line-height:1;color:#374151" style-hover="background:#F3F4F6">×</button>
+          </div>
+          <div style="padding:12px 28px 28px;display:flex;flex-direction:column;gap:28px">
+            <div style="display:flex;flex-direction:column">
+              <sc-for list="{{ veh.facts }}" as="f" hint-placeholder-count="5">
+                <div style="display:grid;grid-template-columns:104px minmax(0,1fr);gap:16px;align-items:baseline;padding:14px 0;border-bottom:1px solid #F0F0F0">
+                  <span style="font-size:13px;color:#6B7280">{{ f.k }}</span>
+                  <span style="font-size:13px;font-weight:500;color:#131516">{{ f.v }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <span style="font-size:16px;font-weight:700;color:#00274C">Open work</span>
+              <sc-for list="{{ veh.work }}" as="w" hint-placeholder-count="1">
+                <div style="border:0.77px solid #E5E7EB;border-radius:14px;padding:20px 18px 16px;display:flex;flex-direction:column;gap:12px">
+                  <span style="font-size:14px;font-weight:700;color:#00274C">{{ w.b }}</span>
+                  <span style="font-size:13px;line-height:20px;color:#131516;text-wrap:pretty">{{ w.s }}</span>
+                  <span style="font-size:12px;color:#9CA3AF;margin-top:4px">{{ w.stage }}</span>
+                </div>
+              </sc-for>
+              <sc-if value="{{ veh.none }}" hint-placeholder-val="{{ false }}">
+                <p style="margin:0;font-size:13px;color:#9CA3AF">Nothing open on this vehicle.</p>
+              </sc-if>
+            </div>
+          </div>
+          <div style="border-top:1px solid #F0F0F0;padding:16px 28px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+            <sc-if value="{{ veh.none }}" hint-placeholder-val="{{ false }}"><a href="#work-order" style="border:0.77px solid #D1D5DB;background:#fff;color:#131516;border-radius:999px;padding:14px 28px;font-size:14px;font-weight:600;white-space:nowrap" style-hover="border-color:#00274C;color:#131516">Place a work order</a></sc-if><span></span>
+            <a href="./Vehicle Ordering.dc.html" style="background:#FFCB05;color:#131516;border-radius:999px;padding:14px 28px;font-size:14px;font-weight:600;white-space:nowrap" style-hover="background:#FFD633;color:#131516">View Vehicle Package</a>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    </div>
+    </sc-if>
+
+    <p style="margin:0;font-size:12.5px;line-height:1.55;color:#9CA3AF;max-width:96ch">Phase one covers purchasing, maintenance and notification. Figures are read live from the records in this portal and are only as current as those records.</p>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600},&quot;showNotice&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;unitColumns&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:3,&quot;min&quot;:2,&quot;max&quot;:4,&quot;tsType&quot;:&quot;number&quot;}}">
+const CH={ok:['#EDF7F1','#2A7D46','#CDE7D8'],pend:['#FDF4DC','#92610A','#F0DFB4'],crit:['#FDECEC','#C0362C','#F5CFCB'],blue:['#E8EEF7','#00274C','#C5D9EF']};
+const OOS='#C0362C', PEND='#92610A', OK='#2A7D46', NAVY='#00274C';
+
+const FLEET=[["227","Dearborn","2022","Ford Explorer / PIU Hybrid","Patrol","Due","Police patrol","1FM5K8AW4NNA00204","040x227","$616/mo","27,144","7/29/25","7/29/26 or 32,144 mi","12/01/2026",[]],["284","Dearborn","2025","Ford Explorer / PIU","Patrol","In service","Police patrol","1FM5K8AB3SGA31926","040x284","$552/mo","7,089","9/22/25","9/22/26 or 12,089 mi","10/01/2029",[]],["287","Dearborn","2025","Ford Explorer / PIU","Patrol","In service","Police patrol","1FM5K8AB7SGA31346","040x287","$552/mo","6,477","10/2/25","10/2/26 or 11,477 mi","09/29/2029",[]],["365","Dearborn","2025","Ford Explorer / PIU","K-9","Due","K-9","1FM5K8AB4SGB87036","040X365","Not recorded","","","11/14/26 or 5,000 mi","11/14/2029",[["No cost figure and no maintenance log","One of four 2025 PIUs missing both a cost figure and a service log tab in the fleet workbook. These are the newest vehicles in the fleet.","Reported"]]],["368","Dearborn","2025","Ford Explorer / PIU","Patrol","Due","Police patrol","1FM5K8AB9SGB96895","040x368","Not recorded","","","9/17/26 or 5,000 mi","09/17/2029",[["Rifle release operates in accessory mode","One of four to five Dearborn vehicles cycling through the upfitter. The release still works when the key is removed and the engine is running, leaving the weapon accessible while officers are away from the vehicle.","Reported"]]],["388","Dearborn","2025","Ford Explorer / PIU","Patrol","Due","Police patrol","1FM5K8AB3SGC33696","040x388","Not recorded","","","9/22/26 or 5,000 mi","09/22/2029",[["Rifle release operates in accessory mode","Awaiting a repair slot at the upfitter.","Reported"]]],["389","Dearborn","2025","Ford Explorer / PIU","Patrol","Due","Police patrol","1FM5K8AB6SGC33918","040x389","Not recorded","","","10/2/26 or 5,000 mi","10/02/2029",[["Delivered with no two-way radio","Radios were not installed on delivery of recent Dearborn patrol vehicles. The omission was discovered during an active-shooter response.","Reported"]]],["2170","Dearborn","2018","Ford Explorer / PIU","Patrol","In service","Police patrol","1FM5K8AR1JGA21049","040x715","Department owned","50,421","6/11/25","6/11/26 or 55,421 mi","None: dept. owned",[]],["2171","Dearborn","2018","Ford Explorer / PIU","Patrol","In service","Police patrol","1FM5K8ARXJGA21048","040x718","Department owned","46,562","12/3/25","12/3/26 or 51,562 mi","None: dept. owned",[]],["2439","Dearborn","2016","Ford Explorer / PIU","Patrol","In service","Police patrol","1FM5K8AR8GGA63002","040x642","Department owned","58,853","9/24/25","9/24/26 or 63,853 mi","None: dept. owned",[]],["195","Dearborn","2025","Ford Explorer / PIU","Security","Due","Security patrol","1FM5K8AB1SGA10105","130x791","$515/mo","6,421","10/23/25","10/23/26 or 11,421 mi","02/07/2030",[["Perimeter fault warning light showing","Open, not yet scheduled.","Reported"],["Decal peeling on driver's door","Open. Graphics rework needed.","Reported"]]],["198","Dearborn","2025","Ford Explorer / PIU","Security","In service","Security patrol","1FM5K8AB6SGA10102","130x792","$515/mo","5,298","10/13/25","10/13/26 or 10,298 mi","01/06/2030",[]],["225","Dearborn","2022","Ford Escape","Security","Out of service","Security patrol","1FMCU9H95NUA49215","040x225","$403/mo","17,291","3/25/25","3/25/26 or 22,291 mi","05/01/2027",[]],["1178","Dearborn","2023","Ford F-150","Pool","In service","Administrative","1FTEW1EPXPKF21662","041x178","$540/mo","13,171","10/6/25","10/6/26 or 18,171 mi","12/01/2029",[]],["190","Dearborn","2020","Ford Explorer / PIU","Patrol","Out of service","Police patrol","1FM5K8ABLGA64376","130x789","$397/mo","32,538","5/12/25","","10/01/2025",[["Preventative maintenance and rear TPMS repair","AA Fleet. Work order 85584. $425.46.","Reported"],["Dashboard instruments, TPMS, front stabilizer","AA Fleet. Work order 84242. $559.84.","Reported"]]],["Bike","Dearborn","·","Patrol bicycle","Patrol","In service","Bike patrol","Not recorded","n/a","Not leased","","","","",[]],["5001","Dearborn","2025","Yamaha UMAX Rally 2+2","Other","In service","Utility","J0P-500174","n/a","Not recorded","","","","",[]],["320","Michigan Medicine","2022","Ford Explorer Interceptor","Security","In service","Security patrol","1FM5K8ABXNGA10303","040x914","$358/mo","","","","",[]],["326","Michigan Medicine","·","Ford Explorer Interceptor","Security","In service","Security patrol","","","","","","","",[]],["128","Michigan Medicine","·","Ford Explorer Interceptor","Security","In service","Security patrol","","","","","","","",[]],["304","Michigan Medicine","·","Ford Explorer Interceptor","Security","In service","Security patrol","","","","","","","",[]],["344","Michigan Medicine","·","Ford Explorer Interceptor","Security","In service","Security patrol","","","","","","","",[]],["21","Michigan Medicine","·","Ford Explorer Interceptor","Security","In service","Security patrol","","","","","","","",[]],["200","Michigan Medicine","·","Ford Explorer Interceptor","Security","In service","Security patrol","","","","","","","",[]],["290","Michigan Medicine","·","Ford Explorer Interceptor","Patrol","In service","Supervisor","","","","","","","",[]],["177","Michigan Medicine","·","Ford Explorer Interceptor","Security","In service","Security patrol","","","","","","","",[]],["157","Michigan Medicine","·","Ford Explorer Interceptor","Security","In service","Security patrol","","","","","","","",[]],["292","Michigan Medicine","·","Ford Explorer Interceptor","Security","In service","Security patrol","","","","","","","",[]],["204","Michigan Medicine","·","Ford Explorer Interceptor","K-9","In service","K-9","","","","","","","",[]],["233","Michigan Medicine","·","Ford Explorer Interceptor","K-9","Due","K-9","","","","","","","",[]],["240","Michigan Medicine","·","Ford Explorer Interceptor","K-9","In service","K-9","","","","","","","",[]],["251","Michigan Medicine","·","Ford Explorer Interceptor","K-9","In service","K-9","","","","","","","",[]],["381","Michigan Medicine","·","Ford Explorer Interceptor","K-9","In service","Police K-9","","","","","","","",[]],["236","Michigan Medicine","·","Ford Explorer Interceptor","Patrol","Out of service","Marked police","","","","","","","",[]],["158","Michigan Medicine","·","Ford police utility","CIU","In service","Investigations / admin","","","","","","","",[]],["29","Michigan Medicine","·","Ford Explorer","CIU","Due","Investigations / admin, minivan on conversion","","","","","","","",[]],["1014","Michigan Medicine","·","Ford Transit","Other","In service","Locksmith","","","","","","","",[]],["414","Michigan Medicine","2026","Ford Explorer Interceptor","K-9","Due","K-9","","","","","","","",[]],["78","Ann Arbor","2026","Chevrolet Tahoe-SUV","Patrol","Due","Police Patrol","1GNSKDEC6LR248354","040x078","$676/mo","","","","",[]],["403","Ann Arbor","2026","Chevrolet Tahoe-SUV","Patrol","Due","Police Patrol","Not recorded","040x078","$708/mo","","","","",[]],["404","Ann Arbor","2026","Chevrolet Tahoe-SUV","Patrol","Due","Police Patrol","Not recorded","Not recorded","$708/mo","","","","",[]],["405","Ann Arbor","2026","Chevrolet Tahoe-SUV","Patrol","Due","Police Supervisor","Not recorded","Not recorded","$708/mo","","","","",[]],["406","Ann Arbor","2026","Chevrolet Tahoe-SUV","Patrol","Due","Police Patrol","Not recorded","Not recorded","$708/mo","","","","",[]],["108","Ann Arbor","2023","Ford Interceptor-U","Patrol","Due","Police Patrol","Not recorded","040x108","$674/mo","","","","",[]],["558","Ann Arbor","2020","Ford Interceptor-P","Patrol","In service","Police Patrol","1FM5K8AB1LGC52670","040x558","$694/mo","","","","",[]],["103","Ann Arbor","2022","Ford Interceptor-U","Patrol","Due","Police Patrol","1FM5K8AB0NGA02131","040x103","$694/mo","","","","",[]],["363","Ann Arbor","2023","Ford Interceptor-U","Patrol","Due","Police Patrol","1FM5K8AR4FGA21456","040x363","$694/mo","","","","",[]],["556","Ann Arbor","2025","Chevrolet Tahoe-PPV","Patrol","Due","Police Patrol","1GNSKLEDXNR272650","040x556","$749/mo","","","","",[]],["79","Ann Arbor","2025","Chevrolet Tahoe-PPV","Patrol","Due","Police Patrol","1GNSKLEDXNR271206","040x79","$749/mo","","","","",[]],["80","Ann Arbor","2025","Chevrolet Tahoe-PPV","Patrol","Due","Police Patrol","1GNSKLED5NR273008","040x080","$749/mo","","","","",[]],["438","Ann Arbor","2025","Ford Interceptor-U","Patrol","In service","Police Patrol","1FM5K8AB1SGA30743","040x438","$674/mo","","","","",[]],["156","Ann Arbor","2025","Ford Interceptor-U","Patrol","In service","Police Patrol","1FM5K8AB4SGA31174","040x156","$674/mo","","","","",[]],["125","Ann Arbor","2025","Chevrolet Tahoe-4x4","K-9","Due","Police K-9","1GNSK2E09BR302058","040x125","$609/mo","","","","",[]],["1531","Ann Arbor","2025","Chevrolet Tahoe-4x4","K-9","Due","Police K-9","3GCUKNEC6JG124802","041x531","$517/mo","","","","",[]],["1354","Ann Arbor","2024","Ford Transit","Transport","In service","Prisoner Transport","1FTYR1YG7GKA79780","041X354","$484/mo","","","","",[]],["M1","Ann Arbor","2014","Harley-Davidson Motorcycle","Patrol","Due","Police Patrol","1HD1FHM18EB669762","01x66","Owned","","","","",[]],["M2","Ann Arbor","2015","Harley-Davidson Motorcycle","Patrol","Due","Police Patrol","1HD1FHM1XFB687018","01x68","Owned","","","","",[]],["M3","Ann Arbor","2015","Harley-Davidson Motorcycle","Patrol","Due","Police Patrol","1HD1FHM13FB687040","01x65","Owned","","","","",[]],["102","Ann Arbor","2023","Chevrolet Malibu","Pool","Due","Pool","1G1ZC5ST4PF215609","DYY2628","$584/mo","","","","",[["Cost figures don't reconcile","Monthly $584 times twelve is $7,008, but the annual column reads $7,080, transposed digits.","Reported"]]],["10","Ann Arbor","2023","Chevrolet Malibu","Pool","Out of service","Pool","3FA6P0G77JR118000","EDZ1770","$500/mo","","","","",[["Annual cost is missing a zero","Recorded as $600 a year against $500 a month. The correct figure is $6,000. This single cell accounts for most of the gap between the two totals in the sheet.","Reported"],["Make and VIN don't match","Listed as a Chevrolet Malibu, but the VIN follows a Ford pattern. One of the two is wrong.","Reported"]]],["427","Ann Arbor","2023","Ford Interceptor-U","CIU","In service","CIU","1FM5K8AB2PGA36896","EED6467","$674/mo","","","","",[]],["439","Ann Arbor","2023","Ford Interceptor-U","CIU","Due","CIU","Not recorded","040X439","$635/mo","","","","",[]],["234","Ann Arbor","2023","Chevrolet Malibu","Pool","Due","Chief","Not recorded","EMU1899","$674/mo","","","","",[]],["38","Ann Arbor","2024","Ford Explorer","Pool","Due","Pool","!FMSK7BH8RGA75561","040x038","$674/mo","","","","",[["VIN begins with an exclamation mark","Reads !FMSK7BH8RGA75561 where the first character should be a 1. A keyboard slip that will break any lookup.","Reported"]]],["2","Ann Arbor","2017","Ford Taurus","CIU","Due","CIU","1FAHP2D87HG135964","DYP4398","$465/mo","","","","",[]],["1174","Ann Arbor","2023","Ford Maverick","Pool","Due","Pool","Not recorded","040x801","$547/mo","","","","",[]],["402","Ann Arbor","2024","Chevrolet Bolt","Parking","Due","Parking Enforcement","1G!FY6S08P4188748","040x402","$609/mo","","","","",[["VIN contains an exclamation mark","Reads 1G!FY6S08P4188748 where the third character should be a 1.","Reported"]]],["310","Ann Arbor","2024","Chevrolet Bolt","Parking","In service","Parking Enforcement","1G1FY6S0XP4207297","040x310","$640/mo","","","","",[]],["314","Ann Arbor","2024","Chevrolet Bolt","Parking","In service","Parking Enforcement","1G1FY6S08P4200767","040x314","$640/mo","","","","",[]],["319","Ann Arbor","2024","Chevrolet Bolt","Parking","In service","Parking Enforcement","1G1FY6S01P4192690","040x319","$640/mo","","","","",[]],["322","Ann Arbor","2024","Chevrolet Bolt","Parking","In service","Parking Enforcement","1G1FY6S08P4199085","040x322","$640/mo","","","","",[]],["53","Ann Arbor","2024","Chevrolet Bolt","Parking","Out of service","Parking Enforcement","Not recorded","Not recorded","Not recorded","","","","",[]],["109","Ann Arbor","2024","Chevrolet Bolt","Parking","Out of service","Parking Enforcement","Not recorded","Not recorded","Not recorded","","","","",[]],["2029","Ann Arbor","1986","John Deere","Other","Due","Utility Vehicle","W81UTH9302A019","None","None","","","","",[]],["2041","Ann Arbor","2011","Value Trailer","Other","In service","AQUAD Trailer","5HNULV422BN065095","040x905","None","","","","",[]],["2074","Ann Arbor","2011","Polaris Ranger XP 800","Other","In service","Utility Vehicle","4XATY76A8B4204580","None","None","","","","",[]],["2075","Ann Arbor","2012","River Forest Trailer","Other","In service","Trailer","5NHUCC429CN067741","Not recorded","None","","","","",[]],["2068","Ann Arbor","2025","Dark Horse Trailer","Other","Due","Drone Team","7LZBE1214WE121675","130x864","None","","","","",[]],["62","Ann Arbor","·","Administrative vehicle","Pool","Due","Administrative","","","","","","","",[]],["394","Ann Arbor","2026","Ford Explorer","Patrol","At vendor","Police patrol","","","","","","","",[["Rifle release exposure not checked","Dearborn found the rifle release operates in accessory mode on the Ford patrol platform. Whether these new Fords share the exposure has not been confirmed.","Reported"]]],["395","Ann Arbor","2026","Ford Explorer","Patrol","At vendor","Police patrol","","","","","","","",[["Rifle release exposure not checked","See unit 394.","Reported"]]],["396","Ann Arbor","2026","Ford Explorer","Patrol","At vendor","Police patrol","","","","","","","",[["Rifle release exposure not checked","See unit 394.","Reported"]]],["400","Ann Arbor","2026","Ford Explorer","Patrol","At vendor","Police patrol","","","","","","","",[["Rifle release exposure not checked","See unit 394.","Reported"]]],["2265","Flint","2025","Chevrolet Tahoe Command","Patrol","In service","Supervisor or command","IGNS6UEDXSR339429","130x836","Purchased","","","","",[]],["2266","Flint","2025","Chevrolet Tahoe","Patrol","In service","Marked patrol","IGNS6UEDXSR338509","130X837","Purchased","","","","",[]],["2267","Flint","2025","Chevrolet Tahoe","Patrol","In service","Marked patrol","IGNS6UEDXSR339448","130X838","Purchased","","","","",[]],["2268","Flint","2025","Chevrolet Tahoe","Patrol","In service","Marked patrol","IGNS6UEDXSR389476","130X863","Purchased","","","","",[]],["2239","Flint","·","Dodge Durango","CIU","Due","Unmarked","","","","","","","",[]],["RV 040X806","Flint","·","Recreational vehicle","Other","Due","Not confirmed","","","","","","","",[]],["392","Guest Services","2026","Chrysler Pacifica Select","Pool","Due","Minivan","","","","","","","",[]],["393","Guest Services","·","Ford Escape","Other","Out of service","No package assigned","","","","","","","",[]],["74","Museum","·","Ford Explorer","Security","Out of service","Security patrol, Museum build","","","","","","","",[]],["277","Housing","·","Ford Police Interceptor Utility","Security","Out of service","Security patrol","","","","","","","",[]],["105","Michigan Medicine","·","Chrysler Pacifica","Pool","Due","Minivan, temporary lease","","","","","","","",[]],["2358","Flint","2025","Ford Explorer","Patrol","In service","Marked patrol","1FM5K8AB6SGC00756","130X840","Purchased","","","","",[]],["2062","Flint","2017","Chevrolet Tahoe","Patrol","In service","Marked patrol","1GNSKFEC6HR154722","040X668","Purchased","","","","",[]],["2359","Flint","2025","Ford Explorer","Patrol","In service","Marked patrol","1FM5K8AB9SGB95262","130X841","Purchased","","","","",[]],["2286","Flint","2024","Ford Explorer","Patrol","In service","Marked patrol","1FM5K8AB0RGA30879","040x818","Purchased","","","","",[]],["2287","Flint","2024","Ford Explorer","Patrol","In service","Marked patrol","1FM5K8AB4RGA31184","040X819","Purchased","","","","",[]],["2319","Flint","2025","Ford Explorer","Patrol","In service","Marked patrol","1FM5K8AB0SGA31205","130X787","Purchased","","","","",[]],["2320","Flint","2025","Ford Explorer","Patrol","In service","Marked patrol","1FM5K8AB0SGA31912","130X788","Purchased","","","","",[]],["2285","Flint","2022","Ford Explorer Command","Patrol","In service","Supervisor or command","1FM5K8AB3NGA05881","040X667","Purchased","","","","",[]],["2055","Flint","2011","Chevrolet Impala","Security","In service","Security patrol","2G1WD5EM1B1261516","040X562","Purchased","","","","",[]],["2220","Flint","2015","Ford Escape","Security","In service","Security patrol","1FM5K8AR4FGC41583","040x635","Purchased","","","","",[]],["2227","Flint","2016","Ford Escape","Security","In service","Security patrol","1FM5K8AR3GGA52750","041x641","Purchased","","","","",[]],["2119","Flint","2013","Dodge Charger","Pool","In service","Administrative","2C3CDXAT5DH695035","CPQ4976","Purchased","","","","",[]],["2316","Flint","2023","Ford Explorer","Pool","In service","Administrative","1FMSK8DH6PGB83547","040X805","Purchased","","","","",[]],["2030","Flint","2017","GMC Savana Van","Pool","In service","Community Engagement","1GTW7AFFXH1109174","040X660","Purchased","","","","",[]],["2199","Flint","2016","Chevrolet Silverado","Pool","In service","Community Engagement","3GCUKNEC7GG224013","040X775","Purchased","","","","",[]],["2044","Flint","2011","Ford Escape","Pool","In service","Emergency Manager","1FMCU9DG6BKA75785","041X556","Purchased","","","","",[]],["FL ·1","Flint","·","Not recorded","Other","Due","Role not confirmed","","","","","","","",[]],["FL ·2","Flint","·","Not recorded","Other","Due","Role not confirmed","","","","","","","",[]],["8","Housing","2022","Ford Police Interceptor Utility","Security","In service","Security patrol","1FM5K8AB2NGA04334","Not recorded","","","","","",[]],["166","Housing","2022","Ford Police Interceptor Utility","Security","In service","Security patrol","1FM5K8AB9NGA03083","Not recorded","","","","","",[]],["215","Housing","2022","Ford Police Interceptor Utility","Security","In service","Security patrol","1FM5K8AB0NGA02629","Not recorded","","","","","",[]],["401","Housing","2022","Ford Police Interceptor Utility","Security","In service","Security patrol","1FM5K8AB0NGA02680","Not recorded","","","","","",[]],["457","Housing","2021","Ford Police Interceptor Utility","Security","In service","Security patrol","1FM5K8AB2MGB46312","Not recorded","","","","","",[]],["270","Housing","2025","Ford Police Interceptor Utility","Security","In service","Security patrol","1FM5K8ABXSGA10104","Not recorded","","","","","",[]],["468","Housing","2022","Ford Police Interceptor Utility","Patrol","In service","Supervisor or command","1FM5K8AB0NGA02534","Not recorded","","","","","",[]],["AA ·1","Ann Arbor","·","Not recorded","Other","Due","Role not confirmed","","","","","","","",[]],["AA ·2","Ann Arbor","·","Not recorded","Other","Due","Role not confirmed","","","","","","","",[]],["AA ·3","Ann Arbor","·","Not recorded","Other","Due","Role not confirmed","","","","","","","",[]],["390","Michigan Medicine","2025","Ford Explorer Interceptor","Pool","In service","Administrative or pool","1FM5K8AB2SGC32501","040x390","$487/mo","","","","",[]],["PS ·1","Protective Services","·","Unmarked SUV","Security","Due","Protective Services","","","","","","","",[]],["PS ·2","Protective Services","·","Unmarked SUV","Security","Due","Protective Services","","","","","","","",[]],["PS ·3","Protective Services","·","Unmarked SUV","Security","Due","Protective Services","","","","","","","",[]],["PS ·4","Protective Services","·","Unmarked SUV","Security","Due","Protective Services","","","","","","","",[]],["PS ·5","Protective Services","·","Unmarked SUV","Security","Due","Protective Services","","","","","","","",[]],["PS ·6","Protective Services","·","Unmarked SUV","Security","Due","Protective Services","","","","","","","",[]],["PS ·7","Protective Services","·","Unmarked SUV","Security","Due","Protective Services","","","","","","","",[]],["PS ·8","Protective Services","·","Unmarked SUV","Security","Due","Protective Services","","","","","","","",[]],["FL ·3","Flint","·","Not recorded","Other","Due","Role not confirmed","","","","","","","",[]],["AA ·4","Ann Arbor","·","Not recorded","Other","Due","Role not confirmed","","","","","","","",[]]];
+const RECORD_ISSUES = ["No cost figure and no maintenance log","Cost figures don't reconcile","Annual cost is missing a zero","Make and VIN don't match","VIN begins with an exclamation mark","VIN contains an exclamation mark"];
+const isRecord = b => RECORD_ISSUES.includes(b);
+const VPILL={'In service':['#EDF7F1','#2A7D46'],'Due':['#FDF4DC','#92610A'],'At vendor':['#FDECEC','#C0362C'],'Out of service':['#F3F4F6','#374151']};
+const FOPTS={loc:['All'].concat(["Dearborn","Michigan Medicine","Ann Arbor","Flint","Guest Services","Museum","Housing","Protective Services"]),status:['All','In service','Due','Out of service','At vendor'],type:['All','Patrol','Security','CIU','K-9','Pool','Transport','Parking','Other'],year:['All','2022 and newer','2021 and older']};
+const FBLANK={f_q:'',f_loc:'All',f_status:'All',f_type:'All',f_year:'All'};
+const DUE=[
+  {key:'a',label:'Past due',range:'Apr 2025 to Jun 2026',n:11,pct:'10.8%',c:OOS,cost:'$134,244',say:'These eleven should already have been replaced.',rows:[{id:'0204',unit:'Michigan Medicine',when:'Apr 2025'},{id:'0078',unit:'DPSS Police',when:'Aug 2025'},{id:'0157',unit:'Michigan Medicine',when:'Aug 2025'},{id:'0177',unit:'Michigan Medicine',when:'Aug 2025'},{id:'0344',unit:'Michigan Medicine',when:'Aug 2025'},{id:'0555',unit:'DPSS Police',when:'Aug 2025'},{id:'0557',unit:'DPSS Police',when:'Sep 2025'},{id:'0552',unit:'DPSS Police',when:'Oct 2025'},{id:'0558',unit:'DPSS Police',when:'Dec 2025'},{id:'0186',unit:'Community Engagement',when:'May 2026'},{id:'0457',unit:'Housing Security',when:'Jun 2026'}],units:[{"u":"DPSS Police","n":5,"pct":"45%"},{"u":"Michigan Medicine","n":4,"pct":"36%"},{"u":"Community Engagement","n":1,"pct":"9%"},{"u":"Housing Security","n":1,"pct":"9%"}]},
+  {key:'b',label:'Next 12 months',range:'Feb 2027 to Jul 2027',n:11,pct:'10.8%',c:PEND,cost:'$122,520',say:'Order these now to have them on the road in time.',rows:[{id:'0029',unit:'Michigan Medicine',when:'Feb 2027'},{id:'0158',unit:'Michigan Medicine',when:'Feb 2027'},{id:'0320',unit:'Michigan Medicine',when:'Feb 2027'},{id:'0215',unit:'Housing Security',when:'Feb 2027'},{id:'0304',unit:'Michigan Medicine',when:'Feb 2027'},{id:'0233',unit:'Michigan Medicine',when:'Feb 2027'},{id:'0227',unit:'Dearborn Police',when:'Apr 2027'},{id:'0056',unit:'Protective Security',when:'Jun 2027'},{id:'0225',unit:'Dearborn Police',when:'Jun 2027'},{id:'0008',unit:'Housing Security',when:'Jul 2027'},{id:'0401',unit:'Housing Security',when:'Jul 2027'}],units:[{"u":"Michigan Medicine","n":5,"pct":"45%"},{"u":"Housing Security","n":3,"pct":"27%"},{"u":"Dearborn Police","n":2,"pct":"18%"},{"u":"Protective Security","n":1,"pct":"9%"}]},
+  {key:'c',label:'1 to 2 years out',range:'Sep 2027 to Aug 2028',n:18,pct:'17.6%',c:'#2A5993',cost:'$193,218',say:'Enough lead time to bid the package properly.',rows:[{id:'0166',unit:'Housing Security',when:'Sep 2027'},{id:'0363',unit:'DPSS Police',when:'Nov 2027'},{id:'0468',unit:'Housing Security',when:'Dec 2027'},{id:'0074',unit:'Museum Security',when:'Dec 2027'},{id:'0079',unit:'DPSS Police',when:'Feb 2028'},{id:'0103',unit:'DPSS Police',when:'Mar 2028'},{id:'0108',unit:'DPSS Police',when:'Mar 2028'},{id:'0439',unit:'DPSS Police',when:'Mar 2028'},{id:'0556',unit:'DPSS Police',when:'Mar 2028'},{id:'0151',unit:'Protective Security',when:'Mar 2028'},{id:'0080',unit:'DPSS Police',when:'Mar 2028'},{id:'0109',unit:'DPSS Police',when:'May 2028'},{id:'0053',unit:'DPSS Police',when:'May 2028'},{id:'0427',unit:'DPSS Police',when:'May 2028'},{id:'0179',unit:'Physical Security',when:'Jun 2028'},{id:'0010',unit:'DPSS Police',when:'Jun 2028'},{id:'0102',unit:'DPSS Police',when:'Jul 2028'},{id:'0112',unit:'Technology Services',when:'Aug 2028'}],units:[{"u":"DPSS Police","n":12,"pct":"67%"},{"u":"Housing Security","n":2,"pct":"11%"},{"u":"Museum Security","n":1,"pct":"6%"},{"u":"Protective Security","n":1,"pct":"6%"},{"u":"Physical Security","n":1,"pct":"6%"},{"u":"Technology Services","n":1,"pct":"6%"}]},
+  {key:'d',label:'More than 2 years',range:'Sep 2028 to Aug 2031',n:62,pct:'60.8%',c:OK,cost:'$833,067',say:'On term. Nothing to decide yet.',rows:[{id:'0234',unit:'DPSS Police',when:'Sep 2028'},{id:'0183',unit:'Dispatch',when:'Jan 2029'},{id:'0314',unit:'DPSS Police',when:'Mar 2029'},{id:'0322',unit:'DPSS Police',when:'Mar 2029'},{id:'0402',unit:'DPSS Police',when:'Apr 2029'},{id:'0319',unit:'DPSS Police',when:'Apr 2029'},{id:'0310',unit:'DPSS Police',when:'Apr 2029'},{id:'0230',unit:'Protective Security',when:'May 2029'},{id:'0038',unit:'DPSS Police',when:'Jun 2029'},{id:'1174',unit:'DPSS Police',when:'Aug 2029'},{id:'1278',unit:'Technology Services',when:'Sep 2029'},{id:'1014',unit:'Michigan Medicine',when:'Sep 2029'},{id:'0287',unit:'Dearborn Marygrove',when:'Sep 2029'},{id:'0284',unit:'Dearborn Marygrove',when:'Oct 2029'},{id:'0128',unit:'Michigan Medicine',when:'Oct 2029'},{id:'0021',unit:'Michigan Medicine',when:'Oct 2029'},{id:'0041',unit:'Protective Security',when:'Oct 2029'},{id:'0091',unit:'Protective Security',when:'Oct 2029'},{id:'0105',unit:'Michigan Medicine',when:'Oct 2029'},{id:'0236',unit:'Michigan Medicine',when:'Oct 2029'},{id:'0240',unit:'Michigan Medicine',when:'Oct 2029'},{id:'0251',unit:'Michigan Medicine',when:'Oct 2029'},{id:'0163',unit:'Technology Services',when:'Oct 2029'},{id:'0326',unit:'Michigan Medicine',when:'Oct 2029'},{id:'0292',unit:'Michigan Medicine',when:'Oct 2029'},{id:'0145',unit:'Physical Security',when:'Dec 2029'},{id:'1178',unit:'Dearborn Police',when:'Dec 2029'},{id:'0198',unit:'Dearborn Police',when:'Jan 2030'},{id:'0092',unit:'Michigan Medicine',when:'Jan 2030'},{id:'0277',unit:'Housing Security',when:'Jan 2030'},{id:'0195',unit:'Dearborn Police',when:'Feb 2030'},{id:'0170',unit:'Physical Security',when:'Feb 2030'},{id:'0270',unit:'Housing Security',when:'Apr 2030'},{id:'0275',unit:'Physical Security',when:'Apr 2030'},{id:'0333',unit:'Community Engagement',when:'Apr 2030'},{id:'0156',unit:'DPSS Police',when:'May 2030'},{id:'0438',unit:'DPSS Police',when:'May 2030'},{id:'1354',unit:'DPSS Police',when:'Jun 2030'},{id:'0368',unit:'Dearborn Marygrove',when:'Sep 2030'},{id:'0062',unit:'DPSS Division',when:'Sep 2030'},{id:'0388',unit:'Dearborn Marygrove',when:'Sep 2030'},{id:'0389',unit:'Dearborn Police',when:'Oct 2030'},{id:'0002',unit:'DPSS Police',when:'Oct 2030'},{id:'0381',unit:'Michigan Medicine',when:'Oct 2030'},{id:'0393',unit:'MM Guest Services',when:'Oct 2030'},{id:'0365',unit:'Dearborn Police',when:'Nov 2030'},{id:'0390',unit:'Michigan Medicine',when:'Nov 2030'},{id:'0392',unit:'MM Guest Services',when:'Nov 2030'},{id:'0025',unit:'DPSS Police',when:'Nov 2030'},{id:'0394',unit:'DPSS Police',when:'Jan 2031'},{id:'0395',unit:'DPSS Police',when:'Jan 2031'},{id:'0396',unit:'DPSS Police',when:'Jan 2031'},{id:'0400',unit:'DPSS Police',when:'Jan 2031'},{id:'0200',unit:'Michigan Medicine',when:'Feb 2031'},{id:'0125',unit:'DPSS Police',when:'Mar 2031'},{id:'0012',unit:'Protective Security',when:'Apr 2031'},{id:'0403',unit:'DPSS Police',when:'May 2031'},{id:'0404',unit:'DPSS Police',when:'May 2031'},{id:'0405',unit:'DPSS Police',when:'May 2031'},{id:'0406',unit:'DPSS Police',when:'May 2031'},{id:'0188',unit:'Protective Security',when:'May 2031'},{id:'1588',unit:'Technology Services',when:'Aug 2031'}],units:[{"u":"DPSS Police","n":22,"pct":"35%"},{"u":"Michigan Medicine","n":13,"pct":"21%"},{"u":"Protective Security","n":5,"pct":"8%"},{"u":"Dearborn Police","n":5,"pct":"8%"},{"u":"Dearborn Marygrove","n":4,"pct":"6%"},{"u":"Technology Services","n":3,"pct":"5%"},{"u":"Physical Security","n":3,"pct":"5%"},{"u":"Housing Security","n":2,"pct":"3%"},{"u":"MM Guest Services","n":2,"pct":"3%"},{"u":"Dispatch","n":1,"pct":"2%"},{"u":"Community Engagement","n":1,"pct":"2%"},{"u":"DPSS Division","n":1,"pct":"2%"}]}
+];
+const DUEBY=Object.fromEntries(DUE.map(d=>[d.key,d]));
+
+
+const ROWS=[
+ {unit:'225',what:'Service overdue',where:'Dearborn · Security patrol',status:'Out of service',stc:'crit',age:'11 days',cat:'oos'},
+ {unit:'394',what:'At vendor, no return date',where:'Ann Arbor · Police patrol',status:'At vendor',stc:'crit',age:'10 days',cat:'oos'},
+ {unit:'411',what:'At A2 Fleet Services',where:'Ann Arbor · Police patrol',status:'Out of service',stc:'crit',age:'10 days',cat:'oos'},
+ {unit:'422',what:'Awaiting parts',where:'Ann Arbor · Utility',status:'Out of service',stc:'crit',age:'24 days',cat:'oos'},
+ {unit:'540',what:'Collision repair, no estimate',where:'Ann Arbor · Police patrol',status:'Out of service',stc:'crit',age:'17 days',cat:'oos'},
+ {unit:'368',what:'Rifle mount release, accessory mode',where:'Dearborn · Police patrol',status:'Safety hold',stc:'crit',age:'held',cat:'faults'},
+ {unit:'388',what:'Rifle mount release, accessory mode',where:'Dearborn · Police patrol',status:'Safety hold',stc:'crit',age:'held',cat:'faults'},
+ {unit:'395',what:'Rifle mount release, accessory mode',where:'Ann Arbor · Police patrol',status:'Safety hold',stc:'crit',age:'held',cat:'faults'},
+ {unit:'396',what:'Rifle mount release, accessory mode',where:'Ann Arbor · Police patrol',status:'Safety hold',stc:'crit',age:'held',cat:'faults'},
+ {unit:'227',what:'Replacement due 1 December',where:'Dearborn · Police patrol',status:'Due soon',stc:'pend',age:'3 mo',cat:'due'},
+ {unit:'225',what:'Replacement due within 8 months',where:'Dearborn · Security patrol',status:'Due soon',stc:'pend',age:'8 mo',cat:'due'},
+ {unit:'531',what:'Preventative maintenance booked',where:'Ann Arbor · CIU',status:'Service booked',stc:'pend',age:'10 days',cat:'due'},
+ {unit:'078',what:'Plate shared with unit 403',where:'Ann Arbor · Police patrol',status:'Record gap',stc:'pend',age:'open',cat:'records'},
+ {unit:'403',what:'No VIN recorded',where:'Ann Arbor · Police patrol',status:'Record gap',stc:'pend',age:'open',cat:'records'},
+ {unit:'404',what:'No VIN recorded',where:'Ann Arbor · Police patrol',status:'Record gap',stc:'pend',age:'open',cat:'records'},
+ {unit:'365',what:'No cost figure, no maintenance log',where:'Dearborn · Police K-9',status:'Record gap',stc:'pend',age:'open',cat:'records'},
+ {unit:'514',what:'Disposed in August, still on the shift board',where:'Flint · Pool',status:'Record gap',stc:'pend',age:'open',cat:'records'}
+];
+
+const UNITS=[
+ {name:'Ann Arbor UMPD',n:42,open:'2 need action'},
+ {name:'Ann Arbor Parking',n:7,open:'Clear'},
+ {name:'Dearborn',n:17,open:'3 need action'},
+ {name:'Flint',n:25,open:'1 need action'},
+ {name:'Michigan Medicine Security',n:23,open:'No lease dates on file'},
+ {name:'Protective Services',n:8,open:'Workbook outstanding'},
+ {name:'Housing Security',n:8,open:'Clear'},
+ {name:'Museum Security',n:1,open:'Clear'},
+ {name:'Guest Services · MM',n:2,open:'Clear'}
+];
+
+const ROLE_HOME={officer:'./Officer Home.dc.html',supervisor:'./Supervisor Home.dc.html'};
+const ROLE_NAV={
+  officer:[{label:'Home',href:'./Officer Home.dc.html'},{label:'Assignments',href:'./Shift Assignments.dc.html'}],
+  supervisor:[{label:'Home',href:'./Supervisor Home.dc.html'},{label:'Overview',href:'./Overview.dc.html'},
+    {label:'Budget Forecast',href:'./Budget Forecast.dc.html'},{label:'Ordering',href:'./Vehicle Ordering.dc.html'},
+    {label:'Service Calendar',href:'./Service Calendar.dc.html'},{label:'Assignments',href:'./Shift Assignments.dc.html'}]
+};
+function navFor(role,current){
+  return (ROLE_NAV[role]||ROLE_NAV.officer).map(n=>({label:n.label,href:n.href,
+    style:'font-size:14px;white-space:nowrap;'+(n.label===current?'font-weight:700;color:#00274C;':'font-weight:500;color:#6B7280;')}));
+}
+function setStoredRole(role){try{localStorage.setItem('dpss-role',role);}catch(e){}}
+
+class Component extends DCLogic {
+  state={tab:'All',query:'',noticeOpen:(()=>{try{return sessionStorage.getItem('dpss-alert-dismissed')!=='1'}catch(e){return true}})(),expanded:false,...FBLANK,vLimit:20,vehKey:null};
+
+  componentDidMount(){setStoredRole('supervisor');
+    try{const p=new URLSearchParams(location.search);const up={};
+      if(p.get('loc')&&FOPTS.loc.includes(p.get('loc')))up.f_loc=p.get('loc');
+      if(p.get('status')&&FOPTS.status.includes(p.get('status')))up.f_status=p.get('status');
+      if(Object.keys(up).length){this.setState(up,()=>setTimeout(()=>{const el=document.getElementById('division');if(el)window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY-24,behavior:'smooth'});},300));}}catch(e){}}
+
+  arc(from,to){
+    const r=94,c=100,rad=a=>(a-90)*Math.PI/180;
+    const x1=c+r*Math.cos(rad(from)),y1=c+r*Math.sin(rad(from));
+    const x2=c+r*Math.cos(rad(to)),y2=c+r*Math.sin(rad(to));
+    return 'M '+c+' '+c+' L '+x1.toFixed(2)+' '+y1.toFixed(2)+
+      ' A '+r+' '+r+' 0 '+((to-from>180)?1:0)+' 1 '+x2.toFixed(2)+' '+y2.toFixed(2)+' Z';
+  }
+
+  fleetVals(){
+    const s=this.state, q=s.f_q.trim().toLowerCase();
+    const list=FLEET.filter(v=>{const y=parseInt(v[2],10);
+      if(q&&!(v[0].toLowerCase().startsWith(q)||v[8].toLowerCase().includes(q)||v[7].toLowerCase().includes(q)||v[3].toLowerCase().includes(q)))return false;
+      return (s.f_loc==='All'||v[1]===s.f_loc)&&(s.f_status==='All'||v[5]===s.f_status)&&(s.f_type==='All'||v[4]===s.f_type)&&
+        (s.f_year==='All'||(s.f_year==='2022 and newer'?y>=2022:(y&&y<=2021)));});
+    const shown=list.slice(0,s.vLimit);
+    const cur=FLEET.find(v=>v[0]+v[1]===s.vehKey);
+    const out={vCount:list.length+' of '+FLEET.length+' vehicles',
+      vFiltered:s.f_q||s.f_loc!=='All'||s.f_status!=='All'||s.f_type!=='All'||s.f_year!=='All',
+      clearF:()=>this.setState({...FBLANK,vLimit:20}),
+      vEmpty:list.length===0, vMore:list.length>shown.length,
+      moreLabel:'Show '+Math.min(20,list.length-shown.length)+' more · '+(list.length-shown.length)+' left',
+      showMore:()=>this.setState(st=>({vLimit:st.vLimit+20})),
+      f_q:s.f_q, set_q:e=>this.setState({f_q:e.target.value,vLimit:20}),
+      vehicles:shown.map(v=>{const c=VPILL[v[5]]||VPILL['Out of service'];return {u:v[0],yr:v[2],model:v[3],place:v[1]+' · '+v[4],status:v[5],
+        open:()=>this.setState({vehKey:v[0]+v[1]}),
+        pillStyle:'align-self:flex-start;display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:500;line-height:18px;background:'+c[0]+';color:'+c[1]+';',
+        dotStyle:'width:7px;height:7px;border-radius:999px;flex-shrink:0;background:'+c[1]+';'};}),
+      vehOpen:!!cur, closeVeh:()=>this.setState({vehKey:null}), stop:e=>e.stopPropagation(),
+      veh:cur?{u:cur[0],sub:(cur[2]?cur[2]+' · ':'')+cur[3],
+        facts:[['Status',cur[5]],['Unit',cur[1]+(cur[6]?' · '+cur[6]:'')],['VIN',cur[7]],['Plate',cur[8]],['Odometer',cur[10]],['Last service',cur[11]],['Next service',cur[12]],['Lease',cur[9]],['Replacement',cur[13]]].filter(f=>f[1]).map(([k,v])=>({k,v})),
+        work:cur[14].filter(w=>!isRecord(w[0])).map(w=>({b:w[0],s:w[1],stage:w[2]})), none:cur[14].filter(w=>!isRecord(w[0])).length===0,
+        recs:cur[14].filter(w=>isRecord(w[0])).map(w=>({b:w[0],s:w[1]})), hasRecs:cur[14].some(w=>isRecord(w[0]))}:{u:'',sub:'',facts:[],work:[],none:false,recs:[],hasRecs:false},
+      recIssues:FLEET.flatMap(v=>v[14].filter(w=>isRecord(w[0])).map(w=>({u:v[0],c:v[1],b:w[0],s:w[1],open:()=>this.setState({vehKey:v[0]+v[1]})}))),
+      recCount:''};
+    out.recCount=out.recIssues.length+' record issue'+(out.recIssues.length===1?'':'s')+' on '+new Set(out.recIssues.map(r=>r.u+r.c)).size+' vehicles';
+    ['loc','status','type','year'].forEach(k=>{out['f_'+k]=s['f_'+k];out['opt_'+k]=FOPTS[k].map(v=>({v}));out['set_'+k]=e=>this.setState({['f_'+k]:e.target.value,vLimit:20});});
+    return out;
+  }
+
+  renderVals(){
+    const s=this.state, q=s.query.trim().toLowerCase();
+    const catOf={'Out of service':'oos','Safety holds':'faults','Falls due':'due','Record gaps':'records','Available':'__none'};
+    const rows=ROWS.filter(r=>(s.tab==='All'||r.cat===catOf[s.tab])
+      &&(!q||(r.unit+' '+r.what+' '+r.where).toLowerCase().includes(q)))
+      .map(r=>{const c=CH[r.stc];
+        return Object.assign({},r,{bar:c[1],chipBg:c[0],chipFg:c[1],chipBc:c[2]});});
+
+    const count=c=>ROWS.filter(r=>r.cat===c).length;
+
+    const seg=[
+      {label:'Available',n:132-ROWS.length,c:OK,sub:'On the road, nothing open against them',cat:null},
+      {label:'Falls due',n:count('due'),c:'#2A5993',sub:'Service or replacement approaching',cat:'due'},
+      {label:'Record gaps',n:count('records'),c:NAVY,sub:'Shared plates, missing VINs, impossible dates',cat:'records'},
+      {label:'Out of service',n:count('oos'),c:OOS,sub:'Off the road today',cat:'oos'},
+      {label:'Safety holds',n:count('faults'),c:PEND,sub:'Rifle mount release, held to 30 Sep',cat:'faults'}
+    ];
+    const total=seg.reduce((a,g)=>a+g.n,0);
+    let cursor=0;
+    const slices=seg.map(g=>{
+      const from=cursor, to=cursor+g.n/total*360; cursor=to;
+      const mid=(from+to)/2-90, rad=mid*Math.PI/180, out=s.hov===g.label?7:0;
+      const dim=s.hov&&s.hov!==g.label;
+      return {d:this.arc(from,to),fill:dim?'#E5E7EB':g.c,
+        tf:'translate('+(Math.cos(rad)*out).toFixed(2)+' '+(Math.sin(rad)*out).toFixed(2)+')',
+        op:(s.hov===g.label||s.tab==='All'||s.tab===g.label)?1:.28,
+        enter:()=>this.setState({hov:g.label}),
+        leave:()=>this.setState({hov:null}),
+        go:()=>this.setState({tab:s.tab===g.label?'All':g.label})};
+    });
+    const legend=seg.map(g=>({n:g.n,label:g.label,sub:g.sub,c:g.c,
+      bg:s.tab===g.label?'#F3F4F6':'#fff',
+      go:()=>this.setState({tab:s.tab===g.label?'All':g.label})}));
+
+    return {
+      today:'Monday, 14 September 2026',
+      noticeOpen:s.noticeOpen&&(this.props.showNotice??true),
+      unitCols:this.props.unitColumns??3,
+      dismissNotice:()=>{(()=>{try{sessionStorage.setItem('dpss-alert-dismissed','1')}catch(e){}})();this.setState({noticeOpen:false});},
+      slices, legend,
+      centerN:(s.hov||s.tab!=='All')?seg.find(g=>g.label===(s.hov||s.tab)).n:132,
+      centerLabel:(s.hov||s.tab!=='All')?(s.hov||s.tab).toLowerCase():'vehicles',
+      listTitle:s.tab==='All'?'Open items':s.tab,
+      filtered:s.tab!=='All',
+      clearSlice:()=>this.setState({tab:'All'}),
+      clearLabel:'Clear filter',
+      rows, rowsEmpty:rows.length===0,
+      listCount:rows.length+' open',
+      listMax:s.expanded?'none':'820px',
+      expandLabel:s.expanded?'Collapse':'Expand',
+      expandHint:s.expanded?('All '+rows.length+' shown'):(rows.length>6?('Showing 6 of '+rows.length+' — scroll inside, or expand'):('All '+rows.length+' shown')),
+      toggleExpand:()=>this.setState({expanded:!s.expanded}),
+      query:s.query,
+      setQuery:e=>this.setState({query:e.target.value}),
+      showCurrent:true,
+      showForecast:false,
+      role:'supervisor',
+      navLinks:navFor('supervisor','Overview'),
+      switchRole:e=>{const next=e.target.value;setStoredRole(next);if(next!=='supervisor')window.location.href=ROLE_HOME[next];},
+      curStyle:'cursor:pointer;font-family:inherit;border-radius:999px;padding:9px 20px;font-size:14px;font-weight:600;white-space:nowrap;'+
+        ((s.view||'current')==='current'?'background:#00274C;border:0.77px solid #00274C;color:#fff;':'background:#fff;border:0.77px solid #E5E7EB;color:#374151;'),
+      fcStyle:'cursor:pointer;font-family:inherit;border-radius:999px;padding:9px 20px;font-size:14px;font-weight:600;white-space:nowrap;'+
+        (s.view==='forecast'?'background:#00274C;border:0.77px solid #00274C;color:#fff;':'background:#fff;border:0.77px solid #E5E7EB;color:#374151;'),
+      fcStats:[
+        {v:'$1.28M',label:'What the fleet costs a year',note:'Lease plus maintenance, 102 vehicles',c:NAVY},
+        {v:'11',label:'Already past due',note:'Oldest expired April 2025',c:OOS},
+        {v:'22',label:'Due in the next year',note:'The 11 above, plus 11 more',c:PEND},
+        {v:'$19,954',label:'To build one patrol car',note:'Quoted, September 2025',c:NAVY}
+      ],
+      fcTimeline:DUE.map(d=>({key:d.key,n:d.n,label:d.label,pct:d.pct,c:d.c,
+        bd:(s.due||'a')===d.key?'3px solid #131516':'3px solid transparent',
+        go:()=>this.setState({due:d.key})})),
+      dueTabs:DUE.map(d=>({key:d.key,label:d.label,range:d.range,n:d.n,c:d.c,
+        bg:(s.due||'a')===d.key?d.c:'#fff',
+        fg:(s.due||'a')===d.key?'#fff':'#131516',
+        go:()=>this.setState({due:d.key})})),
+      dueTitle:DUEBY[s.due||'a'].label,
+      dueRange:DUEBY[s.due||'a'].range,
+      dueN:DUEBY[s.due||'a'].n,
+      dueCost:DUEBY[s.due||'a'].cost,
+      dueSay:DUEBY[s.due||'a'].say,
+      dueC:DUEBY[s.due||'a'].c,
+      dueRows:DUEBY[s.due||'a'].rows,
+      dueUnits:DUEBY[s.due||'a'].units,
+      fcBuild:[
+        {role:'Patrol Tahoe',cost:'$19,954',h:'86%',base:'18%',delta:'Highest'},
+        {role:'Supervisor Tahoe',cost:'$18,952',h:'81.7%',base:'19%',delta:'$1,002 less \u2014 no cage'},
+        {role:'Patrol Explorer',cost:'$18,477',h:'79.6%',base:'19%',delta:'$1,477 less \u2014 smaller vehicle'}
+      ],
+      fcCoverage:[
+        {label:'Vehicles we can date',have:102,of:144,pct:'71%',c:OK,note:'Transportation has the lease term'},
+        {label:'Vehicles with an outfitting cost on file',have:31,of:144,pct:'22%',c:OOS,note:'Missing on the other 113'},
+        {label:'Roles with a real price quote',have:3,of:9,pct:'33%',c:PEND,note:'One vendor, quotes now lapsed'},
+        {label:'Computer replacements budgeted',have:0,of:102,pct:'0%',c:OOS,note:'Replaced every 3 years, lease runs 5'}
+      ],
+      fcUnits:[
+        {name:'DPSS Police',n:39,cost:'$504,448',pct:'100%'},
+        {name:'Michigan Medicine Security',n:22,cost:'$278,717',pct:'55%'},
+        {name:'Housing Security',n:8,cost:'$96,534',pct:'19%'},
+        {name:'Protective Security Service',n:7,cost:'$95,052',pct:'19%'},
+        {name:'Dearborn Police',n:7,cost:'$93,534',pct:'19%'},
+        {name:'Dearborn Marygrove Operations',n:4,cost:'$59,641',pct:'12%'},
+        {name:'Technology Services',n:4,cost:'$38,028',pct:'8%'},
+        {name:'Physical Security',n:4,cost:'$34,896',pct:'7%'}
+      ],
+      fcRates:[
+        {role:'Patrol Tahoe',note:'EST1216 \u00b7 cage, partition mount rack, trunk tray',cost:'$19,954'},
+        {role:'Supervisor Tahoe',note:'EST1217 \u00b7 no cage, self-supporting rack',cost:'$18,952'},
+        {role:'Patrol Explorer',note:'EST1226 \u00b7 Interceptor Utility, 2025',cost:'$18,477'}
+      ],
+      fcExp:[
+        {n:11,label:'Overdue',note:'Lease term already run. Three Michigan Medicine vehicles expired August 2025',pct:'11%',c:OOS},
+        {n:11,label:'Within 12 months',note:'Six Michigan Medicine, three Housing, one Dearborn, one Protective',pct:'11%',c:PEND},
+        {n:18,label:'12 to 24 months',note:'Ten DPSS Police. The first year with room to plan the bid',pct:'18%',c:'#2A5993'},
+        {n:62,label:'Beyond 24 months',note:'On term, nothing to forecast yet',pct:'61%',c:OK}
+      ],
+      fcGaps:[
+        {what:'Upfitting rates come from one bidder',detail:'Equipment is bid among three approved upfitters. Both Arrowhead quotes lapsed in autumn 2025, so the three totals are a reference build, not a rate card.',bar:OOS},
+        {what:'Police Eq recorded on 31 of 144 vehicles',detail:'Where it is recorded it runs $43.51 to $468.90 a month. On the other 113 the outfitting charge is simply absent from the lease line.',bar:OOS},
+        {what:'Computers replace on a 3-year cycle against a 60-month lease',detail:'Every MDC is replaced mid-lease. No line in this forecast accounts for it, and no forecast lets Technology Services order in bulk.',bar:PEND},
+        {what:'Ann Arbor lease dates cannot be read as expirations',detail:'21 of 40 records show dates that predate the model year. The figures above use Transportation\u2019s file, which is the only source with a usable term on every leased vehicle.',bar:PEND}
+      ],
+      dates:[
+        {what:'Unit return workbooks',when:'16 days late',who:'Outstanding: Ann Arbor, Michigan Medicine, Flint, Protective Services',bar:OOS},
+        {what:'Packages technically settled',when:'9 days late',who:'Everything the upfitter has to confirm',bar:OOS},
+        {what:'Approved packages to Transportation',when:'26 days',who:'Renee Jordan · the only hard external date',bar:NAVY}
+      ],
+      pipeline:[
+        {unit:'227',pct:'94%',left:'3 mo left',c:PEND},
+        {unit:'225',pct:'87%',left:'8 mo left',c:PEND},
+        {unit:'368',pct:'40%',left:'36 mo left',c:OK},
+        {unit:'287',pct:'38%',left:'37 mo left',c:OK}
+      ],
+      units:UNITS.map(u=>Object.assign({},u,{
+        openFg:u.open==='Clear'?'#2A7D46':'#C0362C'})),
+      ...this.fleetVals()
+    };
+  }
+}
+</script>
+</body>
+</html>

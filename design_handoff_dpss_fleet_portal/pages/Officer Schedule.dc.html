@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900&display=swap" rel="stylesheet" />
+<style>
+  body { margin: 0; background: #F7F8FA; -webkit-font-smoothing: antialiased; }
+  a { color: #2A5993; text-decoration: none; }
+  a:hover { color: #00274C; }
+</style>
+</helmet>
+<div style="font-family: 'DM Sans', sans-serif; background: #F7F8FA; min-height: 100vh; display: flex; flex-direction: column;">
+
+  <div style="background: #fff; border-bottom: 1.313px solid #E5E7EB;">
+    <div style="background: #FAFAFA; border-bottom: 1.313px solid #F0F0F0; display: flex; align-items: center; gap: 8px; padding: 6px 40px;">
+      <span style="font-size: 12px; font-weight: 400; line-height: 18px; color: #6B7280;">homeLocation</span>
+      <div style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+        <span style="font-size: 12px; font-weight: 600; line-height: 100%; color: #00274C;">Ann Arbor</span>
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="display: block;"><path d="M1 1.5L5 4.5L9 1.5" stroke="#00274C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 12px; font-weight: 400; line-height: 18px; color: #6B7280; white-space: nowrap;">Viewing as</span>
+        <select onChange="{{ switchRole }}" value="{{ role }}" style="font-family: inherit; font-size: 12px; font-weight: 600; color: #00274C; background: #fff; border: 1px solid #E5E7EB; border-radius: 999px; padding: 4px 12px; cursor: pointer;">
+          <option value="officer">Officer</option>
+          <option value="supervisor">Supervisor</option>
+        </select>
+      </div>
+    </div>
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 14px 40px; height: 67px; box-sizing: border-box;">
+      <span style="font-size: 18px; font-weight: 700; line-height: 27px; letter-spacing: 1.8px; color: #00274C; white-space: nowrap;">DPSS FLEET</span>
+      <div style="display: flex; align-items: center; gap: 28px;">
+        <sc-for list="{{ navLinks }}" as="n" hint-placeholder-count="2">
+          <a href="{{ n.href }}" style="{{ n.style }}">{{ n.label }}</a>
+        </sc-for>
+        <a href="{{ workOrderHref }}" style="background: #00274C; color: #fff; border-radius: 999px; padding: 10px 22px; font-size: 14px; font-weight: 600; white-space: nowrap;" style-hover="background: #003A6E; color: #fff;">+ Work Order</a>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; justify-content: center;">
+  <div style="width: 100%; max-width: 1200px; padding: 48px 40px 80px; box-sizing: border-box;">
+
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap;">
+      <div>
+        <div style="font-size: 14px; font-weight: 400; line-height: 21px; color: #6B7280;">DPSS Division · Officer Zamorski</div>
+        <div style="font-size: 42px; font-weight: 900; line-height: 1.12; letter-spacing: -1.05px; color: #00274C;">Division Schedule</div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <button style="border: none; cursor: pointer; background: #FFCB05; color: #131516; border-radius: 999px; padding: 11px 22px; font-family: inherit; font-size: 14px; font-weight: 700;">Today</button>
+        <button style="cursor: pointer; background: #fff; border: 1.313px solid #E5E7EB; border-radius: 999px; width: 42px; height: 42px; font-family: inherit; font-size: 15px; color: #374151;" style-hover="border-color: #00274C;">←</button>
+        <span style="font-size: 14px; font-weight: 500; color: #374151; min-width: 56px; text-align: center;">Today</span>
+        <button style="cursor: pointer; background: #fff; border: 1.313px solid #E5E7EB; border-radius: 999px; width: 42px; height: 42px; font-family: inherit; font-size: 15px; color: #374151;" style-hover="border-color: #00274C;">→</button>
+        <button style="cursor: pointer; background: #fff; border: 1.313px solid #E5E7EB; border-radius: 999px; padding: 11px 18px; font-family: inherit; font-size: 14px; font-weight: 600; color: #00274C;" style-hover="border-color: #00274C;">↓ Export CSV</button>
+      </div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 24px 0 0;">
+      <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.66px; text-transform: uppercase; color: #9CA3AF; margin-right: 4px;">Dept</span>
+      <sc-for list="{{ depts }}" as="d" hint-placeholder-count="6">
+        <button onClick="{{ d.pick }}" style="{{ d.style }}">
+          <span>{{ d.name }}</span>
+          <span style="{{ d.countStyle }}">{{ d.count }}</span>
+        </button>
+      </sc-for>
+    </div>
+
+    <div style="display: flex; gap: 0; margin-top: 24px; background: #fff; border: 1.313px solid #E5E7EB; border-radius: 8px; overflow: hidden;">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+        <button onClick="{{ t.pick }}" style="{{ t.style }}">
+          <span>{{ t.name }}</span>
+          <sc-if value="{{ t.badge }}">
+            <span style="background: #7A3610; color: #fff; border-radius: 999px; min-width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; padding: 0 5px;">{{ t.badge }}</span>
+          </sc-if>
+        </button>
+      </sc-for>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 32px; padding: 28px 0;">
+
+      <div style="border-radius: 16px; background: #00274C; display: flex; gap: 32px; padding: 24px 28px; flex-wrap: wrap;">
+        <div style="min-width: 180px; display: flex; flex-direction: column; justify-content: space-between; gap: 16px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="border-radius: 999px; background: #FFCB05; padding: 2px 10px; font-size: 11px; font-weight: 700; line-height: 16.5px; letter-spacing: 0.66px; text-transform: uppercase; color: #131516;">My Shift</span>
+              <span style="border-radius: 999px; background: rgba(255,255,255,0.1); padding: 2px 10px; font-size: 11px; font-weight: 600; line-height: 16.5px; text-transform: capitalize; color: rgba(255,255,255,0.55);">officer</span>
+            </div>
+            <div style="padding: 6px 0;">
+              <span style="font-size: 28px; font-weight: 900; line-height: 42px; letter-spacing: -0.28px; color: #fff;">ZAMORSKI</span>
+            </div>
+            <div style="padding: 2px 0; font-size: 14px; font-weight: 400; line-height: 21px; color: rgba(255,255,255,0.55);">Badge #103 · Ann Arbor UMPD</div>
+          </div>
+          <span style="align-self: flex-start; border-radius: 999px; background: #FDE8D6; color: #7A3610; padding: 7px 16px; font-size: 13px; font-weight: 600;">Noons · 1200–0000</span>
+        </div>
+
+        <div style="flex: 1 1 200px; min-width: 180px; border-left: 1px solid rgba(255,255,255,0.14); padding-left: 32px; display: flex; flex-direction: column; justify-content: space-between; gap: 16px;">
+          <div>
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.66px; text-transform: uppercase; color: rgba(255,255,255,0.55);">Assignment</div>
+            <div style="padding: 4px 0;">
+              <span style="font-size: 42px; font-weight: 900; line-height: 1.1; letter-spacing: -0.42px; color: #FFCB05;">103</span>
+            </div>
+            <div style="font-size: 14px; font-weight: 400; line-height: 21px; color: rgba(255,255,255,0.55);">Unit number</div>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <span style="border-radius: 999px; background: #FFCB05; color: #131516; padding: 4px 12px; font-size: 12px; font-weight: 700;">Taser assigned</span>
+            <span style="border-radius: 999px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.72); padding: 4px 12px; font-size: 12px; font-weight: 600;">Rifle #7</span>
+            <span style="border-radius: 999px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.72); padding: 4px 12px; font-size: 12px; font-weight: 600;">Kit #1</span>
+          </div>
+        </div>
+
+        <div style="width: 220px; border-left: 1px solid rgba(255,255,255,0.14); padding-left: 32px; display: flex; flex-direction: column; gap: 10px;">
+          <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.66px; text-transform: uppercase; color: rgba(255,255,255,0.55);">Quick actions</div>
+          <button style="cursor: pointer; text-align: left; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.16); border-radius: 10px; padding: 11px 16px; font-family: inherit; font-size: 13px; font-weight: 600; color: #fff;" style-hover="background: rgba(255,255,255,0.16);">Request time off →</button>
+          <button style="cursor: pointer; text-align: left; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.16); border-radius: 10px; padding: 11px 16px; font-family: inherit; font-size: 13px; font-weight: 600; color: #fff;" style-hover="background: rgba(255,255,255,0.16);">Pick up a shift →</button>
+          <div style="font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.42); margin-top: 2px;">{{ todayLabel }}</div>
+        </div>
+      </div>
+
+      <div style="background: #fff; border: 1.313px solid #E5E7EB; border-radius: 14px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+          <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.66px; text-transform: uppercase; color: #9CA3AF; margin-right: 4px;">Shift</span>
+          <sc-for list="{{ shifts }}" as="s" hint-placeholder-count="3">
+            <button onClick="{{ s.pick }}" style="{{ s.style }}">
+              <span style="font-weight: 700;">{{ s.name }}</span>
+              <span style="{{ s.hoursStyle }}">{{ s.hours }}</span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <div style="background: #E0F5F4; border-radius: 10px; padding: 10px 20px; text-align: center;">
+            <div style="font-size: 22px; font-weight: 900; line-height: 1.1; color: #006560;">9</div>
+            <div style="font-size: 11px; font-weight: 600; color: #006560;">Assigned</div>
+          </div>
+          <div style="background: #E8EEF7; border-radius: 10px; padding: 10px 20px; text-align: center;">
+            <div style="font-size: 22px; font-weight: 900; line-height: 1.1; color: #2A5993;">7</div>
+            <div style="font-size: 11px; font-weight: 600; color: #2A5993;">Open</div>
+          </div>
+          <div style="background: #FDE8D6; border-radius: 10px; padding: 10px 20px; text-align: center;">
+            <div style="font-size: 22px; font-weight: 900; line-height: 1.1; color: #7A3610;">0</div>
+            <div style="font-size: 11px; font-weight: 600; color: #7A3610;">Call-offs</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px;">
+          <span style="font-size: 16px; font-weight: 700; color: #00274C;">Assigned this shift</span>
+          <span style="border-radius: 999px; background: #E0F5F4; color: #006560; padding: 3px 12px; font-size: 11px; font-weight: 600;">9 officers</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(196px, 1fr)); gap: 12px;">
+          <sc-for list="{{ assigned }}" as="o" hint-placeholder-count="9">
+            <div style="{{ o.cardStyle }}">
+              <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;">
+                <span style="{{ o.unitStyle }}">{{ o.unit }}</span>
+                <sc-if value="{{ o.you }}">
+                  <span style="border-radius: 999px; background: #FFCB05; color: #131516; padding: 2px 9px; font-size: 11px; font-weight: 700; letter-spacing: 0.66px;">YOU</span>
+                </sc-if>
+              </div>
+              <div style="{{ o.nameStyle }}">{{ o.name }}</div>
+              <div style="{{ o.badgeStyle }}">{{ o.badge }}</div>
+              <div style="display: flex; gap: 6px; flex-wrap: wrap; padding: 10px 0 0;">
+                <sc-for list="{{ o.kit }}" as="k" hint-placeholder-count="2">
+                  <span style="{{ k.style }}">{{ k.label }}</span>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px;">
+          <span style="font-size: 16px; font-weight: 700; color: #00274C;">Open — nobody is in these</span>
+          <span style="border-radius: 999px; background: #E8EEF7; color: #2A5993; padding: 3px 12px; font-size: 11px; font-weight: 600;">7 available</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px;">
+          <sc-for list="{{ open }}" as="u" hint-placeholder-count="7">
+            <div style="border-radius: 14px; background: #E8EEF7; border: 1.313px solid #C5D9EF; padding: 16px 18px; cursor: pointer;" style-hover="border-color: #2A5993;">
+              <div style="font-size: 22px; font-weight: 900; line-height: 1.2; color: #2A5993;">{{ u.unit }}</div>
+              <div style="font-size: 13px; font-weight: 600; color: #374151; padding-top: 2px;">{{ u.role }}</div>
+              <div style="font-size: 11px; font-weight: 500; color: #6B7280; padding-top: 4px;">{{ u.lot }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size: 16px; font-weight: 700; color: #00274C; margin-bottom: 14px;">Shift details</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+
+          <div style="background: #fff; border: 1.313px solid #E5E7EB; border-radius: 12px; overflow: hidden;">
+            <div style="padding: 16px 20px; border-bottom: 1.313px solid #E5E7EB; font-size: 11px; font-weight: 600; letter-spacing: 0.66px; text-transform: uppercase; color: #6B7280;">Dispatchers</div>
+            <sc-for list="{{ dispatchers }}" as="d" hint-placeholder-count="3">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 20px; border-bottom: 1px solid #F3F4F6;">
+                <span style="font-size: 14px; font-weight: 500; color: #374151;"><span style="font-weight: 700; color: #131516;">{{ d.name }}</span> {{ d.id }}</span>
+                <span style="background: #F3F4F6; color: #374151; border-radius: 999px; padding: 4px 12px; font-size: 12px; font-weight: 600; white-space: nowrap;">{{ d.hours }}</span>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="background: #fff; border: 1.313px solid #E5E7EB; border-radius: 12px; overflow: hidden;">
+            <div style="padding: 16px 20px; border-bottom: 1.313px solid #E5E7EB; font-size: 11px; font-weight: 600; letter-spacing: 0.66px; text-transform: uppercase; color: #6B7280;">Call-offs</div>
+            <sc-for list="{{ calloffs }}" as="c" hint-placeholder-count="2">
+              <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 14px 20px; border-bottom: 1px solid #F3F4F6;">
+                <div>
+                  <div style="font-size: 14px; font-weight: 700; color: #131516;">{{ c.name }}</div>
+                  <div style="font-size: 12px; font-weight: 400; color: #6B7280; padding-top: 2px;">{{ c.meta }}</div>
+                </div>
+                <div style="display: flex; gap: 6px; flex-shrink: 0;">
+                  <span style="background: #FDE8D6; color: #7A3610; border-radius: 999px; padding: 2px 10px; font-size: 11px; font-weight: 600;">Nights</span>
+                  <span style="{{ c.statusStyle }}">{{ c.status }}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="background: #fff; border: 1.313px solid #E5E7EB; border-radius: 12px; overflow: hidden;">
+            <div style="padding: 16px 20px; border-bottom: 1.313px solid #E5E7EB; font-size: 11px; font-weight: 600; letter-spacing: 0.66px; text-transform: uppercase; color: #6B7280;">Critical Infrastructure</div>
+            <sc-for list="{{ infra }}" as="i" hint-placeholder-count="6">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px; border-bottom: 1px solid #F3F4F6;">
+                <span style="font-size: 14px; font-weight: 500; color: #374151;">{{ i.name }}</span>
+                <span style="background: #E0F5F4; color: #006560; border-radius: 999px; padding: 2px 10px; font-size: 11px; font-weight: 600;">Active</span>
+              </div>
+            </sc-for>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1540,&quot;height&quot;:1684}}">
+const ROLE_HOME = { officer: "./Officer Home.dc.html", supervisor: "./Supervisor Home.dc.html" };
+const ROLE_NAV = {
+  officer: [
+    { label: "Home", href: "./Officer Home.dc.html" },
+    { label: "Assignments", href: "./Shift Assignments.dc.html" },
+  ],
+  supervisor: [
+    { label: "Home", href: "./Supervisor Home.dc.html" },
+    { label: "Overview", href: "./Overview.dc.html" },
+    { label: "Budget Forecast", href: "./Budget Forecast.dc.html" },
+    { label: "Service Calendar", href: "#service-calendar" },
+    { label: "Assignments", href: "./Shift Assignments.dc.html" },
+  ],
+};
+const WORK_ORDER_HREF = "./Fleet Ordering.dc.html";
+
+function navFor(role, current) {
+  return (ROLE_NAV[role] || ROLE_NAV.officer).map(n => ({
+    label: n.label, href: n.href,
+    style: "font-size:14px;white-space:nowrap;" +
+      (n.label === current ? "font-weight:700;color:#00274C;" : "font-weight:500;color:#6B7280;"),
+  }));
+}
+
+function setStoredRole(role) { try { localStorage.setItem("dpss-role", role); } catch (e) {} }
+function getStoredRole(fallback) {
+  try { return localStorage.getItem("dpss-role") || fallback; } catch (e) { return fallback; }
+}
+
+class Component extends DCLogic {
+  state = { dept: "Ann Arbor UMPD", tab: "Shift Roster", shift: "Noons", role: "officer" };
+
+  componentDidMount() { this.setState({ role: getStoredRole("officer") }); }
+
+  renderVals() {
+    const chipBase = "cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:9px 18px;font-size:14px;font-weight:600;white-space:nowrap;";
+    const depts = [
+      ["Ann Arbor UMPD", 42], ["Dearborn", 17], ["Flint", 25],
+      ["Michigan Medicine Security", 23], ["Ann Arbor Parking", 7], ["Housing Security", 8],
+    ].map(([name, count]) => {
+      const on = this.state.dept === name;
+      return {
+        name, count,
+        style: chipBase + (on
+          ? "background:#00274C;border:1.313px solid #00274C;color:#fff;"
+          : "background:#fff;border:1.313px solid #E5E7EB;color:#374151;"),
+        countStyle: "font-size:12px;font-weight:600;" + (on ? "color:rgba(255,255,255,0.55);" : "color:#9CA3AF;"),
+        pick: () => this.setState({ dept: name }),
+      };
+    });
+
+    const tabs = [["Shift Roster", null], ["My OOO Requests", 1], ["Shift Takeover", null]].map(([name, badge]) => {
+      const on = this.state.tab === name;
+      return {
+        name, badge,
+        style: "cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px;padding:14px 22px;font-size:14px;white-space:nowrap;border:none;border-right:1.313px solid #E5E7EB;" +
+          (on ? "background:#fff;color:#00274C;font-weight:700;box-shadow:inset 0 -3px 0 #00274C;" : "background:#F9FAFB;color:#6B7280;font-weight:500;"),
+        pick: () => this.setState({ tab: name }),
+      };
+    });
+
+    const shifts = [["Days", "0600–1800"], ["Noons", "1200–0000"], ["Nights", "1800–0600"]].map(([name, hours]) => {
+      const on = this.state.shift === name;
+      return {
+        name, hours,
+        style: "cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:9px 18px;font-size:14px;white-space:nowrap;" +
+          (on ? "background:#00274C;border:1.313px solid #00274C;color:#fff;" : "background:#fff;border:1.313px solid #E5E7EB;color:#374151;"),
+        hoursStyle: "font-weight:500;" + (on ? "color:rgba(255,255,255,0.6);" : "color:#6B7280;"),
+        pick: () => this.setState({ shift: name }),
+      };
+    });
+
+    const kitStyle = (label, you) => {
+      if (label === "Taser") return you
+        ? "border-radius:999px;background:#FFCB05;color:#131516;padding:2px 8px;font-size:11px;font-weight:600;"
+        : "border-radius:999px;background:#E0F5F4;color:#006560;padding:2px 8px;font-size:11px;font-weight:600;";
+      return you
+        ? "border-radius:999px;background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.75);padding:2px 8px;font-size:11px;font-weight:600;"
+        : "border-radius:999px;background:#F3F4F6;color:#374151;padding:2px 8px;font-size:11px;font-weight:600;";
+    };
+
+    const assigned = [
+      ["103", "Zamorski", "Badge 103", ["Taser", "Rifle #7", "Kit #1"], true],
+      ["156", "Parrish", "Badge 156", ["Taser", "Rifle #6"], false],
+      ["78", "Clement", "Badge 078", ["Taser", "Rifle #2"], false],
+      ["79", "Holton", "Badge 079", ["Taser", "Rifle #8"], false],
+      ["2171", "Korndorfer", "Badge 848", ["Taser", "Rifle #3"], false],
+      ["2439", "Maxey", "Badge 846", ["Taser", "Rifle #2"], false],
+      ["388", "Wancha", "Badge 824", ["Taser", "Rifle #4", "Kit #4"], false],
+      ["403", "Lock", "Badge 403", ["Taser"], false],
+      ["406", "Pendred", "Badge 406", ["Taser", "Rifle #9"], false],
+    ].map(([unit, name, badge, kit, you]) => ({
+      unit, name, badge, you,
+      cardStyle: "border-radius:14px;padding:16px 18px;box-sizing:border-box;" +
+        (you ? "background:#00274C;border:1.313px solid #00274C;" : "background:#fff;border:1.313px solid #E5E7EB;"),
+      unitStyle: "font-size:26px;font-weight:900;line-height:1.15;letter-spacing:-0.26px;" + (you ? "color:#FFCB05;" : "color:#00274C;"),
+      nameStyle: "font-size:15px;font-weight:700;padding-top:2px;" + (you ? "color:#fff;" : "color:#131516;"),
+      badgeStyle: "font-size:14px;font-weight:400;padding-top:2px;" + (you ? "color:rgba(255,255,255,0.55);" : "color:#9CA3AF;"),
+      kit: kit.map(label => ({ label, style: kitStyle(label, you) })),
+    }));
+
+    const open = [
+      ["438", "Patrol"], ["558", "Patrol"], ["427", "CIU"], ["1354", "Transport"],
+      ["363", "Patrol"], ["80", "Patrol"], ["108", "Patrol"],
+    ].map(([unit, role]) => ({ unit, role, lot: "AA CSSB LOT" }));
+
+    const dispatchers = [
+      { name: "Cummings", id: "885", hours: "0600–1800" },
+      { name: "Issa", id: "886", hours: "1600–0000" },
+      { name: "Cummings", id: "885", hours: "0000–0600" },
+    ];
+
+    const calloffs = [
+      { name: "Ogozaly #883", meta: "Nights · 6-1-26", status: "Covered",
+        statusStyle: "background:#E0F5F4;color:#006560;border-radius:999px;padding:2px 10px;font-size:11px;font-weight:600;" },
+      { name: "Waldon #847", meta: "Nights · 6-1-26", status: "Uncovered",
+        statusStyle: "background:#F7E5E3;color:#A52F23;border-radius:999px;padding:2px 10px;font-size:11px;font-weight:600;" },
+    ];
+
+    const infra = ["Alertus", "Radios", "Access IT", "Talon/LEIN", "Genetec", "CSS Security"].map(name => ({ name }));
+
+    const d = new Date();
+    const todayLabel = d.toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" });
+
+    return {
+      depts, tabs, shifts, assigned, open, dispatchers, calloffs, infra, todayLabel,
+      role: this.state.role,
+      navLinks: navFor(this.state.role, "Schedule"),
+      workOrderHref: WORK_ORDER_HREF,
+      switchRole: e => {
+        const next = e.target.value;
+        setStoredRole(next);
+        this.setState({ role: next });
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

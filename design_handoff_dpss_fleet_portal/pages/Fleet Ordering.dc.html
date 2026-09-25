@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/industry-8286e80e-223b-42c4-9c36-beb85b2ba7b1/styles.css">
+<script src="_ds/industry-8286e80e-223b-42c4-9c36-beb85b2ba7b1/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&amp;family=Barlow+Condensed:wght@400;500;600;700&amp;family=Barlow+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<style>
+:root{--color-accent:#00274C;--color-accent-500:#00274C;--color-accent-700:#001B35;--color-text:#111A22;--color-divider:#C9D0D8}
+body{margin:0;background:#E4E8EC;color:#111A22;font-family:"Barlow",system-ui,sans-serif}
+a{color:#003E7A}
+a:hover{color:#00274C}
+input,select,textarea{font-family:"Barlow",system-ui,sans-serif}
+@keyframes stepFade{from{opacity:0}to{opacity:1}}
+:focus-visible{outline:2px solid #00274C;outline-offset:2px}
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;flex-direction:column;background:#E4E8EC">
+
+  <div style="background:#00274C;border-bottom:3px solid #FFCB05;display:flex;align-items:center;gap:30px;padding:0 26px;height:66px;position:sticky;top:0;z-index:20">
+    <div style="display:flex;flex-direction:column;gap:1px">
+      <span style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:21px;letter-spacing:.07em;color:#fff;line-height:1">DPSS FLEET</span>
+      <span style="font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:rgba(255,255,255,.6)">Ordering &amp; outfitting</span>
+    </div>
+    <div style="display:flex;gap:2px;align-self:stretch;align-items:stretch">
+      <div style="display:flex;align-items:center;padding:0 16px;font-family:'Barlow Semi Condensed',sans-serif;font-weight:600;font-size:15px;color:#fff;border-bottom:3px solid #FFCB05;margin-bottom:-3px">Ordering</div>
+      <div style="display:flex;align-items:center;padding:0 16px;font-family:'Barlow Semi Condensed',sans-serif;font-weight:600;font-size:15px;color:rgba(255,255,255,.66);cursor:pointer" style-hover="color:#fff">Fleet</div>
+      <div style="display:flex;align-items:center;padding:0 16px;font-family:'Barlow Semi Condensed',sans-serif;font-weight:600;font-size:15px;color:rgba(255,255,255,.66);cursor:pointer" style-hover="color:#fff">Admin</div>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
+      <span style="font-size:12.5px;color:rgba(255,255,255,.7)">Faith Richardson · frichar</span>
+      <div style="width:32px;height:32px;border:1px solid rgba(255,255,255,.45);display:grid;place-items:center;font-size:12px;font-weight:600;color:#fff">FR</div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:22px;padding:24px 26px 40px;align-items:flex-start;max-width:1680px;width:100%;margin:0 auto;box-sizing:border-box">
+
+    <div style="display:flex;flex-direction:column;gap:22px;min-width:0;flex:1 1 620px">
+
+      <div class="blueprint" style="position:relative;background:#fff;border:1px solid #00274C">
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+
+        <div style="border-bottom:1px solid #DDE2E7;padding:16px 22px 0;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+            <h1 style="margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:32px;letter-spacing:-.01em;color:#00274C">Order a vehicle</h1>
+            <span style="font-size:13px;color:#6A7480">{{ stepBlurb }}</span>
+            <sc-if value="{{ canBack }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ back }}" style="margin-left:auto;border:1px solid #B9C2CB;background:#fff;color:#00274C;font-family:'Barlow Semi Condensed',sans-serif;font-weight:600;font-size:13.5px;padding:6px 14px;cursor:pointer;align-self:center" style-hover="background:#E8EDF2;border-color:#00274C">← Back</button>
+            </sc-if>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0">
+            <sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
+              <button type="button" onClick="{{ s.go }}" style="min-width:0;text-align:left;border:0;background:transparent;cursor:{{ s.cursor }};padding:6px 12px 11px 0;display:flex;align-items:baseline;gap:9px;border-bottom:3px solid {{ s.rule }};opacity:{{ s.op }}">
+                <span style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:19px;color:{{ s.numFg }};letter-spacing:.04em;flex:0 0 auto">{{ s.n }}</span>
+                <span style="font-family:'Barlow Semi Condensed',sans-serif;font-weight:600;font-size:15px;color:{{ s.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0">{{ s.t }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+
+        <sc-if value="{{ is1 }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:20px 22px 24px;display:flex;flex-direction:column;gap:18px;min-height:560px;box-sizing:border-box;animation:stepFade .18s ease-out">
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:#DDE2E7;border:1px solid #DDE2E7">
+              <sc-for list="{{ units }}" as="u" hint-placeholder-count="9">
+                <button type="button" onClick="{{ u.go }}" style="text-align:left;border:0;background:#fff;cursor:pointer;padding:14px 16px;display:flex;flex-direction:column;gap:5px;min-width:0;border-left:4px solid {{ u.rule }};font-family:inherit" style-hover="background:#EEF2F6">
+                  <span style="font-family:'Barlow Semi Condensed',sans-serif;font-weight:600;font-size:16.5px;color:#111A22;line-height:1.15">{{ u.name }}</span>
+                  <span style="font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:#6A7480">{{ u.count }}</span>
+                  <span style="font-size:12.5px;color:#5A6674;line-height:1.4">{{ u.desc }}</span>
+                </button>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;max-width:520px">
+              <label style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#6A7480">Posting location <span style="text-transform:none;letter-spacing:0;font-size:12px">(optional — flags clearance and site-specific needs)</span></label>
+              <select value="{{ posting }}" onChange="{{ setPosting }}" style="border:1px solid #B9C2CB;background:#fff;border-radius:0;padding:9px 11px;font-size:14px;color:#111A22">
+                <sc-for list="{{ postings }}" as="p" hint-placeholder-count="4">
+                  <option value="{{ p }}">{{ p }}</option>
+                </sc-for>
+              </select>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is2 }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:20px 22px 24px;display:flex;flex-direction:column;gap:18px;min-height:560px;box-sizing:border-box;animation:stepFade .18s ease-out">
+            <div style="display:flex;align-items:center;gap:10px;background:#EEF2F6;border-left:4px solid #00274C;padding:10px 14px">
+              <span style="font-family:'Barlow Semi Condensed',sans-serif;font-weight:600;font-size:15px;color:#00274C">{{ unit }}</span>
+              <span style="font-size:12.5px;color:#5A6674">{{ postingLabel }}</span>
+              <button type="button" onClick="{{ back }}" style="margin-left:auto;border:0;background:transparent;color:#003E7A;font-size:13px;cursor:pointer;text-decoration:underline">Change unit</button>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;max-width:560px">
+              <label style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#6A7480">Vehicle role *</label>
+              <select value="{{ role }}" onChange="{{ setRole }}" style="border:1px solid #00274C;background:#fff;border-radius:0;padding:11px 12px;font-size:15px;font-weight:600;color:#111A22">
+                <option value="">Select a role…</option>
+                <sc-for list="{{ roles }}" as="r" hint-placeholder-count="9">
+                  <option value="{{ r.name }}">{{ r.opt }}</option>
+                </sc-for>
+              </select>
+            </div>
+            <sc-if value="{{ roleDetail }}" hint-placeholder-val="{{ false }}">
+              <div class="blueprint" style="position:relative;border:1px solid #C9D0D8;padding:14px 16px;display:flex;flex-direction:column;gap:5px;max-width:560px">
+                <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+                <span style="font-family:'Barlow Semi Condensed',sans-serif;font-weight:600;font-size:16px;color:#00274C">{{ roleDetail.name }}</span>
+                <span style="font-size:13px;color:#5A6674;line-height:1.5">{{ roleDetail.desc }}</span>
+              </div>
+            </sc-if>
+            <div>
+              <button type="button" onClick="{{ next }}" style="border:0;background:{{ nextBg }};color:{{ nextFg }};font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;padding:11px 20px;cursor:{{ nextCursor }}">Continue to the package →</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is3 }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:20px 22px 24px;display:flex;flex-direction:column;gap:16px;min-height:560px;box-sizing:border-box;animation:stepFade .18s ease-out">
+            <div style="display:flex;align-items:center;gap:10px;background:#EEF2F6;border-left:4px solid #00274C;padding:10px 14px;flex-wrap:wrap">
+              <span style="font-family:'Barlow Semi Condensed',sans-serif;font-weight:600;font-size:15px;color:#00274C">{{ unit }}</span>
+              <span style="font-size:12.5px;color:#5A6674">{{ role }}</span>
+              <span style="font-size:12.5px;color:#5A6674">{{ postingLabel }}</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;max-width:88ch">
+              <h2 style="margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:23px;color:#00274C">Graphics package</h2>
+              <p style="margin:0;font-size:13.5px;line-height:1.6;color:#3D4752">Ann Arbor is the baseline. Every Tahoe is built identically, and after the five currently in build, every Ann Arbor Tahoe will have been outfitted by the same upfitter.</p>
+              <p style="margin:0;font-size:13.5px;line-height:1.6;color:#6B4A00;background:#FBEFCE;border-left:3px solid #B07A00;padding:9px 13px">2 items in this package are not confirmed. They are shown so nothing is invisible at order time. Note anything you need changed in the deviations box below.</p>
+            </div>
+            <div style="display:grid;grid-template-columns:118px minmax(0,1fr) 110px 118px;border:1px solid #DDE2E7">
+              <div style="grid-column:1/-1;display:grid;grid-template-columns:subgrid;background:#F4F6F8;border-bottom:1.5px solid #C9D0D8;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#6A7480">
+                <span style="padding:8px 12px">Category</span><span style="padding:8px 12px">Item</span><span style="padding:8px 12px">Supplied by</span><span style="padding:8px 12px">Status</span>
+              </div>
+              <sc-for list="{{ pkg }}" as="p" hint-placeholder-count="3">
+                <div style="grid-column:1/-1;display:grid;grid-template-columns:subgrid;border-bottom:1px solid #EBEFF3">
+                  <span style="padding:11px 12px;font-family:'Barlow Semi Condensed',sans-serif;font-weight:600;font-size:14px;color:#00274C">{{ p.cat }}</span>
+                  <span style="padding:11px 12px;display:flex;flex-direction:column;gap:3px;min-width:0">
+                    <span style="font-size:14px;font-weight:600;color:#111A22">{{ p.item }}</span>
+                    <span style="font-size:12.5px;color:#5A6674;line-height:1.45">{{ p.note }}</span>
+                  </span>
+                  <span style="padding:11px 12px;font-size:13px;color:#5A6674">{{ p.by }}</span><span style="padding: 11px 12px; width: 118px"><span style="font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; padding: 2px 7px; background: {{ p.chipBg }}; color: {{ p.chipFg }}; border: 1px solid {{ p.chipBc }}; display: inline-block; text-align: center; position: static; width: 96px">{{ p.status }}</span></span>
+                  
+                </div>
+              </sc-for>
+            </div>
+            <div>
+              <button type="button" onClick="{{ next }}" style="border:0;background:#00274C;color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;padding:11px 20px;cursor:pointer" style-hover="background:#003E7A">Continue to graphics →</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is4 }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:20px 22px 24px;display:flex;flex-direction:column;gap:18px;min-height:560px;box-sizing:border-box;animation:stepFade .18s ease-out">
+            <div style="display:flex;align-items:baseline;gap:10px">
+              <h2 style="margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:23px;color:#00274C">Submit the request</h2>
+              <span style="font-size:13px;color:#6A7480">Goes to Transportation, copies your fleet leads</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px">
+              <sc-for list="{{ fields }}" as="f" hint-placeholder-count="6">
+                <div style="display:flex;flex-direction:column;gap:5px;min-width:0">
+                  <label style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#6A7480">{{ f.label }}</label>
+                  <input type="{{ f.type }}" placeholder="{{ f.ph }}" defaultValue="{{ f.val }}" style="border:1px solid #B9C2CB;background:#fff;border-radius:0;padding:9px 11px;font-size:14px;color:#111A22;min-width:0">
+                  <span style="font-size:11.5px;color:#8892A0">{{ f.hint }}</span>
+                </div>
+              </sc-for>
+              <div style="display:flex;flex-direction:column;gap:5px;min-width:0">
+                <label style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#6A7480">What triggered this</label>
+                <select style="border:1px solid #B9C2CB;background:#fff;border-radius:0;padding:9px 11px;font-size:14px;color:#111A22">
+                  <option>Lease ending: replacement</option>
+                  <option>Collision write-off</option>
+                  <option>Fleet growth: new position</option>
+                  <option>Role change</option>
+                </select>
+                <span style="font-size:11.5px;color:#8892A0">&nbsp;</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:5px;min-width:0">
+                <label style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#6A7480">How is outfitting funded</label>
+                <select style="border:1px solid #B9C2CB;background:#fff;border-radius:0;padding:9px 11px;font-size:14px;color:#111A22">
+                  <option>Rolled into the lease agreement</option>
+                  <option>Paid from the unit short code</option>
+                  <option>Grant funded</option>
+                </select>
+                <span style="font-size:11.5px;color:#8892A0">Changes which approvals apply</span>
+              </div>
+            </div>
+
+            <div style="border:1px solid #DDE2E7;background:#F8FAFB;padding:11px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <span style="font-family:'Barlow Semi Condensed',sans-serif;font-weight:600;font-size:14px;color:#00274C">Package recap</span>
+              <span style="font-size:13px;color:#5A6674">3 items, 2 needing confirmation · {{ role }}</span>
+              <button type="button" onClick="{{ goto3 }}" style="margin-left:auto;border:0;background:transparent;color:#003E7A;font-size:13px;cursor:pointer;text-decoration:underline">Review package</button>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <label style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#6A7480">Deviations from the standard package</label>
+              <textarea rows="3" placeholder="Anything this vehicle needs that differs from what loaded above — clearance limits, unit-specific equipment, an item to omit. Leave blank if the package is correct as shown." style="border:1px solid #B9C2CB;background:#fff;border-radius:0;padding:10px 11px;font-size:14px;color:#111A22;resize:vertical"></textarea>
+              <span style="font-size:11.5px;color:#8892A0">Every deviation is recorded against the vehicle and needs approval before the order is placed.</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <label style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#6A7480">Anything else Transportation should know</label>
+              <textarea rows="2" style="border:1px solid #B9C2CB;background:#fff;border-radius:0;padding:10px 11px;font-size:14px;color:#111A22;resize:vertical"></textarea>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-top:1px solid #DDE2E7;padding-top:16px">
+              <button type="button" style="border:1px solid #00274C;background:transparent;color:#00274C;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;padding:11px 18px;cursor:pointer" style-hover="background:#E8EDF2">Download spec sheet</button>
+              <button type="button" onClick="{{ submit }}" style="border:0;background:#FFCB05;color:#00274C;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;padding:11px 22px;cursor:pointer" style-hover="background:#FFD633">Send request to Transportation</button>
+              <span style="font-size:12.5px;color:#6A7480">Routes to Renee Jordan, copies your unit fleet leads and Technology Operations.</span>
+            </div>
+            <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+              <div style="background:#E2F2E9;border-left:4px solid #0F7B43;padding:11px 14px;font-size:13.5px;color:#0B5E33">Request queued. It appears at the top of the live feed as <b>Submitted</b> and is now waiting on Transportation.</div>
+            </sc-if>
+          </div>
+        </sc-if>
+      </div>
+
+      <div class="blueprint" style="position:relative;background:#fff;border:1px solid #C9D0D8">
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <div style="border-bottom:1px solid #DDE2E7;padding:13px 20px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+          <h2 style="margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:22px;color:#00274C">Who to contact</h2>
+          <span style="font-size:12.5px;color:#6A7480">{{ contactScope }}</span>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(150px,1fr) minmax(140px,1fr) minmax(0,1.4fr)">
+          <div style="grid-column:1/-1;display:grid;grid-template-columns:subgrid;background:#F4F6F8;border-bottom:1.5px solid #C9D0D8;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#6A7480">
+            <span style="padding:8px 20px">For</span><span style="padding:8px 12px">Who</span><span style="padding:8px 12px">Contact</span>
+          </div>
+          <sc-for list="{{ contacts }}" as="c" hint-placeholder-count="5">
+            <div style="grid-column:1/-1;display:grid;grid-template-columns:subgrid;border-bottom:1px solid #EBEFF3">
+              <span style="padding:10px 20px;font-family:'Barlow Semi Condensed',sans-serif;font-weight:600;font-size:14px;color:#00274C">{{ c.for }}</span>
+              <span style="padding:10px 12px;display:flex;flex-direction:column;gap:1px;min-width:0">
+                <span style="font-size:13.5px;font-weight:600;color:#111A22">{{ c.who }}</span>
+                <span style="font-size:12px;color:#8892A0">{{ c.where }}</span>
+              </span>
+              <span style="padding:10px 12px;font-size:13px;color:#3D4752;overflow-wrap:break-word;min-width:0">{{ c.how }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <div class="blueprint" style="background:#fff;border:1px solid #00274C;display:flex;flex-direction:column;position:sticky;top:90px;max-height:calc(100vh - 116px);flex:1 1 448px;max-width:560px;min-width:0">
+      <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+
+      <div style="border-bottom:1px solid #DDE2E7;padding:14px 18px;display:flex;flex-direction:column;gap:11px">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <h2 style="margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:22px;color:#00274C">Order history</h2>
+          <span style="display:flex;align-items:center;gap:5px;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#0F7B43"><span style="width:7px;height:7px;background:#0F7B43;border-radius:50%;display:inline-block"></span>Live · division-wide</span>
+          <button type="button" style="margin-left:auto;border:1px solid #00274C;background:#fff;color:#00274C;font-family:'Barlow Semi Condensed',sans-serif;font-weight:600;font-size:13px;padding:5px 12px;cursor:pointer;white-space:nowrap" style-hover="background:#E8EDF2">Export CSV</button>
+        </div>
+        <input value="{{ vinQuery }}" onChange="{{ setVin }}" placeholder="Search by VIN, unit number or requester" style="border:1px solid #B9C2CB;background:#fff;border-radius:0;padding:9px 11px;font-size:13.5px;color:#111A22;width:100%;box-sizing:border-box">
+      </div>
+
+      <div style="overflow:auto;flex:1;min-height:280px">
+        <sc-for list="{{ feed }}" as="o" hint-placeholder-count="7">
+          <div style="border-bottom:1px solid #EBEFF3;padding:12px 18px;display:grid;grid-template-columns:22px minmax(0,1fr);gap:11px;align-items:start">
+            <span style="width:20px;height:20px;border:1.5px solid {{ o.c }};color:{{ o.c }};display:grid;place-items:center;font-size:12px;font-weight:700;line-height:1;margin-top:2px">{{ o.glyph }}</span>
+            <span style="display:flex;flex-direction:column;gap:3px;min-width:0">
+              <span style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+                <span style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:19px;line-height:1;color:#00274C">{{ o.unit }}</span>
+                <span style="font-family:'Barlow Semi Condensed',sans-serif;font-weight:600;font-size:13.5px;color:#111A22">{{ o.model }}</span>
+                <span style="margin-left:auto;font-size:11.5px;color:#8892A0;font-variant-numeric:tabular-nums">{{ o.date }}</span>
+              </span>
+              <span style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+                <span style="font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;white-space:nowrap;background:{{ o.chipBg }};color:{{ o.chipFg }};border:1px solid {{ o.chipBc }}">{{ o.status }}</span>
+                <span style="font-size:12px;color:#5A6674">{{ o.who }}</span>
+              </span>
+              <span style="font-size:11.5px;color:#8892A0;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere">{{ o.vin }}</span>
+            </span>
+          </div>
+        </sc-for>
+        <sc-if value="{{ feedEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:34px 18px;text-align:center;font-size:13.5px;color:#8892A0">No orders match that search in {{ quarter }}.</div>
+        </sc-if>
+      </div>
+
+      <div style="border-top:1px solid #C9D0D8;display:grid;grid-template-columns:repeat(4,1fr)">
+        <sc-for list="{{ quarters }}" as="q" hint-placeholder-count="4">
+          <button type="button" onClick="{{ q.go }}" style="border:0;border-right:1px solid #EBEFF3;background:{{ q.bg }};color:{{ q.fg }};font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:.06em;padding:11px 0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px" style-hover="background:#E8EDF2">
+            <span>{{ q.name }}</span>
+            <span style="font-size:11px;font-weight:500;letter-spacing:.02em;opacity:.75">{{ q.n }}</span>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600},&quot;prefillRequester&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Form&quot;}}">
+const CH={ok:['#E2F2E9','#0B5E33','#BEDECB'],pend:['#FBEFCE','#6B4A00','#EBD59A'],crit:['#FAE3E1','#8E2018','#EEC3BE'],na:['#EAECEF','#414A53','#D5D9DE'],blue:['#E8EDF2','#00274C','#BBC8D6']};
+
+const UNITS=[
+ {n:43,name:'Ann Arbor UMPD',desc:'Marked patrol, motorcycles, administration and utility · 4 without a unit number'},
+ {n:7,name:'Ann Arbor Parking',desc:'Chevrolet Bolt, inherited, minimal outfitting'},
+ {n:14,name:'Dearborn',desc:'Explorer Interceptor and Tahoe · specifies to the Ann Arbor build from Sep 2026'},
+ {n:25,name:'Flint',desc:'Purchased outright, outside the lease schedule · 3 without a unit number'},
+ {n:23,name:'Michigan Medicine Security',desc:'White Explorer Interceptor, posted across SE Michigan'},
+ {n:8,name:'Protective Services',desc:'Unmarked, varied in color and model · no workbook returned'},
+ {n:8,name:'Housing Security',desc:'7 security patrol and 1 supervisor on a lighter build'},
+ {n:1,name:'Museum Security',desc:'Marked to match Housing Security · full build file held'},
+ {n:2,name:'Guest Services, Michigan Medicine',desc:'Unmarked, not police package · 392 Pacifica and 393 Escape'}
+];
+
+const ROLES={
+ 'Ann Arbor UMPD':[
+  {name:'Police patrol',desc:'Explorer Interceptor, Tahoe · return 19'},
+  {name:'Police supervisor',desc:'Tahoe and Malibu · return 2, units 555 and 234'},
+  {name:'Police K-9',desc:'Tahoe 4x4 and Silverado · units 125, 1531'},
+  {name:'CIU: unmarked',desc:'Interceptor-U, Tahoe, F-150 · return 3'},
+  {name:'Prisoner transport',desc:'Ford Transit · return 1'},
+  {name:'Supervisor Malibu',desc:'Malibu · unit 234, EMU1899 · counted inside supervisor, not separately'},
+  {name:'Administrative pool',desc:'Malibu, Explorer, Maverick, Pacifica, Transit · return 4'},
+  {name:'Motorcycle',desc:'Harley-Davidson · return 3, owned'},
+  {name:'Utility and trailers',desc:'Gator, Ranger, UMAX, 4 trailers, 4 barriers · return 9'}
+ ]
+};
+const DEFAULT_ROLES=[
+ {name:'Police patrol',desc:'Marked build to the Ann Arbor baseline'},
+ {name:'Supervisor',desc:'Marked, supervisor console and lighter cage'},
+ {name:'Unmarked / investigations',desc:'No exterior graphics, covert lighting'},
+ {name:'Security patrol',desc:'Lighter build, no prisoner partition'},
+ {name:'Administrative pool',desc:'No emergency equipment'},
+ {name:'Utility and trailers',desc:'No unit number issued by default'}
+];
+
+const PKG=[
+ {cat:'Vehicles',item:'Five',note:'2029 John Deere (1986), 2074 Polaris Ranger XP 800 (2011), and three trailers — 2041 assigned to AQUAD, 2075, and 2068 assigned to the Drone Team.',by:'·',status:'Confirmed',stc:'ok'},
+ {cat:'Drone Team',item:'Trailer 2068, 2025 Dark Horse · 130x864',note:'A Drone Team appears on the fleet inventory and has been named in no interview. Confirm who owns it and whether it is in scope.',by:'·',status:'Pending',stc:'pend'},
+ {cat:'Build spec',item:'Not documented',note:'No spec on file for any of these. The John Deere is forty years old.',by:'·',status:'Action needed',stc:'crit'}
+];
+
+const CONTACTS=[
+ {for:'Vehicle orders, leases, bids',who:'Renee Jordan',where:'Transportation / F&O',how:'reneej@umich.edu · 734-615-0527',scope:'all'},
+ {for:'Upfitting: awarded by bid',who:'Three approved upfitters',where:'Bid competitively on every order',how:'Canfield has won recently, not a standing arrangement',scope:'all'},
+ {for:'Upfitting contact',who:'Keith Engblom',where:'Canfield Equipment, Warren',how:'K.Engblom@canfieldequipment.com · 586-757-2020',scope:'notflint'},
+ {for:'Upfitting',who:'Arrowhead Upfitters',where:'Clio, MI',how:'Via Flint fleet lead',scope:'flint'},
+ {for:'Graphics',who:'Matt Wilson',where:'UM Sign Shop',how:'Service request',scope:'notflint'},
+ {for:'Graphics',who:'Ken Hubbard',where:'Bill Carr Signs',how:'Via Flint fleet lead',scope:'flint'},
+ {for:'Service scheduling',who:'AA Fleet Services Garage',where:'Transportation',how:'calendly.com/umfleetgarage · 734-764-2490',scope:'notflint'},
+ {for:'Service coordination',who:'DJ Scheller',where:'Transpo Garage',how:'dschelle@umich.edu',scope:'notflint'},
+ {for:'Unit fleet lead',who:'Brian Daniels · Thomas Eberts',where:'UMPD',how:'btd@umich.edu · teberts@umich.edu',scope:'aaumpd'}
+];
+
+const ST={
+ 'Submitted':{stc:'blue',glyph:'·'},
+ 'In bid':{stc:'pend',glyph:'◎'},
+ 'Awarded':{stc:'blue',glyph:'◎'},
+ 'In build':{stc:'pend',glyph:'!'},
+ 'Delivered':{stc:'ok',glyph:'✓'},
+ 'Cancelled':{stc:'crit',glyph:'✕'}
+};
+
+const FEED=[
+ {q:'Q3',date:'08 Sep 2026',unit:'—',model:'Ford Explorer Interceptor',status:'Submitted',who:'T. Eberts · Ann Arbor UMPD',vin:'VIN pending — assigned at award'},
+ {q:'Q3',date:'02 Sep 2026',unit:'531',model:'Chevrolet Tahoe',status:'In build',who:'B. Daniels · Ann Arbor UMPD',vin:'1GNSKDEC6LR248354'},
+ {q:'Q3',date:'27 Aug 2026',unit:'—',model:'Chrysler Pacifica Select',status:'In bid',who:'R. Reddig · Guest Services, MM',vin:'VIN pending — assigned at award'},
+ {q:'Q3',date:'19 Aug 2026',unit:'404',model:'Chevrolet Tahoe',status:'Awarded',who:'B. Daniels · Ann Arbor UMPD',vin:'1GNSKDEC0MR119872'},
+ {q:'Q3',date:'11 Aug 2026',unit:'388',model:'Ford Explorer / PIU',status:'In build',who:'M. Dillard · Dearborn',vin:'1FM5K8AB1SGB44107'},
+ {q:'Q3',date:'04 Aug 2026',unit:'368',model:'Ford Explorer / PIU',status:'Delivered',who:'M. Dillard · Dearborn',vin:'1FM5K8AB9SGB96895'},
+ {q:'Q3',date:'22 Jul 2026',unit:'—',model:'Harley-Davidson Electra Glide',status:'Cancelled',who:'F. Richardson · Ann Arbor UMPD',vin:'Order withdrawn before bid'},
+ {q:'Q3',date:'09 Jul 2026',unit:'365',model:'Ford Explorer / PIU',status:'Delivered',who:'M. Dillard · Dearborn',vin:'1FM5K8AB4SGB87036'},
+ {q:'Q2',date:'18 Jun 2026',unit:'403',model:'Chevrolet Tahoe',status:'Delivered',who:'B. Daniels · Ann Arbor UMPD',vin:'1GNSKDEC4NR221540'},
+ {q:'Q2',date:'02 Jun 2026',unit:'—',model:'Ford Escape',status:'Cancelled',who:'R. Reddig · Guest Services, MM',vin:'Package could not be specified'},
+ {q:'Q2',date:'21 May 2026',unit:'509',model:'Ford Explorer / PIU',status:'Delivered',who:'K. Hubbard · Flint',vin:'1FM5K8AB2RGA55018'},
+ {q:'Q2',date:'14 Apr 2026',unit:'416',model:'Chevrolet Bolt',status:'Delivered',who:'Parking Services · Ann Arbor',vin:'1G1FZ6S05P4102277'},
+ {q:'Q1',date:'26 Mar 2026',unit:'287',model:'Ford Explorer / PIU',status:'Delivered',who:'M. Dillard · Dearborn',vin:'1FM5K8AB7SGA31346'},
+ {q:'Q1',date:'03 Feb 2026',unit:'284',model:'Ford Explorer / PIU',status:'Delivered',who:'M. Dillard · Dearborn',vin:'1FM5K8AB3SGA31926'},
+ {q:'Q1',date:'15 Jan 2026',unit:'74',model:'Ford Explorer',status:'Delivered',who:'Museum Security · Ann Arbor',vin:'1FM5K8AR9LGB19004'},
+ {q:'Q4',date:'12 Dec 2025',unit:'227',model:'Ford Explorer / PIU Hybrid',status:'Delivered',who:'M. Dillard · Dearborn',vin:'1FM5K8AW4NNA00204'},
+ {q:'Q4',date:'20 Oct 2025',unit:'078',model:'Chevrolet Tahoe',status:'Delivered',who:'B. Daniels · Ann Arbor UMPD',vin:'1GNSKDEC6LR248354'}
+];
+
+class Component extends DCLogic {
+  state={step:1,unit:'',posting:'Main campus',role:'',quarter:'Q3',vinQuery:'',allContacts:false,sent:false};
+
+  chip(stc){const c=CH[stc]||CH.na;return{chipBg:c[0],chipFg:c[1],chipBc:c[2]};}
+
+  renderVals(){
+    const s=this.state;
+    const roles=ROLES[s.unit]||DEFAULT_ROLES;
+    const roleDetail=roles.find(r=>r.name===s.role)||null;
+    const stepTitles=['Choose your unit','Vehicle role','Vehicle package','Submit the request'];
+    const blurbs=['Nine units order through this page. Pick yours to load its roles and its build.',
+      'The role sets the package, the upfitter and which approvals apply.',
+      'Loaded from the unit build file. Anything unconfirmed is shown, not hidden.',
+      'One screen, then it leaves for Transportation.'];
+
+    const q=s.quarter, needle=s.vinQuery.trim().toLowerCase();
+    const feed=FEED.filter(o=>o.q===q&&(!needle||
+      o.vin.toLowerCase().includes(needle)||o.unit.toLowerCase().includes(needle)||
+      o.who.toLowerCase().includes(needle)||o.model.toLowerCase().includes(needle)))
+      .map(o=>{const m=ST[o.status];const c=CH[m.stc];
+        return Object.assign({},o,{glyph:m.glyph,c:c[1],chipBg:c[0],chipFg:c[1],chipBc:c[2]});});
+
+    const prefill=this.props.prefillRequester??true;
+    const isFlint=s.unit==='Flint';
+    const contacts=CONTACTS.filter(c=>c.scope==='all'
+      ||(c.scope==='flint'&&isFlint)
+      ||(c.scope==='notflint'&&s.unit&&!isFlint)
+      ||(c.scope==='aaumpd'&&s.unit==='Ann Arbor UMPD'));
+
+    return {
+      steps:[1,2,3,4].map(i=>{
+        const on=s.step===i, done=s.step>i;
+        return {n:'0'+i,t:stepTitles[i-1],
+          rule:on?'#FFCB05':(done?'#00274C':'#DDE2E7'),
+          fg:on?'#00274C':(done?'#3D4752':'#8892A0'),
+          numFg:on?'#00274C':(done?'#6A7480':'#B0B8C1'),
+          op:(i<=s.step||s.unit)?'1':'.55',
+          cursor:(i<s.step||(i>s.step&&s.unit&&s.role))?'pointer':'default',
+          go:()=>{ if(i===1||s.unit) this.setState({step:i}); }};
+      }),
+      stepBlurb:blurbs[s.step-1],
+      canBack:s.step>1,
+      back:()=>this.setState({step:Math.max(1,s.step-1)}),
+      next:()=>{ if(s.step===2&&!s.role) return; this.setState({step:Math.min(4,s.step+1)}); },
+      goto3:()=>this.setState({step:3}),
+      submit:()=>this.setState({sent:true}),
+      sent:s.sent,
+      is1:s.step===1,is2:s.step===2,is3:s.step===3,is4:s.step===4,
+      units:UNITS.map(u=>Object.assign({},u,{
+        count:u.n+' vehicles',
+        rule:s.unit===u.name?'#FFCB05':'#fff',
+        go:()=>this.setState({unit:u.name,role:'',step:2})})),
+      unit:s.unit,
+      postings:['Main campus','Concordia','North Campus','Medical campus','Dearborn campus','Flint campus'],
+      posting:s.posting,
+      postingLabel:'Posted: '+s.posting,
+      setPosting:e=>this.setState({posting:e.target.value}),
+      roles:roles.map(r=>Object.assign({},r,{opt:r.name+' — '+r.desc})),
+      role:s.role,
+      roleDetail,
+      setRole:e=>this.setState({role:e.target.value}),
+      nextBg:s.role?'#00274C':'#C9D0D8',
+      nextFg:s.role?'#fff':'#7A848E',
+      nextCursor:s.role?'pointer':'not-allowed',
+      pkg:PKG.map(p=>Object.assign({},p,this.chip(p.stc))),
+      fields:[
+        {label:'Requested by *',type:'text',val:prefill?'Faith Richardson':'',ph:'Your name',hint:''},
+        {label:'Uniqname *',type:'text',val:prefill?'frichar':'',ph:'uniqname',hint:'@umich.edu'},
+        {label:'How many vehicles *',type:'number',val:'1',ph:'',hint:''},
+        {label:'Needed in service by',type:'date',val:'',ph:'mm/dd/yyyy',hint:''},
+        {label:'Short code',type:'text',val:'',ph:'e.g. 129217',hint:''}
+      ],
+      contacts,
+      contactScope:s.unit?('For '+s.unit):'Division-wide — pick a unit above for its upfitter, graphics and fleet lead',
+      quarter:q,
+      quarters:['Q1','Q2','Q3','Q4'].map(name=>({name,
+        n:FEED.filter(o=>o.q===name).length+' orders',
+        bg:q===name?'#00274C':'#fff',fg:q===name?'#FFCB05':'#00274C',
+        go:()=>this.setState({quarter:name})})),
+      feed, feedEmpty:feed.length===0,
+      vinQuery:s.vinQuery,
+      setVin:e=>this.setState({vinQuery:e.target.value})
+    };
+  }
+}
+</script>
+</body>
+</html>

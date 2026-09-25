@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900&amp;display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #F7F8FA; -webkit-font-smoothing: antialiased; }
+  a { color: #00274C; text-decoration: none; }
+  a:hover { color: #2A5993; }
+</style>
+</helmet>
+<div style="font-family: 'DM Sans', sans-serif; background: #F7F8FA; min-height: 100vh;">
+
+  <div style="background: #fff;">
+    <div style="background: #FAFAFA; border-bottom: 1px solid #F0F0F0; display: flex; align-items: center; gap: 8px; padding: 6px 40px;">
+      <span style="font-size: 12px; font-weight: 400; line-height: 18px; color: #6B7280;">homeLocation</span>
+      <div style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+        <span style="font-size: 12px; font-weight: 600; line-height: 100%; color: #00274C;">Ann Arbor</span>
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="display: block;"><path d="M1 1.5L5 4.5L9 1.5" stroke="#00274C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 12px; font-weight: 400; line-height: 18px; color: #6B7280; white-space: nowrap;">Viewing as</span>
+        <select onChange="{{ switchRole }}" value="{{ role }}" style="font-family: inherit; font-size: 12px; font-weight: 600; color: #00274C; background: #fff; border: 1px solid #E5E7EB; border-radius: 999px; padding: 4px 12px; cursor: pointer;">
+          <option value="officer">Officer</option>
+          <option value="supervisor">Supervisor</option>
+        </select>
+      </div>
+    </div>
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 14px 40px; min-height: 67px; box-sizing: border-box;">
+      <span style="font-size: 18px; font-weight: 700; line-height: 27px; letter-spacing: 1.8px; color: #00274C; white-space: nowrap;">DPSS FLEET</span>
+      <div style="display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px 22px; min-width: 0;">
+        <sc-for list="{{ navLinks }}" as="n" hint-placeholder-count="2">
+          <a href="{{ n.href }}" style="{{ n.style }}">{{ n.label }}</a>
+        </sc-for>
+        <a href="{{ workOrderHref }}" style="background: #00274C; color: #fff; border-radius: 999px; padding: 12px 26px; font-size: 14px; font-weight: 600; white-space: nowrap;" style-hover="background: #003A6E; color: #fff;">+ Work Order</a>
+      </div>
+    </div>
+  </div>
+
+  <div style="background: #00274C; display: flex; justify-content: center;">
+    <div style="width: 100%; max-width: 1200px; padding: 28px; box-sizing: border-box; display: flex; gap: 32px; align-items: center; flex-wrap: wrap; min-height: 559px;">
+
+      <div style="flex: 1 1 520px; display: flex; gap: 20px; align-items: flex-end; padding: 40px 0; flex-wrap: wrap;">
+        <div style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 20px; align-items: flex-start;">
+          <span style="font-size: 24px; font-weight: 900; line-height: 1.35; letter-spacing: 0.14px; color: #FFCB05;">Unit 103 · Interceptor-U · 2022</span>
+          <h1 style="margin: 0; font-size: 64px; font-weight: 700; line-height: 1.08; letter-spacing: -1.6px; color: #fff;">Good afternoon,<br>John.</h1>
+          <div style="font-size: 20px; font-weight: 500; line-height: 30px; color: rgba(255,255,255,0.78);">Today is {{ nowLabel }}</div>
+          <button style="border: none; cursor: pointer; background: #FFCB05; color: #131516; border-radius: 999px; padding: 14px 28px; font-family: inherit; font-size: 14px; font-weight: 600; line-height: 21px; margin-top: 20px; white-space: nowrap;" style-hover="background: #FFD633;">View Vehicle Package</button>
+        </div>
+        
+      </div>
+
+      <div style="width: 390px; max-width: 100%; border-radius: 18px; background: #fff; border: 0.77px solid #E5E7EB; padding: 28px 30px; box-sizing: border-box;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+          <span style="font-size: 22px; font-weight: 700; line-height: 33px; color: #131516;">Vehicle Status Check</span>
+          <span style="padding: 3px 0; font-size: 13px; font-weight: 400; line-height: 19.5px; color: #9CA3AF;">{{ phaseLabel }}</span>
+        </div>
+        <div style="padding: 18px 0;">
+          <sc-for list="{{ facts }}" as="f" hint-placeholder-count="3">
+            <div style="display: flex; gap: 16px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid #F0F0F0;">
+              <span style="width: 76px; flex-shrink: 0; font-size: 13px; font-weight: 400; line-height: 19.5px; color: #9CA3AF;">{{ f.label }}</span>
+              <span style="{{ f.valueStyle }}">{{ f.value }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 20px 0;">
+          <button onClick="{{ acknowledge }}" style="{{ ackStyle }}">{{ ackLabel }}</button>
+          <button onClick="{{ advance }}" style="{{ continueStyle }}">{{ continueLabel }}</button>
+        </div>
+        <div style="padding: 16px 0 0; font-size: 13px; font-weight: 400; line-height: 19.5px; color: #6B7280;">Having issues? <a href="#work-order" style="font-weight: 700; color: #00274C;">Place a work order.</a></div>
+      </div>
+
+    </div>
+  </div>
+
+  <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeModal }}" style="position: fixed; inset: 0; z-index: 50; background: rgba(0,20,40,0.55); display: flex; justify-content: center; align-items: flex-start; padding: 32px 16px; box-sizing: border-box; overflow-y: auto;">
+      <div onClick="{{ stop }}" style="width: 100%; max-width: 640px; background: #fff; border-radius: 18px; box-shadow: 0 24px 60px rgba(0,20,40,0.25); display: flex; flex-direction: column; overflow: hidden;">
+
+        <div style="padding: 24px 28px 20px; border-bottom: 1px solid #F0F0F0; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
+          <div>
+            <div style="font-size: 13px; font-weight: 400; line-height: 19.5px; color: #6B7280;">Unit 103 · plate EDZ1770</div>
+            <h2 style="margin: 2px 0 6px; font-size: 24px; font-weight: 700; line-height: 1.25; color: #00274C;">{{ modalTitle }}</h2>
+            <p style="margin: 0; font-size: 13px; line-height: 19.5px; color: #6B7280; text-wrap: pretty;">Anything marked as a fault or new damage opens a work order against this vehicle automatically.</p>
+          </div>
+          <button type="button" onClick="{{ closeModal }}" aria-label="Close" style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 999px; border: 0.77px solid #E5E7EB; background: #fff; cursor: pointer; font-family: inherit; font-size: 18px; line-height: 1; color: #374151;" style-hover="background: #F3F4F6;">×</button>
+        </div>
+
+        <div style="padding: 8px 28px 28px; display: flex; flex-direction: column;">
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; padding: 20px 0 28px; border-bottom: 1px solid #F0F0F0;">
+            <label style="display: flex; flex-direction: column; gap: 8px;">
+              <span style="font-size: 14px; font-weight: 600; color: #131516;">Odometer <span style="color: #C0362C;">*</span></span>
+              <div style="display: flex; align-items: center; border: 1px solid {{ odoBorder }}; border-radius: 12px; padding: 0 16px; height: 52px; background: #fff;">
+                <input type="text" inputmode="numeric" placeholder="e.g. 48210" value="{{ odo }}" onChange="{{ setOdo }}" style="flex: 1; min-width: 0; border: none; outline: none; font-family: inherit; font-size: 18px; font-weight: 600; color: #131516; background: transparent;">
+                <span style="font-size: 13px; color: #9CA3AF;">miles</span>
+              </div>
+              <span style="font-size: 12px; color: #9CA3AF;">No previous reading on file</span>
+            </label>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <span style="font-size: 14px; font-weight: 600; color: #131516;">Fuel</span>
+              <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; background: #F3F4F6; border-radius: 999px; padding: 4px; height: 52px; box-sizing: border-box;">
+                <sc-for list="{{ fuelOpts }}" as="f" hint-placeholder-count="5">
+                  <button type="button" onClick="{{ f.pick }}" style="{{ f.style }}">{{ f.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding: 24px 0 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px;">
+              <span style="font-size: 17px; font-weight: 700; color: #00274C;">Equipment</span>
+              <span style="font-size: 12px; color: #9CA3AF;">All set to OK. Pre-existing keeps a record without a new work order.</span>
+            </div>
+            <div style="margin-top: 8px;">
+              <sc-for list="{{ eqRows }}" as="r" hint-placeholder-count="8">
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #F5F5F5; flex-wrap: wrap;">
+                  <span style="font-size: 14px; font-weight: 500; color: #131516;">{{ r.name }}</span>
+                  <div style="display: flex; gap: 4px; background: #F3F4F6; border-radius: 999px; padding: 4px;">
+                    <sc-for list="{{ r.opts }}" as="o" hint-placeholder-count="3">
+                      <button type="button" onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.label }}</button>
+                    </sc-for>
+                  </div>
+                  <sc-if value="{{ r.hasOpen }}" hint-placeholder-val="{{ false }}">
+                    <span style="{{ r.openTagStyle }}">{{ r.openTag }}</span>
+                  </sc-if>
+                  <sc-if value="{{ r.dup }}" hint-placeholder-val="{{ false }}">
+                    <div style="width: 100%; background: #E8EEF7; border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px;">
+                      <span style="font-size: 13px; font-weight: 700; color: #00274C;">{{ r.dupTitle }}</span>
+                      <span style="font-size: 12px; line-height: 18px; color: #1E4577;">{{ r.dupBody }}</span>
+                      <button type="button" onClick="{{ r.dupToggle }}" style="align-self: flex-start; cursor: pointer; font-family: inherit; border: none; background: transparent; padding: 2px 0 0; font-size: 12px; font-weight: 700; color: #2A5993; text-decoration: underline;">{{ r.dupToggleLabel }}</button>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ r.showNote }}" hint-placeholder-val="{{ false }}">
+                    <input type="text" placeholder="{{ r.notePh }}" value="{{ r.noteVal }}" onChange="{{ r.setNote }}" style="{{ r.noteStyle }}">
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="padding: 24px 0 8px;">
+            <span style="font-size: 17px; font-weight: 700; color: #00274C;">Exterior walk-around</span>
+            <p style="margin: 4px 0 0; font-size: 12px; line-height: 18px; color: #6B7280;">Mark anything you can see. Pre-existing keeps a record without raising a new work order.</p>
+            <div style="margin-top: 8px;">
+              <sc-for list="{{ extRows }}" as="r" hint-placeholder-count="9">
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #F5F5F5; flex-wrap: wrap;">
+                  <span style="font-size: 14px; font-weight: 500; color: #131516;">{{ r.name }}</span>
+                  <div style="display: flex; gap: 4px; background: #F3F4F6; border-radius: 999px; padding: 4px;">
+                    <sc-for list="{{ r.opts }}" as="o" hint-placeholder-count="3">
+                      <button type="button" onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.label }}</button>
+                    </sc-for>
+                  </div>
+                  <sc-if value="{{ r.hasOpen }}" hint-placeholder-val="{{ false }}">
+                    <span style="{{ r.openTagStyle }}">{{ r.openTag }}</span>
+                  </sc-if>
+                  <sc-if value="{{ r.dup }}" hint-placeholder-val="{{ false }}">
+                    <div style="width: 100%; background: #E8EEF7; border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px;">
+                      <span style="font-size: 13px; font-weight: 700; color: #00274C;">{{ r.dupTitle }}</span>
+                      <span style="font-size: 12px; line-height: 18px; color: #1E4577;">{{ r.dupBody }}</span>
+                      <button type="button" onClick="{{ r.dupToggle }}" style="align-self: flex-start; cursor: pointer; font-family: inherit; border: none; background: transparent; padding: 2px 0 0; font-size: 12px; font-weight: 700; color: #2A5993; text-decoration: underline;">{{ r.dupToggleLabel }}</button>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ r.showNote }}" hint-placeholder-val="{{ false }}">
+                    <input type="text" placeholder="{{ r.notePh }}" value="{{ r.noteVal }}" onChange="{{ r.setNote }}" style="{{ r.noteStyle }}">
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
+            <span style="font-size: 14px; font-weight: 600; color: #131516;">Photos <span style="font-weight: 400; color: #9CA3AF;">(optional, helps the garage find it)</span></span>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; background: #00274C; color: #fff; border-radius: 999px; padding: 12px 22px; font-size: 14px; font-weight: 600;" style-hover="background: #003A6E;">
+                <svg width="18" height="16" viewBox="0 0 18 16" fill="none"><path d="M2 4.5h3l1.5-2h5L13 4.5h3v9H2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path><circle cx="9" cy="9" r="2.6" stroke="currentColor" stroke-width="1.5"></circle></svg>
+                <span>Take photo</span>
+                <input type="file" accept="image/*" capture="environment" onChange="{{ addPhotos }}" style="display: none;">
+              </label>
+              <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; background: #fff; color: #00274C; border: 0.77px solid #00274C; border-radius: 999px; padding: 12px 22px; font-size: 14px; font-weight: 600;" style-hover="background: #F3F4F6;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 11V2.5M4.5 6L8 2.5 11.5 6M2.5 11v2.5h11V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                <span>Upload</span>
+                <input type="file" accept="image/*" multiple="multiple" onChange="{{ addPhotos }}" style="display: none;">
+              </label>
+            </div>
+            <sc-if value="{{ hasPhotos }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <sc-for list="{{ photos }}" as="p" hint-placeholder-count="0">
+                  <div style="position: relative; width: 84px; height: 84px; border-radius: 12px; overflow: hidden; background: #F3F4F6;">
+                    <div role="img" aria-label="{{ p.name }}" style="{{ p.thumbStyle }}"></div>
+                    <button type="button" onClick="{{ p.remove }}" aria-label="Remove photo" style="position: absolute; top: 4px; right: 4px; width: 26px; height: 26px; border-radius: 999px; border: none; background: rgba(0,20,40,0.7); color: #fff; cursor: pointer; font-size: 14px; line-height: 1;">×</button>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+
+          <label style="display: flex; flex-direction: column; gap: 6px; margin-top: 24px;">
+            <span style="font-size: 14px; font-weight: 600; color: #131516;">Anything else <span style="font-weight: 400; color: #9CA3AF;">(optional)</span></span>
+            <textarea rows="2" value="{{ notes }}" onChange="{{ setNotes }}" style="font-family: inherit; font-size: 14px; border: 1px solid #E5E7EB; border-radius: 12px; padding: 12px 14px; resize: vertical;"></textarea>
+          </label>
+
+          <div style="margin-top: 20px; display: flex; justify-content: space-between; gap: 16px; font-size: 13px; color: #6B7280;">
+            <span>Checked by</span>
+            <span style="font-weight: 600; color: #131516;">John · Officer · {{ nowLabel }}</span>
+          </div>
+        </div>
+
+        <div style="position: sticky; bottom: 0; background: #fff; border-top: 1px solid #F0F0F0; padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+          <span style="{{ summaryStyle }}">{{ summary }}</span>
+          <button type="button" onClick="{{ submitCheck }}" style="{{ submitStyle }}">{{ submitLabel }}</button>
+        </div>
+
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="display: flex; justify-content: center;">
+    <div style="width: 100%; max-width: 1200px; padding: 72px 28px; box-sizing: border-box;">
+
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap;">
+        <div>
+          <div style="font-size: 13px; font-weight: 400; line-height: 19.5px; color: #6B7280;">{{ countLabel }}</div>
+          <h2 style="margin: 2px 0 0; font-size: 30px; font-weight: 700; line-height: 1.2; color: #00274C;">Division Overview</h2>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px; margin-top: 36px;">
+        <sc-for list="{{ filterGroups }}" as="g" hint-placeholder-count="4">
+          <div>
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.66px; text-transform: uppercase; color: #9CA3AF; margin-bottom: 12px;">{{ g.label }}</div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <sc-for list="{{ g.options }}" as="o" hint-placeholder-count="4">
+                <button onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(196px, 1fr)); gap: 16px; margin-top: 40px;">
+        <sc-for list="{{ vehicles }}" as="v" hint-placeholder-count="14">
+          <div style="border-radius: 14px; background: #fff; border: 0.77px solid #E5E7EB; padding: 18px 18px 16px; box-sizing: border-box;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px;">
+              <span style="font-size: 32px; font-weight: 700; line-height: 32px; color: #00274C;">{{ v.unit }}</span>
+              <span style="font-size: 12px; font-weight: 400; line-height: 18px; color: #9CA3AF;">{{ v.year }}</span>
+            </div>
+            <div style="padding: 6px 0; font-size: 13px; font-weight: 600; line-height: 19.5px; color: #131516;">{{ v.model }}</div>
+            <div style="padding: 2px 0 14px; font-size: 12px; font-weight: 400; line-height: 18px; color: #6B7280;">{{ v.place }}</div>
+            <span style="{{ v.pillStyle }}">
+              <span style="{{ v.dotStyle }}"></span>
+              <span>{{ v.status }}</span>
+            </span>
+          </div>
+        </sc-for>
+      </div>
+      <sc-if value="{{ vEmpty }}" hint-placeholder-val="{{ false }}">
+        <p style="margin: 24px 0 0; font-size: 13px; color: #9CA3AF;">No vehicles match these filters.</p>
+      </sc-if>
+      <sc-if value="{{ vMore }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; justify-content: center; margin-top: 28px;">
+          <button type="button" onClick="{{ showMore }}" style="cursor: pointer; font-family: inherit; border: 0.77px solid #00274C; background: #fff; color: #00274C; border-radius: 999px; padding: 13px 26px; font-size: 14px; font-weight: 600;">{{ moreLabel }}</button>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const FLEET_ALL = [["227","Dearborn","2022","Ford Explorer / PIU Hybrid","Patrol","Due"],["284","Dearborn","2025","Ford Explorer / PIU","Patrol","In service"],["287","Dearborn","2025","Ford Explorer / PIU","Patrol","In service"],["365","Dearborn","2025","Ford Explorer / PIU","K-9","Due"],["368","Dearborn","2025","Ford Explorer / PIU","Patrol","Due"],["388","Dearborn","2025","Ford Explorer / PIU","Patrol","Due"],["389","Dearborn","2025","Ford Explorer / PIU","Patrol","Due"],["2170","Dearborn","2018","Ford Explorer / PIU","Patrol","In service"],["2171","Dearborn","2018","Ford Explorer / PIU","Patrol","In service"],["2439","Dearborn","2016","Ford Explorer / PIU","Patrol","In service"],["195","Dearborn","2025","Ford Explorer / PIU","Security","Due"],["198","Dearborn","2025","Ford Explorer / PIU","Security","In service"],["225","Dearborn","2022","Ford Escape","Security","Out of service"],["1178","Dearborn","2023","Ford F-150","Pool","In service"],["190","Dearborn","2020","Ford Explorer / PIU","Patrol","Out of service"],["Bike","Dearborn","·","Patrol bicycle","Patrol","In service"],["5001","Dearborn","2025","Yamaha UMAX Rally 2+2","Other","In service"],["320","Michigan Medicine","2022","Ford Explorer Interceptor","Security","In service"],["326","Michigan Medicine","·","Ford Explorer Interceptor","Security","In service"],["128","Michigan Medicine","·","Ford Explorer Interceptor","Security","In service"],["304","Michigan Medicine","·","Ford Explorer Interceptor","Security","In service"],["344","Michigan Medicine","·","Ford Explorer Interceptor","Security","In service"],["21","Michigan Medicine","·","Ford Explorer Interceptor","Security","In service"],["200","Michigan Medicine","·","Ford Explorer Interceptor","Security","In service"],["290","Michigan Medicine","·","Ford Explorer Interceptor","Patrol","In service"],["177","Michigan Medicine","·","Ford Explorer Interceptor","Security","In service"],["157","Michigan Medicine","·","Ford Explorer Interceptor","Security","In service"],["292","Michigan Medicine","·","Ford Explorer Interceptor","Security","In service"],["204","Michigan Medicine","·","Ford Explorer Interceptor","K-9","In service"],["233","Michigan Medicine","·","Ford Explorer Interceptor","K-9","Due"],["240","Michigan Medicine","·","Ford Explorer Interceptor","K-9","In service"],["251","Michigan Medicine","·","Ford Explorer Interceptor","K-9","In service"],["381","Michigan Medicine","·","Ford Explorer Interceptor","K-9","In service"],["236","Michigan Medicine","·","Ford Explorer Interceptor","Patrol","Out of service"],["158","Michigan Medicine","·","Ford police utility","CIU","In service"],["29","Michigan Medicine","·","Ford Explorer","CIU","Due"],["1014","Michigan Medicine","·","Ford Transit","Other","In service"],["414","Michigan Medicine","2026","Ford Explorer Interceptor","K-9","Due"],["78","Ann Arbor","2026","Chevrolet Tahoe-SUV","Patrol","Due"],["403","Ann Arbor","2026","Chevrolet Tahoe-SUV","Patrol","Due"],["404","Ann Arbor","2026","Chevrolet Tahoe-SUV","Patrol","Due"],["405","Ann Arbor","2026","Chevrolet Tahoe-SUV","Patrol","Due"],["406","Ann Arbor","2026","Chevrolet Tahoe-SUV","Patrol","Due"],["108","Ann Arbor","2023","Ford Interceptor-U","Patrol","Due"],["558","Ann Arbor","2020","Ford Interceptor-P","Patrol","In service"],["103","Ann Arbor","2022","Ford Interceptor-U","Patrol","Due"],["363","Ann Arbor","2023","Ford Interceptor-U","Patrol","Due"],["556","Ann Arbor","2025","Chevrolet Tahoe-PPV","Patrol","Due"],["79","Ann Arbor","2025","Chevrolet Tahoe-PPV","Patrol","Due"],["80","Ann Arbor","2025","Chevrolet Tahoe-PPV","Patrol","Due"],["438","Ann Arbor","2025","Ford Interceptor-U","Patrol","In service"],["156","Ann Arbor","2025","Ford Interceptor-U","Patrol","In service"],["125","Ann Arbor","2025","Chevrolet Tahoe-4x4","K-9","Due"],["1531","Ann Arbor","2025","Chevrolet Tahoe-4x4","K-9","Due"],["1354","Ann Arbor","2024","Ford Transit","Transport","In service"],["M1","Ann Arbor","2014","Harley-Davidson Motorcycle","Patrol","Due"],["M2","Ann Arbor","2015","Harley-Davidson Motorcycle","Patrol","Due"],["M3","Ann Arbor","2015","Harley-Davidson Motorcycle","Patrol","Due"],["102","Ann Arbor","2023","Chevrolet Malibu","Pool","Due"],["10","Ann Arbor","2023","Chevrolet Malibu","Pool","Out of service"],["427","Ann Arbor","2023","Ford Interceptor-U","CIU","In service"],["439","Ann Arbor","2023","Ford Interceptor-U","CIU","Due"],["234","Ann Arbor","2023","Chevrolet Malibu","Pool","Due"],["38","Ann Arbor","2024","Ford Explorer","Pool","Due"],["2","Ann Arbor","2017","Ford Taurus","CIU","Due"],["1174","Ann Arbor","2023","Ford Maverick","Pool","Due"],["402","Ann Arbor","2024","Chevrolet Bolt","Parking","Due"],["310","Ann Arbor","2024","Chevrolet Bolt","Parking","In service"],["314","Ann Arbor","2024","Chevrolet Bolt","Parking","In service"],["319","Ann Arbor","2024","Chevrolet Bolt","Parking","In service"],["322","Ann Arbor","2024","Chevrolet Bolt","Parking","In service"],["53","Ann Arbor","2024","Chevrolet Bolt","Parking","Out of service"],["109","Ann Arbor","2024","Chevrolet Bolt","Parking","Out of service"],["2029","Ann Arbor","1986","John Deere","Other","Due"],["2041","Ann Arbor","2011","Value Trailer","Other","In service"],["2074","Ann Arbor","2011","Polaris Ranger XP 800","Other","In service"],["2075","Ann Arbor","2012","River Forest Trailer","Other","In service"],["2068","Ann Arbor","2025","Dark Horse Trailer","Other","Due"],["62","Ann Arbor","·","Administrative vehicle","Pool","Due"],["394","Ann Arbor","2026","Ford Explorer","Patrol","At vendor"],["395","Ann Arbor","2026","Ford Explorer","Patrol","At vendor"],["396","Ann Arbor","2026","Ford Explorer","Patrol","At vendor"],["400","Ann Arbor","2026","Ford Explorer","Patrol","At vendor"],["2265","Flint","2025","Chevrolet Tahoe Command","Patrol","In service"],["2266","Flint","2025","Chevrolet Tahoe","Patrol","In service"],["2267","Flint","2025","Chevrolet Tahoe","Patrol","In service"],["2268","Flint","2025","Chevrolet Tahoe","Patrol","In service"],["2239","Flint","·","Dodge Durango","CIU","Due"],["RV 040X806","Flint","·","Recreational vehicle","Other","Due"],["392","Guest Services","2026","Chrysler Pacifica Select","Pool","Due"],["393","Guest Services","·","Ford Escape","Other","Out of service"],["74","Museum","·","Ford Explorer","Security","Out of service"],["277","Housing","·","Ford Police Interceptor Utility","Security","Out of service"],["105","Michigan Medicine","·","Chrysler Pacifica","Pool","Due"],["2358","Flint","2025","Ford Explorer","Patrol","In service"],["2062","Flint","2017","Chevrolet Tahoe","Patrol","In service"],["2359","Flint","2025","Ford Explorer","Patrol","In service"],["2286","Flint","2024","Ford Explorer","Patrol","In service"],["2287","Flint","2024","Ford Explorer","Patrol","In service"],["2319","Flint","2025","Ford Explorer","Patrol","In service"],["2320","Flint","2025","Ford Explorer","Patrol","In service"],["2285","Flint","2022","Ford Explorer Command","Patrol","In service"],["2055","Flint","2011","Chevrolet Impala","Security","In service"],["2220","Flint","2015","Ford Escape","Security","In service"],["2227","Flint","2016","Ford Escape","Security","In service"],["2119","Flint","2013","Dodge Charger","Pool","In service"],["2316","Flint","2023","Ford Explorer","Pool","In service"],["2030","Flint","2017","GMC Savana Van","Pool","In service"],["2199","Flint","2016","Chevrolet Silverado","Pool","In service"],["2044","Flint","2011","Ford Escape","Pool","In service"],["FL ·1","Flint","·","Not recorded","Other","Due"],["FL ·2","Flint","·","Not recorded","Other","Due"],["8","Housing","2022","Ford Police Interceptor Utility","Security","In service"],["166","Housing","2022","Ford Police Interceptor Utility","Security","In service"],["215","Housing","2022","Ford Police Interceptor Utility","Security","In service"],["401","Housing","2022","Ford Police Interceptor Utility","Security","In service"],["457","Housing","2021","Ford Police Interceptor Utility","Security","In service"],["270","Housing","2025","Ford Police Interceptor Utility","Security","In service"],["468","Housing","2022","Ford Police Interceptor Utility","Patrol","In service"],["AA ·1","Ann Arbor","·","Not recorded","Other","Due"],["AA ·2","Ann Arbor","·","Not recorded","Other","Due"],["AA ·3","Ann Arbor","·","Not recorded","Other","Due"],["390","Michigan Medicine","2025","Ford Explorer Interceptor","Pool","In service"],["PS ·1","Protective Services","·","Unmarked SUV","Security","Due"],["PS ·2","Protective Services","·","Unmarked SUV","Security","Due"],["PS ·3","Protective Services","·","Unmarked SUV","Security","Due"],["PS ·4","Protective Services","·","Unmarked SUV","Security","Due"],["PS ·5","Protective Services","·","Unmarked SUV","Security","Due"],["PS ·6","Protective Services","·","Unmarked SUV","Security","Due"],["PS ·7","Protective Services","·","Unmarked SUV","Security","Due"],["PS ·8","Protective Services","·","Unmarked SUV","Security","Due"],["FL ·3","Flint","·","Not recorded","Other","Due"],["AA ·4","Ann Arbor","·","Not recorded","Other","Due"]];
+const PHASES = ["Pre-check", "Post-check", "Signed off"];
+
+const ROLE_HOME = { officer: "./Officer Home.dc.html", supervisor: "./Supervisor Home.dc.html" };
+const ROLE_NAV = {
+  officer: [
+    { label: "Home", href: "./Officer Home.dc.html" },
+    { label: "Assignments", href: "./Shift Assignments.dc.html" },
+  ],
+  supervisor: [
+    { label: "Home", href: "./Supervisor Home.dc.html" },
+    { label: "Overview", href: "./Overview.dc.html" },
+    { label: "Budget Forecast", href: "./Budget Forecast.dc.html" },
+    { label: "Ordering", href: "./Vehicle Ordering.dc.html" },
+    { label: "Service Calendar", href: "./Service Calendar.dc.html" },
+    { label: "Assignments", href: "./Shift Assignments.dc.html" },
+  ],
+};
+const WORK_ORDER_HREF = "./Fleet Ordering.dc.html";
+const EQUIPMENT = ["Emergency lights and siren", "Radio", "Computer and printer", "Tires and brakes", "Body and glass",
+  "First aid, AED, trauma kit", "Weapon storage and lock", "Fluids and warning lights"];
+const EXTERIOR = ["Front bumper and grille", "Driver side, front", "Driver side, rear", "Rear bumper and hatch",
+  "Passenger side, rear", "Passenger side, front", "Roof and lightbar", "Glass and mirrors", "Tires and wheels"];
+const FUEL = ["E", "¼", "½", "¾", "Full"];
+const CHECK_PHASES = [0, 1];
+const BLANK_CHECK = { dupNew: {}, odo: "", fuel: "Full", eq: {}, ext: {}, why: {}, photos: [], notes: "", tried: false };
+const NEEDS_NOTE = v => v === "Fault" || v === "New damage";
+const SEED_WO = {
+  "Tires and brakes": { wo: "WO 2294", when: "9/22/26", by: "Officer Reyes", desc: "Front brakes grinding at low speed", stage: "Scheduled with AA Fleet Services" },
+  "Driver side, rear": { wo: "WO 2287", when: "9/18/26", by: "Officer Parrish", desc: "Dent above the rear wheel well", stage: "Reported" },
+};
+function loadWO() { try { return { ...SEED_WO, ...(JSON.parse(localStorage.getItem("dpss-open-wo-103")) || {}) }; } catch (e) { return { ...SEED_WO }; } }
+function saveWO(m) { try { const extra = {}; Object.keys(m).forEach(k => { if (!SEED_WO[k]) extra[k] = m[k]; }); localStorage.setItem("dpss-open-wo-103", JSON.stringify(extra)); } catch (e) {} }
+
+function navFor(role, current) {
+  return (ROLE_NAV[role] || ROLE_NAV.officer).map(n => ({
+    label: n.label, href: n.href,
+    style: "font-size:14px;white-space:nowrap;" +
+      (n.label === current ? "font-weight:700;color:#00274C;" : "font-weight:500;color:#6B7280;"),
+  }));
+}
+
+function setStoredRole(role) { try { localStorage.setItem("dpss-role", role); } catch (e) {} }
+function getStoredRole(fallback) {
+  try { return localStorage.getItem("dpss-role") || fallback; } catch (e) { return fallback; }
+}
+
+class Component extends DCLogic {
+  state = { phase: 0, acked: false, modalOpen: false, ...BLANK_CHECK, lastCheck: null, loc: "Ann Arbor", status: "All", unit: "All", year: "All", now: new Date() };
+
+  componentDidMount() {
+    setStoredRole("officer");
+    this.t = setInterval(() => this.setState({ now: new Date() }), 30000);
+  }
+  componentWillUnmount() { clearInterval(this.t); document.removeEventListener("keydown", this.onKey); }
+  onKey = e => { if (e.key === "Escape") this.setState({ modalOpen: false }); };
+  componentDidUpdate(_, prevState) {
+    const prev = prevState || { modalOpen: this._wasOpen };
+    this._wasOpen = this.state.modalOpen;
+    if (this.state.modalOpen && !prev.modalOpen) { document.addEventListener("keydown", this.onKey); document.body.style.overflow = "hidden"; }
+    if (!this.state.modalOpen && prev.modalOpen) { document.removeEventListener("keydown", this.onKey); document.body.style.overflow = ""; }
+  }
+
+  pill(kind) {
+    const map = {
+      "In service": ["#EDF7F1", "#2A7D46"],
+      "Due": ["#FDF4DC", "#92610A"],
+      "At vendor": ["#FDECEC", "#C0362C"],
+      "Out of service": ["#F3F4F6", "#374151"],
+    };
+    return map[kind] || map["In service"];
+  }
+
+  renderVals() {
+    const { phase, acked } = this.state;
+    const d = this.state.now;
+    const nowLabel = d.toLocaleDateString("en-US", { month: "numeric", day: "numeric", year: "2-digit" }) +
+      " · " + String(d.getHours()).padStart(2, "0") + String(d.getMinutes()).padStart(2, "0") + " hrs";
+
+    const facts = [
+      { label: "Last used", value: "Yesterday, 1840 hrs · Officer Reyes",
+        valueStyle: "font-size:13px;font-weight:500;line-height:19.5px;color:#131516;" },
+      { label: "Status", value: "In service · no open work orders",
+        valueStyle: "font-size:13px;font-weight:500;line-height:19.5px;color:#2A7D46;" },
+      { label: "Notice", value: "Rifle mount release operates in accessory mode",
+        valueStyle: "font-size:13px;font-weight:500;line-height:19.5px;color:#92610A;" },
+    ];
+    if (this.state.lastCheck) facts.push({ label: "Last check", value: this.state.lastCheck.text,
+      valueStyle: "font-size:13px;font-weight:500;line-height:19.5px;color:" + (this.state.lastCheck.wo ? "#C0362C" : "#2A7D46") + ";" });
+
+    const btn = "cursor:pointer;font-family:inherit;border-radius:999px;text-align:center;font-size:14px;line-height:21px;";
+    const ackStyle = btn + "border:none;padding:15px;font-weight:700;" +
+      (acked ? "background:#EDF7F1;color:#2A7D46;" : "background:#FFCB05;color:#00274C;");
+    const continueStyle = btn + "padding:13px;font-weight:600;" +
+      (acked ? "background:#00274C;border:0.77px solid #00274C;color:#fff;"
+             : "background:#fff;border:0.77px solid #E5E7EB;color:#6B7280;cursor:not-allowed;");
+
+    const all = FLEET_ALL.map(([unit, loc, year, model, unitType, status]) => ({ unit, year: parseInt(year, 10) || 0, yrLabel: year, model, loc, unitType, status }));
+
+    const s = this.state;
+    const shown = all.filter(v =>
+      (s.loc === "All" || v.loc === s.loc) &&
+      (s.status === "All" || v.status === s.status) &&
+      (s.unit === "All" || v.unitType === s.unit) &&
+      (s.year === "All" || (s.year === "2022 and newer" ? v.year >= 2022 : (v.year && v.year <= 2021))));
+    const limit = s.vLimit || 20;
+    const visible = shown.slice(0, limit);
+
+    const vehicles = visible.map(v => {
+      const [bg, fg] = this.pill(v.status);
+      return {
+        unit: v.unit, year: v.yrLabel, model: v.model, place: v.loc + " · " + v.unitType, status: v.status,
+        pillStyle: "display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 10px;background:" + bg +
+          ";font-size:12px;font-weight:500;line-height:18px;color:" + fg + ";",
+        dotStyle: "width:7px;height:7px;border-radius:3.5px;flex-shrink:0;background:" + fg + ";",
+      };
+    });
+
+    const chip = on => "cursor:pointer;font-family:inherit;border-radius:999px;padding:8px 16px;font-size:13px;font-weight:500;white-space:nowrap;" +
+      (on ? "background:#00274C;border:0.77px solid #00274C;color:#fff;font-weight:600;"
+          : "background:#fff;border:0.77px solid #E5E7EB;color:#374151;");
+
+    const group = (key, label, options) => ({
+      label,
+      options: options.map(o => ({ label: o, style: chip(s[key] === o), pick: () => this.setState({ [key]: o, vLimit: 20 }) })),
+    });
+
+    const filterGroups = [
+      group("loc", "Location", ["All", "Ann Arbor", "Dearborn", "Flint", "Michigan Medicine"]),
+      group("status", "Status", ["All", "In service", "Due", "Out of service", "At vendor"]),
+      group("unit", "Unit type", ["All", "Patrol", "Security", "CIU", "K-9", "Pool", "Transport", "Parking"]),
+      group("year", "Model year", ["All", "2022 and newer", "2021 and older"]),
+    ];
+
+    const seg = (on, tone) => "cursor:pointer;font-family:inherit;border:none;border-radius:999px;padding:8px 14px;min-height:36px;font-size:13px;white-space:nowrap;" +
+      (on ? "font-weight:700;box-shadow:0 1px 2px rgba(0,0,0,0.08);" + (tone === "bad" ? "background:#C0362C;color:#fff;" : tone === "warn" ? "background:#FDF4DC;color:#92610A;" : "background:#fff;color:#00274C;")
+          : "font-weight:500;background:transparent;color:#6B7280;");
+    const fuelOpts = FUEL.map(f => ({ label: f, pick: () => this.setState({ fuel: f }),
+      style: seg(s.fuel === f, s.fuel === f && f === "E" ? "bad" : null) + "padding:0;" }));
+    const openWO = loadWO();
+    const isDupItem = (n, v) => !!openWO[n] && NEEDS_NOTE(v) && !s.dupNew[n];
+    const eqRows = EQUIPMENT.map(name => {
+      const v = s.eq[name] || "OK";
+      const needs = NEEDS_NOTE(v), missing = needs && s.tried && !(s.why[name] || "").trim();
+      const note = { showNote: v !== "OK" && v !== "No damage", noteVal: s.why[name] || "",
+        notePh: needs ? "What's wrong? (required)" : "Describe it for the record (optional)",
+        noteStyle: "width:100%;box-sizing:border-box;font-family:inherit;font-size:14px;border-radius:10px;padding:10px 12px;outline:none;background:#fff;border:1px solid " + (missing ? "#C0362C" : needs ? "#E8B4AF" : "#E5E7EB") + ";",
+        setNote: e => { const val = e.target.value; this.setState(st => ({ why: { ...st.why, [name]: val } })); } };
+
+      const ow = openWO[name], isDup = !!ow && NEEDS_NOTE(v) && !s.dupNew[name];
+      const dupBits = { hasOpen: !!ow && !NEEDS_NOTE(v), openTag: ow ? "Already reported · " + ow.wo + " · " + ow.stage : "",
+        openTagStyle: "width:100%;font-size:12px;color:#2A5993;",
+        dup: !!ow && NEEDS_NOTE(v), dupTitle: !ow ? "" : s.dupNew[name] ? "Opening a new work order" : "Already open: " + ow.wo,
+        dupBody: !ow ? "" : s.dupNew[name] ? "Use this only if it's a different problem from " + ow.wo + " (" + ow.desc.toLowerCase() + ")." :
+          "Reported " + ow.when + " by " + ow.by + ": \u201c" + ow.desc + ".\u201d " + ow.stage + ". Your note is added to that work order, so no duplicate is opened.",
+        dupToggleLabel: s.dupNew[name] ? "Same problem, add to " + (ow ? ow.wo : "") : "This is a different problem",
+        dupToggle: () => this.setState(st => ({ dupNew: { ...st.dupNew, [name]: !st.dupNew[name] } })) };
+      if (isDup) { note.notePh = "Anything new since it was reported? (optional)"; note.noteStyle = note.noteStyle.replace(/border:1px solid #[0-9A-F]+;?/i, "border:1px solid #E5E7EB;"); }
+      return { name, ...note, ...dupBits, opts: [["OK", null], ["Fault", "bad"], ["Pre-existing", "warn"]].map(([label, tone]) => ({
+        label, style: seg(v === label, tone), pick: () => this.setState(st => ({ eq: { ...st.eq, [name]: label } })) })) };
+    });
+    const extRows = EXTERIOR.map(name => {
+      const v = s.ext[name] || "No damage";
+      const needs = NEEDS_NOTE(v), missing = needs && s.tried && !(s.why[name] || "").trim();
+      const note = { showNote: v !== "OK" && v !== "No damage", noteVal: s.why[name] || "",
+        notePh: needs ? "What's wrong? (required)" : "Describe it for the record (optional)",
+        noteStyle: "width:100%;box-sizing:border-box;font-family:inherit;font-size:14px;border-radius:10px;padding:10px 12px;outline:none;background:#fff;border:1px solid " + (missing ? "#C0362C" : needs ? "#E8B4AF" : "#E5E7EB") + ";",
+        setNote: e => { const val = e.target.value; this.setState(st => ({ why: { ...st.why, [name]: val } })); } };
+
+      const ow = openWO[name], isDup = !!ow && NEEDS_NOTE(v) && !s.dupNew[name];
+      const dupBits = { hasOpen: !!ow && !NEEDS_NOTE(v), openTag: ow ? "Already reported · " + ow.wo + " · " + ow.stage : "",
+        openTagStyle: "width:100%;font-size:12px;color:#2A5993;",
+        dup: !!ow && NEEDS_NOTE(v), dupTitle: !ow ? "" : s.dupNew[name] ? "Opening a new work order" : "Already open: " + ow.wo,
+        dupBody: !ow ? "" : s.dupNew[name] ? "Use this only if it's a different problem from " + ow.wo + " (" + ow.desc.toLowerCase() + ")." :
+          "Reported " + ow.when + " by " + ow.by + ": \u201c" + ow.desc + ".\u201d " + ow.stage + ". Your note is added to that work order, so no duplicate is opened.",
+        dupToggleLabel: s.dupNew[name] ? "Same problem, add to " + (ow ? ow.wo : "") : "This is a different problem",
+        dupToggle: () => this.setState(st => ({ dupNew: { ...st.dupNew, [name]: !st.dupNew[name] } })) };
+      if (isDup) { note.notePh = "Anything new since it was reported? (optional)"; note.noteStyle = note.noteStyle.replace(/border:1px solid #[0-9A-F]+;?/i, "border:1px solid #E5E7EB;"); }
+      return { name, ...note, ...dupBits, opts: [["No damage", null], ["New damage", "bad"], ["Pre-existing", "warn"]].map(([label, tone]) => ({
+        label, style: seg(v === label, tone), pick: () => this.setState(st => ({ ext: { ...st.ext, [name]: label } })) })) };
+    });
+    const faults = EQUIPMENT.filter(n => s.eq[n] === "Fault" && !isDupItem(n, s.eq[n])).length;
+    const newDmg = EXTERIOR.filter(n => s.ext[n] === "New damage" && !isDupItem(n, s.ext[n])).length;
+    const dupItems = [...EQUIPMENT.filter(n => isDupItem(n, s.eq[n])), ...EXTERIOR.filter(n => isDupItem(n, s.ext[n]))];
+    const adds = dupItems.length;
+    const preDmg = EXTERIOR.filter(n => s.ext[n] === "Pre-existing").length + EQUIPMENT.filter(n => s.eq[n] === "Pre-existing").length;
+    const opens = faults + newDmg;
+    const missingNotes = [...EQUIPMENT.filter(n => NEEDS_NOTE(s.eq[n]) && !isDupItem(n, s.eq[n])), ...EXTERIOR.filter(n => NEEDS_NOTE(s.ext[n]) && !isDupItem(n, s.ext[n]))].filter(n => !(s.why[n] || "").trim()).length;
+    const odoOk = /^\d{1,7}$/.test(String(s.odo).replace(/,/g, "").trim());
+    const parts = [];
+    if (faults) parts.push(faults + " fault" + (faults > 1 ? "s" : ""));
+    if (newDmg) parts.push(newDmg + " new damage");
+    if (preDmg) parts.push(preDmg + " pre-existing");
+    if (adds) parts.push(adds + " already open");
+    const canSubmit = odoOk && !missingNotes;
+    const summary = !odoOk && s.tried ? "Enter the odometer reading to submit" :
+      missingNotes && s.tried ? "Say what's wrong for " + missingNotes + " marked item" + (missingNotes > 1 ? "s" : "") :
+      opens ? parts.join(" · ") + " · opens " + opens + " new work order" + (opens > 1 ? "s" : "") :
+      adds ? parts.join(" · ") + " · added to existing, no new work order" :
+      parts.length ? parts.join(" · ") + " · no work order" : "Everything OK · no work order";
+    const isCheckPhase = CHECK_PHASES.includes(phase);
+    const phaseName = phase === 1 ? "End-of-shift check" : "Start-of-shift check";
+
+    return {
+      modalOpen: s.modalOpen, modalTitle: phaseName, stop: e => e.stopPropagation(),
+      closeModal: () => this.setState({ modalOpen: false }),
+      odo: s.odo, setOdo: e => this.setState({ odo: e.target.value.replace(/[^\d,]/g, "") }),
+      odoBorder: s.tried && !odoOk ? "#C0362C" : "#E5E7EB",
+      fuelOpts, eqRows, extRows,
+      hasIssues: faults + newDmg + preDmg > 0,
+
+      notes: s.notes, setNotes: e => this.setState({ notes: e.target.value }),
+      photos: s.photos, hasPhotos: s.photos.length > 0,
+      photoCount: s.photos.length + " photo" + (s.photos.length > 1 ? "s" : "") + " attached",
+      addPhotos: e => {
+        const files = Array.from(e.target.files || []);
+        const add = files.map(f => { const url = URL.createObjectURL(f); return { name: f.name, url, thumbStyle: "width:100%;height:100%;background:#F3F4F6 center/cover no-repeat url('" + url + "');" }; });
+        e.target.value = "";
+        this.setState(st => ({ photos: [...st.photos, ...add].map((p, i, arr) => ({ ...p, remove: () => this.setState(s2 => ({ photos: s2.photos.filter(x => x.url !== p.url) })) })) }));
+      },
+      summary,
+      summaryStyle: "font-size:13px;font-weight:600;" + (!canSubmit && s.tried ? "color:#C0362C;" : opens ? "color:#C0362C;" : "color:#2A7D46;"),
+      submitLabel: opens ? "Submit and open " + (opens > 1 ? opens + " work orders" : "work order") : adds ? "Submit and update " + (adds > 1 ? adds + " work orders" : "work order") : "Submit check",
+      submitStyle: "cursor:pointer;font-family:inherit;border:none;border-radius:999px;padding:14px 28px;font-size:14px;font-weight:700;" +
+        (canSubmit ? "background:#FFCB05;color:#00274C;" : "background:#F3F4F6;color:#9CA3AF;"),
+      submitCheck: () => {
+        if (!canSubmit) { this.setState({ tried: true }); return; }
+        const text = (phase === 1 ? "Post-check" : "Pre-check") + " · " + (opens ? opens + " work order" + (opens > 1 ? "s" : "") + " opened" : adds ? adds + " existing updated" : "all OK") + " · " + s.fuel + " fuel";
+        const m = loadWO(); let n = 2300 + Object.keys(m).length;
+        const stamp = new Date(); const when = (stamp.getMonth() + 1) + "/" + stamp.getDate() + "/" + String(stamp.getFullYear()).slice(2);
+        [...EQUIPMENT.map(k => [k, s.eq[k]]), ...EXTERIOR.map(k => [k, s.ext[k]])].forEach(([k, v]) => {
+          if (NEEDS_NOTE(v) && !isDupItem(k, v)) m[k + (m[k] ? " (2)" : "")] = { wo: "WO " + (n++), when, by: "Officer Zamorski", desc: (s.why[k] || v).trim(), stage: "Reported" };
+        });
+        saveWO(m);
+        this.setState({ ...BLANK_CHECK, modalOpen: false, acked: true, lastCheck: { text, wo: opens } });
+      },
+      nowLabel, facts, vehicles, filterGroups,
+      role: "officer",
+      navLinks: navFor("officer", "Home"),
+      workOrderHref: WORK_ORDER_HREF,
+      switchRole: e => {
+        const next = e.target.value;
+        setStoredRole(next);
+        if (next !== "officer") window.location.href = ROLE_HOME[next];
+      },
+      phaseLabel: PHASES[phase],
+      countLabel: shown.length + " of " + all.length + " vehicles",
+      vEmpty: shown.length === 0, vMore: shown.length > visible.length,
+      moreLabel: "Show " + Math.min(20, shown.length - visible.length) + " more · " + (shown.length - visible.length) + " left",
+      showMore: () => this.setState(st => ({ vLimit: (st.vLimit || 20) + 20 })),
+      ackLabel: acked ? (isCheckPhase ? "✓ " + phaseName + " submitted" : "✓ Vehicle check acknowledged") : (isCheckPhase ? "Perform " + (phase === 1 ? "post-check" : "pre-check") : "I acknowledge that I checked my vehicle"),
+      continueLabel: phase >= PHASES.length - 1 ? "Shift signed off" : "Continue",
+      ackStyle, continueStyle,
+      acknowledge: () => { if (this.state.acked) return; if (isCheckPhase) this.setState({ modalOpen: true }); else this.setState({ acked: true }); },
+      advance: () => { if (this.state.acked) this.setState(st => ({ phase: Math.min(st.phase + 1, PHASES.length - 1), acked: false })); },
+    };
+  }
+}
+</script>
+</body>
+</html>
